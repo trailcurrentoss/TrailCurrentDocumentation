@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrailCurrent DBC Editor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <h1>DBC Editor</h1>
+            <span id="filename" class="filename"></span>
+            <span id="dirty-indicator" class="dirty-indicator" style="display:none;">unsaved changes</span>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-secondary" onclick="handleReload()">Reload</button>
+            <button class="btn btn-primary" onclick="handleSave()">Save</button>
+            <button class="btn btn-secondary" onclick="handleDownload()">Download</button>
+        </div>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab active" data-tab="messages" onclick="switchTab('messages')">Messages</button>
+        <button class="tab" data-tab="nodes" onclick="switchTab('nodes')">Nodes</button>
+        <button class="tab" data-tab="import-export" onclick="switchTab('import-export')">Import / Export</button>
+    </nav>
+
+    <main>
+        <!-- Messages Tab -->
+        <section id="tab-messages" class="tab-content active">
+            <div class="toolbar">
+                <button class="btn btn-success" onclick="showMessageModal()">+ Add Message</button>
+                <input type="text" id="message-search" class="search-input" placeholder="Search messages..." oninput="filterMessages()">
+            </div>
+            <div id="messages-list"></div>
+        </section>
+
+        <!-- Nodes Tab -->
+        <section id="tab-nodes" class="tab-content">
+            <div class="toolbar">
+                <button class="btn btn-success" onclick="showNodeModal()">+ Add Node</button>
+            </div>
+            <div id="nodes-list" class="nodes-grid"></div>
+        </section>
+
+        <!-- Import/Export Tab -->
+        <section id="tab-import-export" class="tab-content">
+            <div class="import-export-panel">
+                <div class="panel-card">
+                    <h3>Upload DBC File</h3>
+                    <p>Replace the current database by uploading a DBC file. The existing file will not be overwritten until you click Save.</p>
+                    <form id="upload-form" onsubmit="handleUpload(event)">
+                        <input type="file" id="upload-input" accept=".dbc" required>
+                        <button type="submit" class="btn btn-primary">Upload &amp; Load</button>
+                    </form>
+                </div>
+                <div class="panel-card">
+                    <h3>Download Current Database</h3>
+                    <p>Download the current in-memory database as a DBC file.</p>
+                    <button class="btn btn-secondary" onclick="handleDownload()">Download .dbc</button>
+                </div>
+                <div class="panel-card">
+                    <h3>Reload From Disk</h3>
+                    <p>Discard all unsaved changes and reload the DBC file from disk.</p>
+                    <button class="btn btn-danger" onclick="handleReload()">Reload</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="modal-overlay" style="display:none;" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modal-body" class="modal-body"></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button id="modal-submit" class="btn btn-primary" onclick="submitModal()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

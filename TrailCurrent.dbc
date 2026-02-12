@@ -1,0 +1,231 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_REL_
+	BA_SGTYPE_REL_
+	SG_MUL_VAL_
+
+BS_: 500000
+
+BU_: GpsModule PowerControlModule EightButtonPanel BtGateway ShuntGateway MpptCanGateway TempSensor AirQualityModule CanEspNowGateway PiCanToMqtt SevenPinTrailerMonitor ElectricHeaterControl VehicleLeveler
+
+BO_ 0 OtaUpdateNotification: 3 PiCanToMqtt
+ SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor
+ SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor
+ SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor
+
+BO_ 6 GpsDateTime: 7 GpsModule
+ SG_ Year : 7|16@0+ (1,0) [2000|2099] "year" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ Month : 23|8@0+ (1,0) [1|12] "month" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ Day : 31|8@0+ (1,0) [1|31] "day" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ Hour : 39|8@0+ (1,0) [0|23] "hour" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ Minute : 47|8@0+ (1,0) [0|59] "min" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ Second : 55|8@0+ (1,0) [0|59] "sec" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 7 GpsSatSpeedCourseMode: 6 GpsModule
+ SG_ NumSatellitesUsed : 7|8@0+ (1,0) [0|255] "satellites" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ SpeedOverGround : 15|16@0+ (0.01,0) [0|655.35] "knots" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ CourseOverGround : 31|16@0+ (0.1,0) [0|6553.5] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ GnssMode : 47|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 8 GpsAltitude: 4 GpsModule
+ SG_ Altitude : 7|32@0+ (0.01,0) [0|42949672.95] "m" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 9 GpsLatitudeLongitude: 8 GpsModule
+ SG_ LatitudeSign : 7|8@0+ (1,0) [0|1] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ LatitudeRaw : 15|24@0+ (0.0001,0) [0|1677.7215] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ LongitudeSign : 39|8@0+ (1,0) [0|1] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ LongitudeRaw : 47|24@0+ (0.0001,0) [0|1677.7215] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 21 BrightnessControl: 2 BtGateway
+ SG_ ChannelIndex : 7|8@0+ (1,0) [0|7] "" PowerControlModule
+ SG_ BrightnessLevel : 15|8@0+ (1,0) [0|255] "" PowerControlModule
+
+BO_ 24 ToggleOnOffCommand: 2 EightButtonPanel
+ SG_ ButtonOrCommand : 7|8@0+ (1,0) [0|9] "" PowerControlModule
+ SG_ CommandValue : 15|8@0+ (1,0) [0|255] "" PowerControlModule
+
+BO_ 27 DeviceStatusReport: 8 PowerControlModule
+ SG_ Output1Value : 7|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
+ SG_ Output2Value : 15|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
+ SG_ Output3Value : 23|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
+ SG_ Output4Value : 31|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
+ SG_ Output5Value : 39|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
+ SG_ Output6Value : 47|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
+ SG_ Output7Value : 55|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
+ SG_ Output8Value : 63|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
+
+BO_ 30 LightSequenceCommand: 1 BtGateway
+ SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" PowerControlModule
+
+BO_ 31 TemperatureHumidity: 4 TempSensor
+ SG_ TemperatureCelsius : 7|8@0+ (1,0) [-40|125] "degC" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ TemperatureFahrenheit : 15|8@0+ (1,0) [-40|257] "degF" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ HumidityScaled : 23|16@0+ (0.01,0) [0|100] "%" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 35 BatteryShuntData1: 7 ShuntGateway
+ SG_ BattVoltageWhole : 7|8@0+ (1,0) [0|255] "V" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ BattVoltageDecimal : 15|8@0+ (1,0) [0|99] "0.01V" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ IsCurrentNegative : 23|8@0+ (1,0) [0|1] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ ShuntCurrentWhole : 31|8@0+ (1,0) [0|255] "A" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ ShuntCurrentDecimal : 39|8@0+ (1,0) [0|99] "0.01A" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ BattSocWhole : 47|8@0+ (1,0) [0|100] "%" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ BattSocDecimal : 55|8@0+ (1,0) [0|99] "0.01%" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 36 BatteryShuntData2: 5 ShuntGateway
+ SG_ IsWattageNegative : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ Wattage : 15|16@0+ (1,0) [0|65535] "W" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ TimeToGo : 31|16@0+ (1,0) [0|65535] "min" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 44 SolarMpptData1: 7 MpptCanGateway
+ SG_ PanelVoltageWhole : 7|8@0+ (1,0) [0|255] "V" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ PanelVoltageDecimal : 15|8@0+ (1,0) [0|99] "0.01V" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ SolarWattage : 23|16@0+ (1,0) [0|65535] "W" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ SolarBattVoltageWhole : 39|8@0+ (1,0) [0|255] "V" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ SolarBattVoltageDecimal : 47|8@0+ (1,0) [0|99] "0.01V" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ SolarChargeStatus : 55|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 45 SolarMpptData2: 3 MpptCanGateway
+ SG_ IsPanelCurrentNegative : 7|8@0+ (1,0) [0|1] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ PanelCurrentWhole : 15|8@0+ (1,0) [0|255] "A" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ PanelCurrentDecimal : 23|8@0+ (1,0) [0|99] "0.01A" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+CM_ BU_ GpsModule "GPS receiver module (ESP32). Reads GNSS data from a connected GPS receiver and broadcasts position, altitude, speed, course, and date/time onto the CAN bus. Transmit-only device.";
+CM_ BU_ PowerControlModule "8-channel PWM power distribution module (ESP32). Controls up to 8 MOSFET outputs for lights and accessories. Receives on/off toggle, brightness, and sequence commands. Sends status reports showing current state of all 8 outputs. Also known as the PDM (Power Distribution Module).";
+CM_ BU_ EightButtonPanel "Physical 8-button panel (ESP32). Each button sends a toggle command to the Power Control Module to turn a corresponding output channel on or off. Has 8 status LEDs that reflect current output states by listening to DeviceStatusReport messages.";
+CM_ BU_ BtGateway "Bluetooth Low Energy gateway (ESP32). Bridges the CAN bus to a smartphone app (Android). Receives sensor data and status from the CAN bus, converts it to BLE characteristic notifications. Also sends user commands from the phone app onto the CAN bus (toggles, brightness, sequences). Accepts ALL CAN messages.";
+CM_ BU_ ShuntGateway "Battery shunt monitor gateway (ESP32). Reads Victron BMV battery monitor data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports battery voltage, current draw, state of charge, wattage, and time-to-go. Transmit-only on CAN.";
+CM_ BU_ MpptCanGateway "Solar charge controller gateway (ESP32). Reads Victron MPPT solar charge controller data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports panel voltage, solar wattage, battery voltage, charge status, and panel current. Transmit-only on CAN.";
+CM_ BU_ TempSensor "Temperature and humidity sensor module (ESP32). Reads a DHT22 sensor and broadcasts temperature (Celsius and Fahrenheit) and relative humidity onto the CAN bus. Uses the original canHelper approach with direct TWAI calls.";
+CM_ BU_ AirQualityModule "Air quality and environment sensor module (ESP32-C6). Reads a DHT22 sensor and broadcasts temperature and humidity. Uses the newer TwaiTaskBased library. Also supports over-the-air (OTA) firmware updates triggered via CAN messages.";
+CM_ BU_ CanEspNowGateway "CAN-to-ESP-NOW bridge (ESP32). Listens to ALL messages on the CAN bus and forwards them wirelessly over ESP-NOW protocol to remote displays and controllers that are not physically wired to the CAN bus. Acts as a transparent CAN bus repeater over wireless.";
+CM_ BU_ PiCanToMqtt "Raspberry Pi CAN-to-MQTT bridge. Runs a Python script that reads all CAN bus messages and publishes them as JSON over MQTT (with TLS). Also subscribes to MQTT and writes received commands back onto the CAN bus. Enables cloud connectivity and remote monitoring.";
+CM_ BU_ SevenPinTrailerMonitor "Seven-pin trailer connector monitor (ESP32-C6). Monitors the standard 7-pin trailer connection for voltage, turn signals, brake signals, and running lights. Reports trailer connection state. Uses TwaiTaskBased library. Under active development.";
+CM_ BU_ ElectricHeaterControl "Electric heater control module (ESP32-C6). Placeholder for controlling an electric heater. Uses TwaiTaskBased library. Listens for OTA update notifications on CAN. Under active development.";
+CM_ BU_ VehicleLeveler "Vehicle leveling module (ESP32-C6). Placeholder for vehicle/trailer leveling functionality. Uses TwaiTaskBased library. Listens for OTA update notifications on CAN. Under active development.";
+
+CM_ BO_ 0 "OTA (Over-The-Air) firmware update notification. Sent by the Raspberry Pi when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device on the bus checks if the MAC matches its own hostname (formatted as esp32c6-XXYYZZ). If it matches, the device pauses normal operation, connects to WiFi, and checks for the OTA update. This allows targeted firmware updates to individual devices without disrupting others.";
+CM_ BO_ 6 "GPS date and time data from the GNSS receiver. Sent periodically by the GPS Module. Year is encoded as a 16-bit unsigned integer split across bytes 0 and 1 (big-endian). Month, day, hour, minute, and second are each a single byte with their natural value. Time is in UTC.";
+CM_ BO_ 7 "GPS navigation data: number of satellites being tracked, speed over ground, course over ground (heading), and the GNSS fix mode. Speed is in knots multiplied by 100 (divide raw value by 100 to get knots). Course is in degrees multiplied by 10 (divide raw value by 10 to get degrees, 0-360). GNSS mode indicates the type of fix (e.g. no fix, 2D, 3D).";
+CM_ BO_ 8 "GPS altitude above mean sea level. Encoded as a 32-bit unsigned integer representing altitude in meters multiplied by 100 (divide raw value by 100 to get meters). For example, a raw value of 152340 means 1523.40 meters.";
+CM_ BO_ 9 "GPS position: latitude and longitude. Each coordinate uses 4 bytes: a sign byte (0 = North/East positive, 1 = South/West negative) followed by a 24-bit unsigned integer representing the absolute value multiplied by 10000. To decode: take the 24-bit value, divide by 10000, and apply the sign. For example, sign=0 and raw=339876 means +33.9876 degrees.";
+CM_ BO_ 21 "Brightness control command for the Power Control Module. Sets a specific PWM brightness level (0-255) for one of the 8 output channels. Byte 0 selects the channel (0-7), byte 1 sets the brightness level. A value of 0 turns the channel fully off, 255 is full brightness. Sent from the BtGateway (originating from the phone app) or from the PiCanToMqtt bridge.";
+CM_ BO_ 24 "Toggle on/off command for the Power Control Module. Sent by the EightButtonPanel (physical buttons) or BtGateway (phone app). Byte 0 indicates which action: values 0-7 toggle the corresponding output channel on or off (if on turns off, if off turns on). Value 8 with byte 1 = 0 turns ALL outputs off, value 8 with byte 1 = 1 turns ALL outputs on. Value 9 with byte 1 = 1 turns ALL outputs on (similar to command 8 with value 1).";
+CM_ BO_ 27 "Device status report from the Power Control Module. Sent continuously at ~30Hz. Each of the 8 data bytes represents the current PWM value (0 = off, 255 = full on) of the corresponding output channel. Used by the EightButtonPanel to update its status LEDs, by the BtGateway to update the phone app display, and by the CanEspNowGateway to relay to wireless displays.";
+CM_ BO_ 30 "Light sequence animation command for the Power Control Module. Triggers a pre-programmed light show effect. Byte 0 value 0 starts the interior sequence (smooth fade in/out followed by a chase pattern on outputs 5-8). Byte 0 value 1 starts the exterior sequence (smooth fade in/out followed by an alternating flash on outputs 3-4). Sequences run to completion before normal control resumes.";
+CM_ BO_ 31 "Temperature and humidity sensor reading. Sent by the TempSensor or AirQualityModule. Byte 0 is temperature in whole degrees Celsius. Byte 1 is temperature in whole degrees Fahrenheit (converted using the formula: F = (C * 9 + 3) / 5 + 32). Bytes 2-3 form a 16-bit big-endian value representing relative humidity multiplied by 100 (divide by 100 to get percentage with 2 decimal places). For example, raw value 5523 means 55.23% humidity.";
+CM_ BO_ 35 "Battery shunt monitor data part 1, from the Victron BMV battery monitor. Reports core battery metrics. Battery voltage is split into whole number (byte 0) and decimal part (byte 1) - combine as: voltage = byte0 + byte1/100. Byte 2 indicates if current is flowing out of the battery (1 = discharging/negative, 0 = charging/positive). Current is split similarly into whole (byte 3) and decimal (byte 4). State of charge percentage is split into whole (byte 5) and decimal (byte 6). For example: bytes 13, 45, 1, 5, 30, 85, 50 means 13.45V, -5.30A discharge, 85.50% SOC.";
+CM_ BO_ 36 "Battery shunt monitor data part 2, from the Victron BMV battery monitor. Byte 0 indicates if wattage is negative (0xFF = battery discharging/negative, 0x00 = charging/positive). Bytes 1-2 form a 16-bit big-endian unsigned value for the absolute wattage in whole watts. Bytes 3-4 form a 16-bit big-endian unsigned value for time-to-go in minutes (how long until the battery is empty at the current discharge rate). For example: bytes 0xFF, 0x01, 0x2C, 0x02, 0x58 means -300W discharge, 600 minutes remaining.";
+CM_ BO_ 44 "Solar MPPT charge controller data part 1, from the Victron MPPT solar charger. Panel voltage is split into whole (byte 0) and decimal (byte 1) - combine as: panelV = byte0 + byte1/100. Bytes 2-3 form a 16-bit big-endian value for solar power in watts. Battery voltage (as seen by the charger) is split into whole (byte 4) and decimal (byte 5). Byte 6 is the solar charge status enum from the Victron CS field (0 = Off, 2 = Fault, 3 = Bulk, 4 = Absorption, 5 = Float).";
+CM_ BO_ 45 "Solar MPPT charge controller data part 2, from the Victron MPPT solar charger. Byte 0 indicates if panel current is negative (1 = yes, 0 = no). Panel current is split into whole number (byte 1) and decimal (byte 2) - combine as: current = byte1 + byte2/100 amps. Apply sign from byte 0.";
+
+CM_ SG_ 0 MacAddressByte1 "First byte of the target device MAC address for OTA update. Combined with bytes 2 and 3, forms the hostname pattern esp32c6-XXYYZZ where XX is this byte in hex.";
+CM_ SG_ 0 MacAddressByte2 "Second byte of the target device MAC address for OTA update.";
+CM_ SG_ 0 MacAddressByte3 "Third byte of the target device MAC address for OTA update.";
+CM_ SG_ 6 Year "Calendar year in UTC (e.g. 2025). Encoded as 16-bit big-endian unsigned integer.";
+CM_ SG_ 6 Month "Month of year 1-12 in UTC.";
+CM_ SG_ 6 Day "Day of month 1-31 in UTC.";
+CM_ SG_ 6 Hour "Hour of day 0-23 in UTC.";
+CM_ SG_ 6 Minute "Minute of hour 0-59 in UTC.";
+CM_ SG_ 6 Second "Second of minute 0-59 in UTC.";
+CM_ SG_ 7 NumSatellitesUsed "Number of GNSS satellites actively used for position calculation. More satellites generally means better accuracy.";
+CM_ SG_ 7 SpeedOverGround "Speed over ground from GPS. Raw value on the bus is the actual speed in knots multiplied by 100. The factor of 0.01 in this DBC definition automatically converts to knots. For example, raw value 550 means 5.50 knots.";
+CM_ SG_ 7 CourseOverGround "Course over ground (heading/bearing) from GPS in degrees. Raw value is degrees multiplied by 10. The factor of 0.1 converts automatically. 0 = North, 90 = East, 180 = South, 270 = West.";
+CM_ SG_ 7 GnssMode "GNSS positioning mode. Indicates quality of GPS fix (e.g. no fix, 2D fix, 3D fix, DGPS, etc.).";
+CM_ SG_ 8 Altitude "Altitude above mean sea level in meters. Raw 32-bit value is meters multiplied by 100. The factor of 0.01 converts automatically. For example, raw value 152340 = 1523.40 meters.";
+CM_ SG_ 9 LatitudeSign "Sign of latitude: 0 = positive (North), 1 = negative (South).";
+CM_ SG_ 9 LatitudeRaw "Absolute value of latitude in degrees. Raw 24-bit value is degrees multiplied by 10000. The factor of 0.0001 converts automatically. Combine with LatitudeSign for the final value. Example: sign=0, raw=339876 means +33.9876 degrees North.";
+CM_ SG_ 9 LongitudeSign "Sign of longitude: 0 = positive (East), 1 = negative (West).";
+CM_ SG_ 9 LongitudeRaw "Absolute value of longitude in degrees. Raw 24-bit value is degrees multiplied by 10000. The factor of 0.0001 converts automatically. Combine with LongitudeSign for the final value.";
+CM_ SG_ 21 ChannelIndex "Output channel number to control (0-7). Channel 0 corresponds to Output 1, channel 7 to Output 8.";
+CM_ SG_ 21 BrightnessLevel "PWM brightness level for the selected channel. 0 = fully off, 255 = fully on. Values in between produce proportional brightness via PWM.";
+CM_ SG_ 24 ButtonOrCommand "Button index or special command code. Values 0-7: toggle the corresponding output channel (0=Output1 ... 7=Output8). Value 8: all-channels command (use CommandValue byte). Value 9: turn all channels on (when CommandValue=1).";
+CM_ SG_ 24 CommandValue "Value parameter for special commands. When ButtonOrCommand=8: 0 = turn all off, 1 = turn all on. When ButtonOrCommand=9: 1 = turn all on. For single-channel toggles (0-7) this byte may not be present (DLC=1) or is ignored.";
+CM_ SG_ 27 Output1Value "Current PWM brightness value of output channel 1. 0 = off, 255 = full on.";
+CM_ SG_ 27 Output2Value "Current PWM brightness value of output channel 2. 0 = off, 255 = full on.";
+CM_ SG_ 27 Output3Value "Current PWM brightness value of output channel 3. 0 = off, 255 = full on.";
+CM_ SG_ 27 Output4Value "Current PWM brightness value of output channel 4. 0 = off, 255 = full on.";
+CM_ SG_ 27 Output5Value "Current PWM brightness value of output channel 5. 0 = off, 255 = full on.";
+CM_ SG_ 27 Output6Value "Current PWM brightness value of output channel 6. 0 = off, 255 = full on.";
+CM_ SG_ 27 Output7Value "Current PWM brightness value of output channel 7. 0 = off, 255 = full on.";
+CM_ SG_ 27 Output8Value "Current PWM brightness value of output channel 8. 0 = off, 255 = full on.";
+CM_ SG_ 30 SequenceType "Light animation sequence to play. 0 = Interior sequence (fade + chase on outputs 5-8, good for interior ambient lighting effects). 1 = Exterior sequence (fade + alternating flash on outputs 3-4, good for exterior accent lighting).";
+CM_ SG_ 31 TemperatureCelsius "Air temperature reading in whole degrees Celsius from the DHT22 sensor.";
+CM_ SG_ 31 TemperatureFahrenheit "Air temperature reading in whole degrees Fahrenheit, converted from Celsius using: F = (C * 9 + 3) / 5 + 32.";
+CM_ SG_ 31 HumidityScaled "Relative humidity percentage. Raw 16-bit value is humidity multiplied by 100. The factor of 0.01 converts automatically. For example, raw 5523 means 55.23% relative humidity.";
+CM_ SG_ 35 BattVoltageWhole "Battery voltage whole number part in volts. Combine with BattVoltageDecimal as: voltage = BattVoltageWhole + BattVoltageDecimal / 100.0 to get the full voltage reading.";
+CM_ SG_ 35 BattVoltageDecimal "Battery voltage decimal part (hundredths of a volt, 0-99). See BattVoltageWhole for how to reconstruct the full voltage.";
+CM_ SG_ 35 IsCurrentNegative "Indicates direction of current flow. 0 = positive/charging (current flowing into battery). 1 = negative/discharging (current flowing out of battery). Apply this sign to the current value from ShuntCurrentWhole + ShuntCurrentDecimal.";
+CM_ SG_ 35 ShuntCurrentWhole "Battery current whole number part in amps. Combine with ShuntCurrentDecimal as: current = ShuntCurrentWhole + ShuntCurrentDecimal / 100.0, then apply sign from IsCurrentNegative.";
+CM_ SG_ 35 ShuntCurrentDecimal "Battery current decimal part (hundredths of an amp, 0-99). See ShuntCurrentWhole for how to reconstruct the full current.";
+CM_ SG_ 35 BattSocWhole "Battery state of charge whole number part (percentage). Combine with BattSocDecimal as: SOC = BattSocWhole + BattSocDecimal / 100.0 to get a value like 85.50%.";
+CM_ SG_ 35 BattSocDecimal "Battery state of charge decimal part (hundredths of a percent, 0-99). See BattSocWhole for how to reconstruct the full SOC value.";
+CM_ SG_ 36 IsWattageNegative "Indicates direction of power flow. 0x00 (0) = positive/charging. 0xFF (255) = negative/discharging. Note: uses 0xFF rather than 1 to indicate negative.";
+CM_ SG_ 36 Wattage "Battery power consumption in whole watts. 16-bit big-endian unsigned value. Apply sign from IsWattageNegative. Positive means power flowing into battery (charging), negative means power drawn from battery (loads active).";
+CM_ SG_ 36 TimeToGo "Estimated time remaining until battery is depleted at the current discharge rate, in minutes. 16-bit big-endian unsigned value. Value of 65535 may indicate infinite (battery is charging). Divide by 60 to get hours.";
+CM_ SG_ 44 PanelVoltageWhole "Solar panel voltage whole number part in volts. Combine with PanelVoltageDecimal as: panelV = PanelVoltageWhole + PanelVoltageDecimal / 100.0.";
+CM_ SG_ 44 PanelVoltageDecimal "Solar panel voltage decimal part (hundredths of a volt, 0-99).";
+CM_ SG_ 44 SolarWattage "Total solar power output in whole watts. 16-bit big-endian unsigned value. This is the instantaneous power being generated by the solar panels.";
+CM_ SG_ 44 SolarBattVoltageWhole "Battery voltage as measured by the solar charge controller, whole number part in volts. May differ slightly from the shunt battery voltage due to different measurement points. Combine with SolarBattVoltageDecimal.";
+CM_ SG_ 44 SolarBattVoltageDecimal "Battery voltage decimal part as measured by the solar charger (hundredths of a volt, 0-99).";
+CM_ SG_ 44 SolarChargeStatus "Victron MPPT charge status enum (CS field). 0 = Off (charger disabled or no sunlight). 2 = Fault (error condition). 3 = Bulk charging (high current to quickly fill battery). 4 = Absorption (voltage held constant, current decreasing). 5 = Float (battery full, maintaining charge).";
+CM_ SG_ 45 IsPanelCurrentNegative "Indicates if panel current is negative. 0 = positive (normal solar generation). 1 = negative (unusual, may indicate reverse current).";
+CM_ SG_ 45 PanelCurrentWhole "Solar panel current whole number part in amps. Combine with PanelCurrentDecimal as: current = PanelCurrentWhole + PanelCurrentDecimal / 100.0, then apply sign from IsPanelCurrentNegative.";
+CM_ SG_ 45 PanelCurrentDecimal "Solar panel current decimal part (hundredths of an amp, 0-99).";
+
+BA_DEF_ BO_ "CycleTime" INT 0 10000;
+BA_DEF_ BU_ "NodeLayerModules" STRING;
+BA_DEF_ "BusType" STRING;
+BA_DEF_ "DatabaseVersion" STRING;
+BA_DEF_ "ProtocolType" STRING;
+
+BA_DEF_DEF_ "CycleTime" 0;
+BA_DEF_DEF_ "NodeLayerModules" "";
+BA_DEF_DEF_ "BusType" "";
+BA_DEF_DEF_ "DatabaseVersion" "";
+BA_DEF_DEF_ "ProtocolType" "";
+
+BA_ "BusType" "CAN";
+BA_ "DatabaseVersion" "1.0.0";
+BA_ "ProtocolType" "CAN 2.0A";
+
+BA_ "CycleTime" BO_ 6 1000;
+BA_ "CycleTime" BO_ 7 1000;
+BA_ "CycleTime" BO_ 8 1000;
+BA_ "CycleTime" BO_ 9 1000;
+BA_ "CycleTime" BO_ 27 33;
+BA_ "CycleTime" BO_ 31 5000;
+BA_ "CycleTime" BO_ 35 33;
+BA_ "CycleTime" BO_ 36 33;
+BA_ "CycleTime" BO_ 44 33;
+BA_ "CycleTime" BO_ 45 33;
+
+VAL_ 9 LatitudeSign 0 "North_Positive" 1 "South_Negative";
+VAL_ 9 LongitudeSign 0 "East_Positive" 1 "West_Negative";
+VAL_ 24 ButtonOrCommand 0 "Toggle_Output1" 1 "Toggle_Output2" 2 "Toggle_Output3" 3 "Toggle_Output4" 4 "Toggle_Output5" 5 "Toggle_Output6" 6 "Toggle_Output7" 7 "Toggle_Output8" 8 "All_Channels_Command" 9 "All_Channels_On";
+VAL_ 30 SequenceType 0 "Interior_FadeAndChase" 1 "Exterior_FadeAndFlash";
+VAL_ 35 IsCurrentNegative 0 "Charging_Positive" 1 "Discharging_Negative";
+VAL_ 36 IsWattageNegative 0 "Charging_Positive" 255 "Discharging_Negative";
+VAL_ 44 SolarChargeStatus 0 "Off" 2 "Fault" 3 "Bulk_Charging" 4 "Absorption_Charging" 5 "Float_Charging";
+VAL_ 45 IsPanelCurrentNegative 0 "Normal_Positive" 1 "Reverse_Negative";
+VAL_ 7 GnssMode 0 "No_Fix" 1 "Fix_2D" 2 "Fix_3D";
+
