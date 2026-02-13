@@ -51,7 +51,7 @@ For Android application:
 
 ### 1. Clone Repository
 ```bash
-git clone https://[gitea-server]/TrailCurrent/[component]
+git clone https://github.com/trailcurrentoss/[component]
 cd [component]
 ```
 
@@ -88,7 +88,7 @@ Follow coding standards and best practices
 
 ### Recommended
 
-- **Version Control**: Git + Gitea
+- **Version Control**: Git + GitHub
 - **IDE**: VS Code (hardware/cloud), Android Studio (mobile)
 - **Database**: DBeaver or pgAdmin (PostgreSQL)
 - **API Testing**: Postman or Insomnia

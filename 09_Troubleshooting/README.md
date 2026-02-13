@@ -290,7 +290,7 @@ Include:
 
 ### Where to Report
 
-- Gitea issues tracker
+- GitHub issues tracker
 - Team chat/email
 - Documentation updates
 

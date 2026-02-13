@@ -134,7 +134,7 @@ docker ps
 
 ```bash
 cd /home/pi
-git clone https://[gitea-server]/TrailCurrent/TrailCurrentPiCanToMqttAndDocker.git
+git clone https://github.com/trailcurrentoss/TrailCurrentPiCanToMqttAndDocker.git
 cd TrailCurrentPiCanToMqttAndDocker
 ```
 
