@@ -208,6 +208,7 @@ These principles are **core to TrailCurrent's mission** and must be preserved in
 ---
 
 See also:
+- [TrailCurrent Architecture Overview](https://trailcurrent.com/architecture.html) - Visual overview of the platform architecture on the TrailCurrent website
 - [SYSTEM_ARCHITECTURE.md](SYSTEM_ARCHITECTURE.md) - Detailed component interactions
 - [NETWORK_TOPOLOGY.md](NETWORK_TOPOLOGY.md) - Network and communication setup
 - [DATA_FLOW.md](DATA_FLOW.md) - Detailed data movement through system

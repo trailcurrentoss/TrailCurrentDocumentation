@@ -25,7 +25,7 @@ By using TrailCurrent:
 
 ## 1. Understanding the System (2 min)
 
-TrailCurrent is an **Open Source Software Defined Vehicle (SDV) Platform with Autonomous Intelligence** - not just another IoT project. It's specifically designed for intelligent vehicle control, autonomous decision-making, and comprehensive management.
+TrailCurrent is an **Open Source Software Defined Vehicle (SDV) Platform with Autonomous Intelligence** - not just another IoT project. It's specifically designed for intelligent vehicle control, autonomous decision-making, and comprehensive management. Visit [trailcurrent.com](https://trailcurrent.com) for a high-level overview of what TrailCurrent does and how it works.
 
 **Three Essential Layers:**
 1. **Vehicle Devices** (ESP32 modules) - Sensors, controllers, gateways communicating via hardwired CAN bus

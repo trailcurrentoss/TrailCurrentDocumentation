@@ -292,3 +292,5 @@ Ready to build or deploy a Software Defined Vehicle?
 **TrailCurrent: Open Source Software Defined Vehicle Platform**
 
 *Building sustainable, user-controlled, safety-first vehicle systems*
+
+Learn more at [trailcurrent.com](https://trailcurrent.com) | See the [system architecture](https://trailcurrent.com/architecture.html)

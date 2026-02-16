@@ -221,6 +221,7 @@ Internet (Public)
 ---
 
 See also:
+- [TrailCurrent Architecture Overview](https://trailcurrent.com/architecture.html) - Visual overview on the TrailCurrent website
 - [NETWORK_TOPOLOGY.md](NETWORK_TOPOLOGY.md) - Network configuration details
 - [DATA_FLOW.md](DATA_FLOW.md) - Message flow examples
 - [DEPLOYMENT_ARCHITECTURE.md](DEPLOYMENT_ARCHITECTURE.md) - Deployment topology

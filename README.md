@@ -20,7 +20,7 @@ Welcome to the TrailCurrent Platform documentation. This is a comprehensive guid
 
 ## What is TrailCurrent?
 
-TrailCurrent is a **reference implementation** of an **Open Source Software Defined Vehicle (SDV) Platform** for comprehensive monitoring, control, autonomous decision-making, and intelligent management of mobile systems. It's designed to be broadly applicable to a wide variety of vehicle types including RVs, trailers, boats, aircraft, and other mobile platforms.
+TrailCurrent is a **reference implementation** of an **Open Source Software Defined Vehicle (SDV) Platform** for comprehensive monitoring, control, autonomous decision-making, and intelligent management of mobile systems. It's designed to be broadly applicable to a wide variety of vehicle types including RVs, trailers, boats, aircraft, and other mobile platforms. Visit [trailcurrent.com](https://trailcurrent.com) to learn more about the platform and see it in action.
 
 Unlike traditional IoT platforms, TrailCurrent is specifically architected for **autonomous vehicle intelligence** with:
 - **Safety-first design** - Physical wired controls for all critical functions
@@ -43,7 +43,7 @@ Unlike traditional IoT platforms, TrailCurrent is specifically architected for *
 - **🚗 What is Software Defined Vehicle?** → [WHAT_IS_SOFTWARE_DEFINED_VEHICLE.md](WHAT_IS_SOFTWARE_DEFINED_VEHICLE.md) - **Understand why TrailCurrent is different**
 - **⭐ Core Principles** (READ FIRST!) → [CORE_PRINCIPLES.md](CORE_PRINCIPLES.md) - **Safety First • Cloud Optional • Data Private • 100% Open Source**
 - **New to the System?** Start with [QUICK_START.md](QUICK_START.md)
-- **System Architecture?** See [01_Architecture/PLATFORM_OVERVIEW.md](01_Architecture/PLATFORM_OVERVIEW.md)
+- **System Architecture?** See [01_Architecture/PLATFORM_OVERVIEW.md](01_Architecture/PLATFORM_OVERVIEW.md) or the [interactive architecture overview](https://trailcurrent.com/architecture.html)
 - **Hardware Modules?** Browse [02_Hardware_Modules/](02_Hardware_Modules/)
 - **In-Vehicle Compute System?** Go to [03_Vehicle_Compute/](03_Vehicle_Compute/)
 - **Cloud Application?** See [04_Cloud_Application/](04_Cloud_Application/)

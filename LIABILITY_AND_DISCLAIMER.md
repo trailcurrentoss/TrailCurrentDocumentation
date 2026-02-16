@@ -141,7 +141,7 @@ While TrailCurrent is designed with privacy principles in mind:
 
 ### Code and Contributions
 
-- TrailCurrent is open source under specified licenses (typically GPL v3 or MIT)
+- TrailCurrent is open source under the MIT License
 - By using the system, you agree to comply with applicable licenses
 - You are responsible for ensuring your modifications comply with licenses
 - You are responsible for any patent infringement from your modifications
@@ -251,7 +251,7 @@ If you have questions about this disclaimer:
 
 ## License Relationship
 
-This disclaimer is separate from and in addition to the open-source license (GPL v3, MIT, or other as specified). Both the license AND this disclaimer apply to your use of TrailCurrent.
+This disclaimer is separate from and in addition to the MIT License. Both the license AND this disclaimer apply to your use of TrailCurrent.
 
 ---
 

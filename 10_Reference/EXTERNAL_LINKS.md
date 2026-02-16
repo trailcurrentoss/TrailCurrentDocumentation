@@ -2,6 +2,12 @@
 
 Reference to external documentation and resources used in TrailCurrent.
 
+## TrailCurrent
+
+- [TrailCurrent Website](https://trailcurrent.com) - Platform overview, features, and use cases
+- [TrailCurrent Architecture](https://trailcurrent.com/architecture.html) - Visual system architecture overview
+- [TrailCurrent GitHub](https://github.com/trailcurrentoss) - Source code repositories
+
 ## Hardware
 
 ### Microcontroller (ESP32)

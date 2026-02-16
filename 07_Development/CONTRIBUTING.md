@@ -18,7 +18,7 @@ Thank you for wanting to contribute to TrailCurrent! This document outlines how 
 
 ## Core Mission
 
-TrailCurrent is built on **three fundamental principles** that **must be preserved in every contribution**:
+TrailCurrent is built on **three fundamental principles** that **must be preserved in every contribution**. If you're new to the project, visit [trailcurrent.com](https://trailcurrent.com) to understand the platform's goals and [architecture](https://trailcurrent.com/architecture.html).
 
 ### 1. ⚪ Cloud is Optional
 - The system must work **completely independently** without any cloud connection
@@ -220,7 +220,7 @@ Be respectful, inclusive, and thoughtful. We welcome contributions from all back
 
 ## License
 
-All contributions must be licensed under the project's license (typically GPL v3 or MIT). By submitting code, you agree to this licensing.
+All contributions must be licensed under the MIT License. By submitting code, you agree to this licensing.
 
 ## Special Notes for New Developers
 
