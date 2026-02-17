@@ -125,7 +125,7 @@ CM_ BU_ VehicleLeveler "Vehicle leveling module (ESP32-C6). Placeholder for vehi
 
 CM_ BO_ 0 "OTA (Over-The-Air) firmware update notification. Sent by the Raspberry Pi when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device on the bus checks if the MAC matches its own hostname (formatted as esp32c6-XXYYZZ). If it matches, the device pauses normal operation, connects to WiFi, and checks for the OTA update. This allows targeted firmware updates to individual devices without disrupting others.";
 CM_ BO_ 6 "GPS date and time data from the GNSS receiver. Sent periodically by the GPS Module. Year is encoded as a 16-bit unsigned integer split across bytes 0 and 1 (big-endian). Month, day, hour, minute, and second are each a single byte with their natural value. Time is in UTC.";
-CM_ BO_ 7 "GPS navigation data: number of satellites being tracked, speed over ground, course over ground (heading), and the GNSS fix mode. Speed is in knots multiplied by 100 (divide raw value by 100 to get knots). Course is in degrees multiplied by 10 (divide raw value by 10 to get degrees, 0-360). GNSS mode indicates the type of fix (e.g. no fix, 2D, 3D).";
+CM_ BO_ 7 "GPS navigation data: number of satellites being tracked, speed over ground, course over ground (heading), and the active GNSS constellation. Speed is in knots multiplied by 100 (divide raw value by 100 to get knots). Course is in degrees multiplied by 10 (divide raw value by 10 to get degrees, 0-360). GNSS mode indicates which satellite constellation combination is active (GPS, BeiDou, GLONASS, or combinations thereof).";
 CM_ BO_ 8 "GPS altitude above mean sea level. Encoded as a 32-bit unsigned integer representing altitude in meters multiplied by 100 (divide raw value by 100 to get meters). For example, a raw value of 152340 means 1523.40 meters.";
 CM_ BO_ 9 "GPS position: latitude and longitude. Each coordinate uses 4 bytes: a sign byte (0 = North/East positive, 1 = South/West negative) followed by a 24-bit unsigned integer representing the absolute value multiplied by 10000. To decode: take the 24-bit value, divide by 10000, and apply the sign. For example, sign=0 and raw=339876 means +33.9876 degrees.";
 CM_ BO_ 21 "Brightness control command for the Power Control Module. Sets a specific PWM brightness level (0-255) for one of the 8 output channels. Byte 0 selects the channel (0-7), byte 1 sets the brightness level. A value of 0 turns the channel fully off, 255 is full brightness. Sent from the BtGateway (originating from the phone app) or from the PiCanToMqtt bridge.";
@@ -150,7 +150,7 @@ CM_ SG_ 6 Second "Second of minute 0-59 in UTC.";
 CM_ SG_ 7 NumSatellitesUsed "Number of GNSS satellites actively used for position calculation. More satellites generally means better accuracy.";
 CM_ SG_ 7 SpeedOverGround "Speed over ground from GPS. Raw value on the bus is the actual speed in knots multiplied by 100. The factor of 0.01 in this DBC definition automatically converts to knots. For example, raw value 550 means 5.50 knots.";
 CM_ SG_ 7 CourseOverGround "Course over ground (heading/bearing) from GPS in degrees. Raw value is degrees multiplied by 10. The factor of 0.1 converts automatically. 0 = North, 90 = East, 180 = South, 270 = West.";
-CM_ SG_ 7 GnssMode "GNSS positioning mode. Indicates quality of GPS fix (e.g. no fix, 2D fix, 3D fix, DGPS, etc.).";
+CM_ SG_ 7 GnssMode "Active GNSS constellation combination from the DFRobot GNSS module. Indicates which satellite systems are being used for position calculation. Value 0 means no constellation is active. Values 1-7 represent different combinations of GPS, BeiDou, and GLONASS.";
 CM_ SG_ 8 Altitude "Altitude above mean sea level in meters. Raw 32-bit value is meters multiplied by 100. The factor of 0.01 converts automatically. For example, raw value 152340 = 1523.40 meters.";
 CM_ SG_ 9 LatitudeSign "Sign of latitude: 0 = positive (North), 1 = negative (South).";
 CM_ SG_ 9 LatitudeRaw "Absolute value of latitude in degrees. Raw 24-bit value is degrees multiplied by 10000. The factor of 0.0001 converts automatically. Combine with LatitudeSign for the final value. Example: sign=0, raw=339876 means +33.9876 degrees North.";
@@ -227,5 +227,5 @@ VAL_ 35 IsCurrentNegative 0 "Charging_Positive" 1 "Discharging_Negative";
 VAL_ 36 IsWattageNegative 0 "Charging_Positive" 255 "Discharging_Negative";
 VAL_ 44 SolarChargeStatus 0 "Off" 2 "Fault" 3 "Bulk_Charging" 4 "Absorption_Charging" 5 "Float_Charging";
 VAL_ 45 IsPanelCurrentNegative 0 "Normal_Positive" 1 "Reverse_Negative";
-VAL_ 7 GnssMode 0 "No_Fix" 1 "Fix_2D" 2 "Fix_3D";
+VAL_ 7 GnssMode 0 "No_Constellation" 1 "GPS" 2 "BeiDou" 3 "GPS_BeiDou" 4 "GLONASS" 5 "GPS_GLONASS" 6 "BeiDou_GLONASS" 7 "GPS_BeiDou_GLONASS";
 
