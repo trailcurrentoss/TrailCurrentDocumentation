@@ -26,12 +26,12 @@ NS_ :
 
 BS_: 500000
 
-BU_: GpsModule PowerControlModule EightButtonPanel BtGateway ShuntGateway MpptCanGateway TempSensor AirQualityModule CanEspNowGateway PiCanToMqtt SevenPinTrailerMonitor ElectricHeaterControl VehicleLeveler
+BU_: GpsModule PowerControlModule EightButtonPanel BtGateway ShuntGateway MpptCanGateway TempSensor AirQualityModule CanEspNowGateway PiCanToMqtt SevenPinTrailerMonitor ElectricHeaterControl VehicleLeveler CabinetDoorSensor
 
 BO_ 0 OtaUpdateNotification: 3 PiCanToMqtt
- SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor
- SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor
- SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor
+ SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,CabinetDoorSensor
+ SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,CabinetDoorSensor
+ SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,CabinetDoorSensor
 
 BO_ 6 GpsDateTime: 7 GpsModule
  SG_ Year : 7|16@0+ (1,0) [2000|2099] "year" BtGateway,CanEspNowGateway,PiCanToMqtt
@@ -55,6 +55,38 @@ BO_ 9 GpsLatitudeLongitude: 8 GpsModule
  SG_ LatitudeRaw : 15|24@0+ (0.0001,0) [0|1677.7215] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
  SG_ LongitudeSign : 39|8@0+ (1,0) [0|1] "" BtGateway,CanEspNowGateway,PiCanToMqtt
  SG_ LongitudeRaw : 47|24@0+ (0.0001,0) [0|1677.7215] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 10 CabinetDoorStatus0: 2 CabinetDoorSensor
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 11 CabinetDoorStatus1: 2 CabinetDoorSensor
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 12 CabinetDoorStatus2: 2 CabinetDoorSensor
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 13 CabinetDoorStatus3: 2 CabinetDoorSensor
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 14 CabinetDoorStatus4: 2 CabinetDoorSensor
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 15 CabinetDoorStatus5: 2 CabinetDoorSensor
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 16 CabinetDoorStatus6: 2 CabinetDoorSensor
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+
+BO_ 17 CabinetDoorStatus7: 2 CabinetDoorSensor
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
 
 BO_ 21 BrightnessControl: 2 BtGateway
  SG_ ChannelIndex : 7|8@0+ (1,0) [0|7] "" PowerControlModule
@@ -122,12 +154,21 @@ CM_ BU_ PiCanToMqtt "Raspberry Pi CAN-to-MQTT bridge. Runs a Python script that 
 CM_ BU_ SevenPinTrailerMonitor "Seven-pin trailer connector monitor (ESP32-C6). Monitors the standard 7-pin trailer connection for voltage, turn signals, brake signals, and running lights. Reports trailer connection state. Uses TwaiTaskBased library. Under active development.";
 CM_ BU_ ElectricHeaterControl "Electric heater control module (ESP32-C6). Placeholder for controlling an electric heater. Uses TwaiTaskBased library. Listens for OTA update notifications on CAN. Under active development.";
 CM_ BU_ VehicleLeveler "Vehicle leveling module (ESP32-C6). Placeholder for vehicle/trailer leveling functionality. Uses TwaiTaskBased library. Listens for OTA update notifications on CAN. Under active development.";
+CM_ BU_ CabinetDoorSensor "Cabinet and door sensor module (ESP32-C6). Monitors up to 10 magnetic reed switch inputs to detect open/closed state of cabinet doors and enclosures. Uses a 3-position DIP switch to set a unique CAN address (0-7), allowing up to 8 modules on the same bus (CAN IDs 0x0A-0x11). A 4th DIP switch controls the 120 ohm CAN bus termination resistor. Uses TwaiTaskBased library. Supports OTA firmware updates via CAN.";
 
 CM_ BO_ 0 "OTA (Over-The-Air) firmware update notification. Sent by the Raspberry Pi when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device on the bus checks if the MAC matches its own hostname (formatted as esp32c6-XXYYZZ). If it matches, the device pauses normal operation, connects to WiFi, and checks for the OTA update. This allows targeted firmware updates to individual devices without disrupting others.";
 CM_ BO_ 6 "GPS date and time data from the GNSS receiver. Sent periodically by the GPS Module. Year is encoded as a 16-bit unsigned integer split across bytes 0 and 1 (big-endian). Month, day, hour, minute, and second are each a single byte with their natural value. Time is in UTC.";
 CM_ BO_ 7 "GPS navigation data: number of satellites being tracked, speed over ground, course over ground (heading), and the active GNSS constellation. Speed is in knots multiplied by 100 (divide raw value by 100 to get knots). Course is in degrees multiplied by 10 (divide raw value by 10 to get degrees, 0-360). GNSS mode indicates which satellite constellation combination is active (GPS, BeiDou, GLONASS, or combinations thereof).";
 CM_ BO_ 8 "GPS altitude above mean sea level. Encoded as a 32-bit unsigned integer representing altitude in meters multiplied by 100 (divide raw value by 100 to get meters). For example, a raw value of 152340 means 1523.40 meters.";
 CM_ BO_ 9 "GPS position: latitude and longitude. Each coordinate uses 4 bytes: a sign byte (0 = North/East positive, 1 = South/West negative) followed by a 24-bit unsigned integer representing the absolute value multiplied by 10000. To decode: take the 24-bit value, divide by 10000, and apply the sign. For example, sign=0 and raw=339876 means +33.9876 degrees.";
+CM_ BO_ 10 "Cabinet/door sensor status from module with DIP address 0 (all switches OFF). Sent at 5Hz. Each bit represents one reed switch input: 1 = door open (no magnet), 0 = door closed (magnet present). Byte 0 contains doors 1-8 (bit 0 = door 1 LSB, bit 7 = door 8 MSB). Byte 1 bits 0-1 contain doors 9-10, bits 2-7 are reserved. CAN IDs 0x0A through 0x11 share this identical signal layout, each sent by a different physical module selected via DIP switch address 0-7.";
+CM_ BO_ 11 "Cabinet/door sensor status from module with DIP address 1. Same signal layout as CabinetDoorStatus0 (ID 0x0A). See that message for full signal description.";
+CM_ BO_ 12 "Cabinet/door sensor status from module with DIP address 2. Same signal layout as CabinetDoorStatus0 (ID 0x0A).";
+CM_ BO_ 13 "Cabinet/door sensor status from module with DIP address 3. Same signal layout as CabinetDoorStatus0 (ID 0x0A).";
+CM_ BO_ 14 "Cabinet/door sensor status from module with DIP address 4. Same signal layout as CabinetDoorStatus0 (ID 0x0A).";
+CM_ BO_ 15 "Cabinet/door sensor status from module with DIP address 5. Same signal layout as CabinetDoorStatus0 (ID 0x0A).";
+CM_ BO_ 16 "Cabinet/door sensor status from module with DIP address 6. Same signal layout as CabinetDoorStatus0 (ID 0x0A).";
+CM_ BO_ 17 "Cabinet/door sensor status from module with DIP address 7 (all address switches ON). Same signal layout as CabinetDoorStatus0 (ID 0x0A).";
 CM_ BO_ 21 "Brightness control command for the Power Control Module. Sets a specific PWM brightness level (0-255) for one of the 8 output channels. Byte 0 selects the channel (0-7), byte 1 sets the brightness level. A value of 0 turns the channel fully off, 255 is full brightness. Sent from the BtGateway (originating from the phone app) or from the PiCanToMqtt bridge.";
 CM_ BO_ 24 "Toggle on/off command for the Power Control Module. Sent by the EightButtonPanel (physical buttons) or BtGateway (phone app). Byte 0 indicates which action: values 0-7 toggle the corresponding output channel on or off (if on turns off, if off turns on). Value 8 with byte 1 = 0 turns ALL outputs off, value 8 with byte 1 = 1 turns ALL outputs on. Value 9 with byte 1 = 1 turns ALL outputs on (similar to command 8 with value 1).";
 CM_ BO_ 27 "Device status report from the Power Control Module. Sent continuously at ~30Hz. Each of the 8 data bytes represents the current PWM value (0 = off, 255 = full on) of the corresponding output channel. Used by the EightButtonPanel to update its status LEDs, by the BtGateway to update the phone app display, and by the CanEspNowGateway to relay to wireless displays.";
@@ -156,6 +197,8 @@ CM_ SG_ 9 LatitudeSign "Sign of latitude: 0 = positive (North), 1 = negative (So
 CM_ SG_ 9 LatitudeRaw "Absolute value of latitude in degrees. Raw 24-bit value is degrees multiplied by 10000. The factor of 0.0001 converts automatically. Combine with LatitudeSign for the final value. Example: sign=0, raw=339876 means +33.9876 degrees North.";
 CM_ SG_ 9 LongitudeSign "Sign of longitude: 0 = positive (East), 1 = negative (West).";
 CM_ SG_ 9 LongitudeRaw "Absolute value of longitude in degrees. Raw 24-bit value is degrees multiplied by 10000. The factor of 0.0001 converts automatically. Combine with LongitudeSign for the final value.";
+CM_ SG_ 10 DoorStatus1to8 "Bitmask of door/cabinet reed switch states for inputs 1-8. Each bit represents one input: bit 0 = door 1 (RSW01), bit 1 = door 2 (RSW02), ... bit 7 = door 8 (RSW08). Value 1 = door open (reed switch open, no magnet nearby). Value 0 = door closed (reed switch closed, magnet present). Applies identically to CAN IDs 0x0A through 0x11.";
+CM_ SG_ 10 DoorStatus9to10 "Bitmask of door/cabinet reed switch states for inputs 9-10. Bit 0 = door 9 (RSW09), bit 1 = door 10 (RSW10). Bits 2-7 are reserved and always 0. Value 1 = door open, 0 = door closed. Applies identically to CAN IDs 0x0A through 0x11.";
 CM_ SG_ 21 ChannelIndex "Output channel number to control (0-7). Channel 0 corresponds to Output 1, channel 7 to Output 8.";
 CM_ SG_ 21 BrightnessLevel "PWM brightness level for the selected channel. 0 = fully off, 255 = fully on. Values in between produce proportional brightness via PWM.";
 CM_ SG_ 24 ButtonOrCommand "Button index or special command code. Values 0-7: toggle the corresponding output channel (0=Output1 ... 7=Output8). Value 8: all-channels command (use CommandValue byte). Value 9: turn all channels on (when CommandValue=1).";
@@ -212,6 +255,14 @@ BA_ "CycleTime" BO_ 6 1000;
 BA_ "CycleTime" BO_ 7 1000;
 BA_ "CycleTime" BO_ 8 1000;
 BA_ "CycleTime" BO_ 9 1000;
+BA_ "CycleTime" BO_ 10 200;
+BA_ "CycleTime" BO_ 11 200;
+BA_ "CycleTime" BO_ 12 200;
+BA_ "CycleTime" BO_ 13 200;
+BA_ "CycleTime" BO_ 14 200;
+BA_ "CycleTime" BO_ 15 200;
+BA_ "CycleTime" BO_ 16 200;
+BA_ "CycleTime" BO_ 17 200;
 BA_ "CycleTime" BO_ 27 33;
 BA_ "CycleTime" BO_ 31 5000;
 BA_ "CycleTime" BO_ 35 33;
