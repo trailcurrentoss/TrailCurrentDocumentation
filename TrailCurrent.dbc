@@ -26,12 +26,12 @@ NS_ :
 
 BS_: 500000
 
-BU_: GpsModule PowerControlModule EightButtonPanel BtGateway ShuntGateway MpptCanGateway TempSensor AirQualityModule CanEspNowGateway PiCanToMqtt SevenPinTrailerMonitor ElectricHeaterControl VehicleLeveler CabinetDoorSensor
+BU_: GpsModule PowerControlModule EightButtonPanel BtGateway ShuntGateway MpptCanGateway TempSensor Borealis CanEspNowGateway PiCanToMqtt SevenPinTrailerMonitor ElectricHeaterControl VehicleLeveler CabinetDoorSensor
 
 BO_ 0 OtaUpdateNotification: 3 PiCanToMqtt
- SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,CabinetDoorSensor
- SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,CabinetDoorSensor
- SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" AirQualityModule,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,CabinetDoorSensor
+ SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" Borealis,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,CabinetDoorSensor
+ SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,CabinetDoorSensor
+ SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,CabinetDoorSensor
 
 BO_ 6 GpsDateTime: 7 GpsModule
  SG_ Year : 7|16@0+ (1,0) [2000|2099] "year" BtGateway,CanEspNowGateway,PiCanToMqtt
@@ -109,10 +109,12 @@ BO_ 27 DeviceStatusReport: 8 PowerControlModule
 BO_ 30 LightSequenceCommand: 1 BtGateway
  SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" PowerControlModule
 
-BO_ 31 TemperatureHumidity: 4 TempSensor
+BO_ 31 EnvironmentSensorData: 8 Borealis
  SG_ TemperatureCelsius : 7|8@0+ (1,0) [-40|125] "degC" BtGateway,CanEspNowGateway,PiCanToMqtt
  SG_ TemperatureFahrenheit : 15|8@0+ (1,0) [-40|257] "degF" BtGateway,CanEspNowGateway,PiCanToMqtt
  SG_ HumidityScaled : 23|16@0+ (0.01,0) [0|100] "%" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ TVOC : 39|16@0+ (1,0) [0|60000] "ppb" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ eCO2 : 55|16@0+ (1,0) [400|60000] "ppm" BtGateway,CanEspNowGateway,PiCanToMqtt
 
 BO_ 35 BatteryShuntData1: 7 ShuntGateway
  SG_ BattVoltageWhole : 7|8@0+ (1,0) [0|255] "V" BtGateway,CanEspNowGateway,PiCanToMqtt
@@ -148,7 +150,7 @@ CM_ BU_ BtGateway "Bluetooth Low Energy gateway (ESP32). Bridges the CAN bus to 
 CM_ BU_ ShuntGateway "Battery shunt monitor gateway (ESP32). Reads Victron BMV battery monitor data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports battery voltage, current draw, state of charge, wattage, and time-to-go. Transmit-only on CAN.";
 CM_ BU_ MpptCanGateway "Solar charge controller gateway (ESP32). Reads Victron MPPT solar charge controller data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports panel voltage, solar wattage, battery voltage, charge status, and panel current. Transmit-only on CAN.";
 CM_ BU_ TempSensor "Temperature and humidity sensor module (ESP32). Reads a DHT22 sensor and broadcasts temperature (Celsius and Fahrenheit) and relative humidity onto the CAN bus. Uses the original canHelper approach with direct TWAI calls.";
-CM_ BU_ AirQualityModule "Air quality and environment sensor module (ESP32-C6). Reads a DHT22 sensor and broadcasts temperature and humidity. Uses the newer TwaiTaskBased library. Also supports over-the-air (OTA) firmware updates triggered via CAN messages.";
+CM_ BU_ Borealis "Environment and air quality sensor module (ESP32-S3-Zero). Reads DHT22 for temperature/humidity and SGP30 for TVOC/eCO2. Sends all data in a single 8-byte CAN frame at ID 0x1F. Bytes 0-3 are backwards-compatible with the predecessor AirQualityModule format. Bytes 4-7 add TVOC and eCO2 readings. Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
 CM_ BU_ CanEspNowGateway "CAN-to-ESP-NOW bridge (ESP32). Listens to ALL messages on the CAN bus and forwards them wirelessly over ESP-NOW protocol to remote displays and controllers that are not physically wired to the CAN bus. Acts as a transparent CAN bus repeater over wireless.";
 CM_ BU_ PiCanToMqtt "Raspberry Pi CAN-to-MQTT bridge. Runs a Python script that reads all CAN bus messages and publishes them as JSON over MQTT (with TLS). Also subscribes to MQTT and writes received commands back onto the CAN bus. Enables cloud connectivity and remote monitoring.";
 CM_ BU_ SevenPinTrailerMonitor "Seven-pin trailer connector monitor (ESP32-C6). Monitors the standard 7-pin trailer connection for voltage, turn signals, brake signals, and running lights. Reports trailer connection state. Uses TwaiTaskBased library. Under active development.";
@@ -173,7 +175,7 @@ CM_ BO_ 21 "Brightness control command for the Power Control Module. Sets a spec
 CM_ BO_ 24 "Toggle on/off command for the Power Control Module. Sent by the EightButtonPanel (physical buttons) or BtGateway (phone app). Byte 0 indicates which action: values 0-7 toggle the corresponding output channel on or off (if on turns off, if off turns on). Value 8 with byte 1 = 0 turns ALL outputs off, value 8 with byte 1 = 1 turns ALL outputs on. Value 9 with byte 1 = 1 turns ALL outputs on (similar to command 8 with value 1).";
 CM_ BO_ 27 "Device status report from the Power Control Module. Sent continuously at ~30Hz. Each of the 8 data bytes represents the current PWM value (0 = off, 255 = full on) of the corresponding output channel. Used by the EightButtonPanel to update its status LEDs, by the BtGateway to update the phone app display, and by the CanEspNowGateway to relay to wireless displays.";
 CM_ BO_ 30 "Light sequence animation command for the Power Control Module. Triggers a pre-programmed light show effect. Byte 0 value 0 starts the interior sequence (smooth fade in/out followed by a chase pattern on outputs 5-8). Byte 0 value 1 starts the exterior sequence (smooth fade in/out followed by an alternating flash on outputs 3-4). Sequences run to completion before normal control resumes.";
-CM_ BO_ 31 "Temperature and humidity sensor reading. Sent by the TempSensor or AirQualityModule. Byte 0 is temperature in whole degrees Celsius. Byte 1 is temperature in whole degrees Fahrenheit (converted using the formula: F = (C * 9 + 3) / 5 + 32). Bytes 2-3 form a 16-bit big-endian value representing relative humidity multiplied by 100 (divide by 100 to get percentage with 2 decimal places). For example, raw value 5523 means 55.23% humidity.";
+CM_ BO_ 31 "Environment sensor data. Sent by the Borealis module (replaces TempSensor/AirQualityModule). Bytes 0-3 are backwards-compatible: byte 0 is temperature in whole degrees Celsius, byte 1 is temperature in whole degrees Fahrenheit (F = (C * 9 + 3) / 5 + 32), bytes 2-3 are a 16-bit big-endian humidity value multiplied by 100. Bytes 4-5 are TVOC in ppb (16-bit big-endian, 0-60000). Bytes 6-7 are eCO2 in ppm (16-bit big-endian, 400-60000). TVOC and eCO2 read from an SGP30 sensor. The SGP30 needs ~15 seconds warm-up; initial values are TVOC=0, eCO2=400.";
 CM_ BO_ 35 "Battery shunt monitor data part 1, from the Victron BMV battery monitor. Reports core battery metrics. Battery voltage is split into whole number (byte 0) and decimal part (byte 1) - combine as: voltage = byte0 + byte1/100. Byte 2 indicates if current is flowing out of the battery (1 = discharging/negative, 0 = charging/positive). Current is split similarly into whole (byte 3) and decimal (byte 4). State of charge percentage is split into whole (byte 5) and decimal (byte 6). For example: bytes 13, 45, 1, 5, 30, 85, 50 means 13.45V, -5.30A discharge, 85.50% SOC.";
 CM_ BO_ 36 "Battery shunt monitor data part 2, from the Victron BMV battery monitor. Byte 0 indicates if wattage is negative (0xFF = battery discharging/negative, 0x00 = charging/positive). Bytes 1-2 form a 16-bit big-endian unsigned value for the absolute wattage in whole watts. Bytes 3-4 form a 16-bit big-endian unsigned value for time-to-go in minutes (how long until the battery is empty at the current discharge rate). For example: bytes 0xFF, 0x01, 0x2C, 0x02, 0x58 means -300W discharge, 600 minutes remaining.";
 CM_ BO_ 44 "Solar MPPT charge controller data part 1, from the Victron MPPT solar charger. Panel voltage is split into whole (byte 0) and decimal (byte 1) - combine as: panelV = byte0 + byte1/100. Bytes 2-3 form a 16-bit big-endian value for solar power in watts. Battery voltage (as seen by the charger) is split into whole (byte 4) and decimal (byte 5). Byte 6 is the solar charge status enum from the Victron CS field (0 = Off, 2 = Fault, 3 = Bulk, 4 = Absorption, 5 = Float).";
@@ -215,6 +217,8 @@ CM_ SG_ 30 SequenceType "Light animation sequence to play. 0 = Interior sequence
 CM_ SG_ 31 TemperatureCelsius "Air temperature reading in whole degrees Celsius from the DHT22 sensor.";
 CM_ SG_ 31 TemperatureFahrenheit "Air temperature reading in whole degrees Fahrenheit, converted from Celsius using: F = (C * 9 + 3) / 5 + 32.";
 CM_ SG_ 31 HumidityScaled "Relative humidity percentage. Raw 16-bit value is humidity multiplied by 100. The factor of 0.01 converts automatically. For example, raw 5523 means 55.23% relative humidity.";
+CM_ SG_ 31 TVOC "Total Volatile Organic Compounds in parts per billion from the SGP30 sensor. Range 0-60000 ppb. Air quality interpretation: 0-65 Excellent, 65-220 Good, 220-660 Moderate, 660-2200 Poor, 2200+ Unhealthy. Reads 0 during the ~15 second warm-up period.";
+CM_ SG_ 31 eCO2 "Equivalent CO2 concentration in parts per million from the SGP30 sensor. Range 400-60000 ppm. Levels: <400 Low (fresh/outdoor air), 400-999 Normal (well-ventilated indoor), 1000-1999 High (poor ventilation), >=2000 Alarm (immediate ventilation needed). Reads 400 during warm-up.";
 CM_ SG_ 35 BattVoltageWhole "Battery voltage whole number part in volts. Combine with BattVoltageDecimal as: voltage = BattVoltageWhole + BattVoltageDecimal / 100.0 to get the full voltage reading.";
 CM_ SG_ 35 BattVoltageDecimal "Battery voltage decimal part (hundredths of a volt, 0-99). See BattVoltageWhole for how to reconstruct the full voltage.";
 CM_ SG_ 35 IsCurrentNegative "Indicates direction of current flow. 0 = positive/charging (current flowing into battery). 1 = negative/discharging (current flowing out of battery). Apply this sign to the current value from ShuntCurrentWhole + ShuntCurrentDecimal.";
@@ -264,7 +268,7 @@ BA_ "CycleTime" BO_ 15 200;
 BA_ "CycleTime" BO_ 16 200;
 BA_ "CycleTime" BO_ 17 200;
 BA_ "CycleTime" BO_ 27 33;
-BA_ "CycleTime" BO_ 31 5000;
+BA_ "CycleTime" BO_ 31 2000;
 BA_ "CycleTime" BO_ 35 33;
 BA_ "CycleTime" BO_ 36 33;
 BA_ "CycleTime" BO_ 44 33;

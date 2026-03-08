@@ -107,7 +107,7 @@ Every component of TrailCurrent is open source: firmware, hardware designs (CAD/
 
 - **MCU Projects**: Parent folder `/Product/`
 - **Shared Libraries**: `/Product/Libraries/`
-- **Vehicle Compute**: `/Product/TrailCurrentPiCanToMqttAndDocker/`
+- **Vehicle Compute**: `/Product/TrailCurrentHeadwaters/`
 - **Cloud App**: `/Product/TrailCurrentCloud/`
 - **Android App**: `/Product/TrailCurrentAndroidApp/`
 - **Deployment**: `/Product/TrailCurrentDeployment/`

@@ -72,7 +72,7 @@ Choose your path:
 |-----------|----------|-----------|
 | Hardware Modules | `/Product/TrailCurrent*/` | `main/main.c`, `CMakeLists.txt` |
 | Shared Libraries | `/Product/Libraries/` | Various library folders |
-| Vehicle Compute | `/Product/TrailCurrentPiCanToMqttAndDocker/` | `docker-compose.yml`, containers/ |
+| Vehicle Compute | `/Product/TrailCurrentHeadwaters/` | `docker-compose.yml`, containers/ |
 | Cloud Backend | `/Product/TrailCurrentCloud/backend/` | `app.js`, routes/ |
 | Cloud Frontend | `/Product/TrailCurrentCloud/frontend/` | HTML, CSS, JS files |
 | Deployment Config | `/Product/TrailCurrentDeployment/` | docker/, config/, scripts/ |

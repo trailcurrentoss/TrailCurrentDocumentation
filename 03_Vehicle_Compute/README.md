@@ -277,7 +277,7 @@ docker exec -it [container-name] /bin/bash  # Enter container
 
 ## Source Code
 
-Vehicle Compute system source: `/Product/TrailCurrentPiCanToMqttAndDocker/`
+Vehicle Compute system source: `/Product/TrailCurrentHeadwaters/`
 
 ---
 

@@ -134,8 +134,8 @@ docker ps
 
 ```bash
 cd /home/pi
-git clone https://github.com/trailcurrentoss/TrailCurrentPiCanToMqttAndDocker.git
-cd TrailCurrentPiCanToMqttAndDocker
+git clone https://github.com/trailcurrentoss/TrailCurrentHeadwaters.git
+cd TrailCurrentHeadwaters
 ```
 
 ### 4.2 Configure Environment
@@ -238,7 +238,7 @@ Requires=docker.service
 
 [Service]
 Type=oneshot
-WorkingDirectory=/home/pi/TrailCurrentPiCanToMqttAndDocker
+WorkingDirectory=/home/pi/TrailCurrentHeadwaters
 ExecStart=/usr/bin/docker-compose up -d
 ExecStop=/usr/bin/docker-compose down
 RemainAfterExit=yes

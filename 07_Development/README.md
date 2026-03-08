@@ -123,7 +123,7 @@ docker-compose -f docker-compose.dev.yml up
 
 ### Deploying to Pi
 ```bash
-cd /Product/TrailCurrentPiCanToMqttAndDocker
+cd /Product/TrailCurrentHeadwaters
 ./deploy.sh [pi-ip-address]
 ```
 
@@ -142,7 +142,7 @@ cd /Product/TrailCurrentAndroidApp
 ├── Libraries/              # Shared libraries
 ├── TrailCurrent*/          # Hardware modules
 ├── TrailCurrentCloud/      # Cloud application
-├── TrailCurrentPiCanToMqttAndDocker/  # Vehicle Pi
+├── TrailCurrentHeadwaters/            # Vehicle Pi
 ├── TrailCurrentAndroidApp/ # Mobile app
 └── TrailCurrentDocumentation/  # This documentation
 ```

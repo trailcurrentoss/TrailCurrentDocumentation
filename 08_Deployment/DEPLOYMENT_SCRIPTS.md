@@ -16,7 +16,7 @@ Guide to available deployment automation scripts.
 **NEEDS TO BE COMPLETED** - Document:
 - /Product/TrailCurrentDeployment/ - Main deployment scripts
 - /Product/TrailCurrentCloud/ - Cloud deployment
-- /Product/TrailCurrentPiCanToMqttAndDocker/ - Pi deployment
+- /Product/TrailCurrentHeadwaters/ - Pi deployment
 - /Product/[Modules]/ - Module-specific scripts
 
 ## Hardware Module Deployment Scripts
