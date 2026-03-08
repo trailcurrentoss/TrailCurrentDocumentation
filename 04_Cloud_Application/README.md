@@ -1,6 +1,6 @@
-# TrailCurrent Cloud Application
+# TrailCurrent Farwatch (Cloud Platform)
 
-Complete guide to the TrailCurrent cloud platform for monitoring, control, and analytics.
+Complete guide to TrailCurrent Farwatch, the cloud platform for remote monitoring, control, and analytics.
 
 ## Overview
 
@@ -300,7 +300,7 @@ WebSocket connection provides:
 
 ## Source Code
 
-Cloud application source: `/Product/TrailCurrentCloud/`
+Farwatch source: `/Product/TrailCurrentFarwatch/`
 
 ---
 

@@ -13,45 +13,47 @@ Hardware modules are organized into four functional categories:
 ### 1. **Sensor Modules** - Data Collection
 Modules that read environmental and operational data
 
-- [GPS Module](./GPS_Module.md) - Vehicle location tracking via GPS
-- [Temperature Sensor](./Temperature_Sensor.md) - Environmental temperature monitoring
-- [Air Quality Module](./Air_Quality_Module.md) - Pollution and particulate measurement
-- [Cabinet & Door Sensor](./Cabinet_Door_Sensor.md) - Intrusion/opening detection
-- [Shunt Gateway](./Shunt_Gateway.md) - Power consumption and battery monitoring
+- [Bearing](./Bearing.md) - GNSS location, heading, altitude, and precise timing
+- [Borealis](./Borealis.md) - Temperature, humidity, CO2, and indoor air quality monitoring
+- [Picket](./Picket.md) - Cabinet and door open/closed status monitoring
+- [Ampline](./Ampline.md) - Power consumption tracking and state-of-charge via Victron Shunt
+- [Plateau](./Plateau.md) - Tilt/level measurement on both axes
 
 ### 2. **Control Modules** - Action Execution
 Modules that control equipment and systems
 
-- [Power Control Module (PCM)](./Power_Control_Module.md) - Main power distribution and management
-- [Electric Heater Control](./Electric_Heater_Control.md) - Heater activation and temperature management
-- [Vehicle Leveler](./Vehicle_Leveler.md) - Automatic leveling system control
-- [MPPT CAN Gateway](./MPPT_CAN_Gateway.md) - Solar charge controller interface
+- [Torrent](./Torrent.md) - 8-channel smart power delivery module with on/off switching and PWM dimming
+- [Therma](./Therma.md) - Dual-relay automatic heating/cooling to maintain set temperature
+- [Solstice](./Solstice.md) - Victron MPPT solar charge controller interface
 
 ### 3. **Communication/Gateway Modules** - Integration
 Modules that connect external devices or provide communication bridges
 
-- [BT Gateway](./BT_Gateway.md) - Bluetooth connectivity for mobile devices
-- [CAN/EspNow Gateway](./CAN_EspNow_Gateway.md) - Multi-protocol gateway for extended range
-- [Trailer Monitoring Module](./Trailer_Monitoring.md) - 7-pin and other trailer connectors
+- [Aftline](./Aftline.md) - Trailer wiring harness monitor (all 7 pins: signals, lights, connection status)
+- RV-C Gateway *(Coming Soon)* - RV-C protocol gateway for industry-standard device integration
 
 ### 4. **User Interface Modules** - Interaction
 Modules that allow user control and status display
 
-- [Eight Button Panel](./Eight_Button_Panel.md) - Physical button control interface
-- [Wall-Mounted Display (Standard)](./Wall_Mounted_Display.md) - Standard wall display with buttons
-- [Wall-Mounted Display (7" Sunton)](./Wall_Mounted_Display_Sunton.md) - High-resolution 7" display
-- [EspNow Remote Control](./EspNow_Remote_Control.md) - Wireless remote control
-- [Waveshare ESP32S3 Remote](./Waveshare_ESP32S3_Remote.md) - Specific remote hardware
+- [Tapper](./Tapper.md) - Physical 8-button interface for Torrent commands
+- [Fireside](./Fireside.md) - Wireless battery-powered touchscreen display with wall cradle
+- [Milepost](./Milepost.md) - Hardwired CAN bus touchscreen (always-on, multiple locations)
+- [Spotter](./Spotter.md) - In-vehicle display that monitors trailer status while towing
+
+### 5. **Voice & AI Modules**
+
+- [Peregrine](./Peregrine.md) - AI voice assistant with system access and hands-free control
 
 ## Module Statistics
 
 | Category | Modules | Primary Function |
 |----------|---------|------------------|
 | Sensors | 5 | Data collection |
-| Control | 4 | System control |
-| Gateway | 3 | Device integration |
-| Interface | 5 | User interaction |
-| **Total** | **17** | - |
+| Control | 3 | System control |
+| Gateway | 2 | Device integration (1 coming soon) |
+| Interface | 4 | User interaction |
+| Voice & AI | 1 | Intelligent assistance |
+| **Total** | **15** | - |
 
 ## Communication Protocol
 
@@ -123,26 +125,26 @@ All modules typically include:
 ## Module Dependencies
 
 ```
-GPS Module
+Bearing (GNSS)
 ├─ Requires: CAN bus
 ├─ Optional: UART for serial input
-└─ Outputs: Position data to CAN
+└─ Outputs: Position, heading, altitude, timing data to CAN
 
-Temperature Sensor
-├─ Requires: CAN bus, I2C or SPI sensor
-└─ Outputs: Temperature readings to CAN
+Borealis (Air Quality)
+├─ Requires: CAN bus, I2C or SPI sensors
+└─ Outputs: Temperature, humidity, CO2 readings to CAN
 
-Power Control Module (Central Hub)
-├─ Requires: CAN bus, relay outputs
+Torrent (Power Delivery)
+├─ Requires: CAN bus, relay/MOSFET outputs
 ├─ Depends on: Multiple sensors for logic
-└─ Outputs: Power state commands to relays
+└─ Outputs: Power state commands to 8 channels
 
-Heater Control
-├─ Requires: CAN bus, PWM output
-├─ Depends on: Temperature sensor feedback
-└─ Outputs: Heating element control
+Therma (Climate Control)
+├─ Requires: CAN bus, dual relay output
+├─ Depends on: Borealis temperature feedback
+└─ Outputs: Heating/cooling relay control
 
-User Interface
+User Interface (Tapper, Fireside, Milepost, Spotter)
 ├─ Requires: CAN bus, buttons/display
 ├─ Depends on: Status from other modules
 └─ Outputs: User commands to CAN
@@ -229,23 +231,20 @@ See [07_Development/CONTRIBUTING.md](../07_Development/CONTRIBUTING.md) for cont
 
 All module source code is in `/Product/`:
 
-- `TrailCurrentGpsModule/`
-- `TrailCurrentTempSensor/`
-- `TrailCurrentAirQualityModule/`
-- `TrailCurrentCabinetAndDoorSensor/`
-- `TrailCurrentShuntGateway/`
-- `TrailCurrentPowerControlModule/`
-- `TrailCurrentElectricHeaterControl/`
-- `TrailCurrentVehicleLeveler/`
-- `TrailCurrentMpptCanGateway/`
-- `TrailCurrentBtGateway/`
-- `TrailCurrentCanEspNowGateway/`
-- `TrailCurrentSevenPinTrailerMonitor/`
-- `TrailCurrentEightButtonPanel/`
-- `TrailCurrentWallMountedDisplay/`
-- `TrailCurrentWallMountedDisplaySunton7Inch/`
-- `TrailCurrentEspNowRemoteControl/`
-- `TrailCurrentWaveshareEsp32s3Remote/`
+- `TrailCurrentGnssModule/` - Bearing (GNSS)
+- `TrailCurrentBorealis/` - Borealis (air quality, temp, humidity, CO2)
+- `TrailCurrentPicket/` - Picket (cabinet & door sensors)
+- `TrailCurrentAmpline/` - Ampline (shunt interface)
+- `TrailCurrentPlateau/` - Plateau (vehicle level sensor)
+- `TrailCurrentTorrent/` - Torrent (power delivery module)
+- `TrailCurrentTherma/` - Therma (climate relay controller)
+- `TrailCurrentSolstice/` - Solstice (MPPT solar controller interface)
+- `TrailCurrentAftline/` - Aftline (trailer wiring harness monitor)
+- `TrailCurrentTapper/` - Tapper (8-button panel)
+- `TrailCurrentFireside/` - Fireside (wireless touchscreen display)
+- `TrailCurrentMilepost/` - Milepost (hardwired CAN bus touchscreen)
+- `TrailCurrentSpotter/` - Spotter (in-vehicle trailer monitor display)
+- `TrailCurrentPeregrine/` - Peregrine (AI voice assistant)
 
 ---
 

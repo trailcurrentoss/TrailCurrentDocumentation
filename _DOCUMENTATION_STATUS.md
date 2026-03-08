@@ -38,11 +38,21 @@ Hardware module documentation:
 - [x] **02_Hardware_Modules/MODULE_CATEGORIES.md** - Module classification and organization
 - [x] **02_Hardware_Modules/Firmware/ESP_IDF_Setup.md** - Firmware development framework
 
-**📋 Placeholder/Stub Files Created** (17 additional module-specific files referenced):
-- GPS Module documentation
-- Temperature Sensor documentation
-- Power Control Module documentation
-- And 14 others (to be completed)
+**📋 Placeholder/Stub Files Needed** (14 module-specific files):
+- Bearing (GNSS) documentation
+- Borealis (environment) documentation
+- Torrent (power delivery) documentation
+- Therma (climate control) documentation
+- Solstice (solar controller) documentation
+- Ampline (shunt interface) documentation
+- Plateau (vehicle level) documentation
+- Picket (cabinet & door sensors) documentation
+- Aftline (trailer wiring) documentation
+- Tapper (8-button panel) documentation
+- Fireside (wireless display) documentation
+- Milepost (hardwired display) documentation
+- Spotter (trailer monitor display) documentation
+- Peregrine (voice assistant) documentation
 
 ### ✅ In-Vehicle Compute Documentation (3/3 Complete)
 
@@ -210,7 +220,7 @@ TrailCurrent Documentation (43 total files)
 
 ### Placeholder/Stub Structure (ready for content)
 📋 **20 Files** - These files have complete structure and "NEEDS TO BE COMPLETED" sections indicating what should go in each:
-- Hardware module specifics (17)
+- Hardware module specifics (14)
 - DEVELOPMENT_SETUP.md subsections
 - Various deployment/troubleshooting subsections
 - Reference file subsections
@@ -271,10 +281,10 @@ Expand these key development guides:
 
 ### Priority 3 (Referenced 1-2 times)
 Complete hardware module-specific documentation:
-- [ ] GPS_Module.md
-- [ ] Temperature_Sensor.md
-- [ ] Power_Control_Module.md
-- [ ] [14 other module-specific files]
+- [ ] Bearing.md (GNSS module)
+- [ ] Borealis.md (environment module)
+- [ ] Torrent.md (power delivery module)
+- [ ] [11 other module-specific files - see 02_Hardware_Modules/README.md]
 
 ### Priority 4 (Supporting Documentation)
 Additional content that enhances but isn't critical:

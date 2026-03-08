@@ -132,10 +132,10 @@ Cloud processes stored commands
 
 ## Message Routing Examples
 
-### Example 1: GPS Position Update
+### Example 1: Bearing (GNSS) Position Update
 
 ```
-GPS Module
+Bearing (GNSS Module)
   ├─ Interval: 5 seconds
   ├─ CAN Message Format:
   │  - Frame ID: 0x100
@@ -166,7 +166,7 @@ User Dashboard
   └─ User sees live location tracking
 ```
 
-### Example 2: Power Control Sequence
+### Example 2: Torrent Power Control Sequence
 
 ```
 User clicks "Turn Heater On" in web interface

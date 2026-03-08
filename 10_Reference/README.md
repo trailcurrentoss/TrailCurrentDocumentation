@@ -76,9 +76,9 @@ Resources outside this documentation:
 ### CAN ID Allocation
 
 ```
-0x000-0x0FF: GPS & Location        (tc/gps/*)
-0x100-0x1FF: Temperature           (tc/temp/*)
-0x200-0x2FF: Power Control         (tc/power/*)
+0x000-0x0FF: Bearing (GNSS)         (tc/gps/*)
+0x100-0x1FF: Borealis (Environment)(tc/temp/*)
+0x200-0x2FF: Torrent (Power)       (tc/power/*)
 0x300-0x3FF: Status & Telemetry    (tc/status/*)
 0x400-0x4FF: User Interface        (tc/ui/*)
 0x500-0x5FF: Gateway/Bridge        (tc/gateway/*)
@@ -120,23 +120,23 @@ CAN Termination: 120Ω resistors
 - **Communication**: CAN Bus primary, optional WiFi/BT
 - **Bootloader**: USB UART or OTA
 
-### Power Control Module (PCM)
+### Torrent (Power Delivery Module)
 - **CAN ID**: 0x200 (commands), 0x280 (status)
-- **Outputs**: 4-8 relay channels
+- **Outputs**: 8 switched/dimmed power channels
 - **Inputs**: Status from other modules
-- **Key Pins**: GPIO for relays, CAN pins
+- **Key Pins**: GPIO for MOSFETs/relays, CAN pins
 
-### GPS Module
+### Bearing (GNSS Module)
 - **CAN ID**: 0x100-0x10F
-- **Interface**: Serial UART to GPS module
+- **Interface**: Serial UART to GNSS module
 - **Frequency**: 1 Hz typical
 - **Accuracy**: 5m typical (depends on receiver)
 
-### Temperature Sensor
+### Borealis (Environment Module)
 - **CAN ID**: 0x120-0x12F
-- **Interfaces**: I2C or 1-Wire
-- **Sensors**: DS18B20, DHT22, BME680
-- **Range**: -40°C to +125°C typical
+- **Interfaces**: I2C
+- **Sensors**: Temperature, humidity, CO2
+- **Range**: -40°C to +125°C typical (temperature)
 
 See [HARDWARE_SPECIFICATIONS.md](HARDWARE_SPECIFICATIONS.md) for complete specs.
 

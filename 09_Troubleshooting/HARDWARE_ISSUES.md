@@ -145,7 +145,7 @@ Detailed troubleshooting procedures for hardware-related issues.
 
 ## Sensor Issues
 
-### Temperature Sensor
+### Borealis (Environment Module)
 
 **NEEDS TO BE COMPLETED** - Troubleshoot:
 - Not responding
@@ -154,7 +154,7 @@ Detailed troubleshooting procedures for hardware-related issues.
 - Calibration errors
 - Environmental compensation
 
-### GPS Module
+### Bearing (GNSS Module)
 
 **NEEDS TO BE COMPLETED** - Troubleshoot:
 - No lock

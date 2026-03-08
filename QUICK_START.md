@@ -71,11 +71,10 @@ Choose your path:
 | Component | Location | Key Files |
 |-----------|----------|-----------|
 | Hardware Modules | `/Product/TrailCurrent*/` | `main/main.c`, `CMakeLists.txt` |
-| Shared Libraries | `/Product/Libraries/` | Various library folders |
-| Vehicle Compute | `/Product/TrailCurrentHeadwaters/` | `docker-compose.yml`, containers/ |
-| Cloud Backend | `/Product/TrailCurrentCloud/backend/` | `app.js`, routes/ |
-| Cloud Frontend | `/Product/TrailCurrentCloud/frontend/` | HTML, CSS, JS files |
-| Deployment Config | `/Product/TrailCurrentDeployment/` | docker/, config/, scripts/ |
+| Shared Libraries | Standalone repos under `/Product/` | e.g., `Esp32C6OtaUpdateLibrary/` |
+| Vehicle Compute (Headwaters) | `/Product/TrailCurrentHeadwaters/` | `docker-compose.yml`, containers/ |
+| Cloud Platform (Farwatch) | `/Product/TrailCurrentFarwatch/backend/` | `app.js`, routes/ |
+| Cloud Frontend | `/Product/TrailCurrentFarwatch/frontend/` | HTML, CSS, JS files |
 
 ## 4. Common Commands
 
@@ -84,12 +83,12 @@ Choose your path:
 cd /Product/TrailCurrent[ModuleName]
 idf.py build
 
-# Run cloud application locally
-cd /Product/TrailCurrentCloud
+# Run cloud platform (Farwatch) locally
+cd /Product/TrailCurrentFarwatch
 docker-compose -f docker-compose.dev.yml up
 
 # Deploy to vehicle
-cd /Product/TrailCurrentDeployment
+cd /Product/TrailCurrentHeadwaters
 ./deploy.sh
 
 # Check system status

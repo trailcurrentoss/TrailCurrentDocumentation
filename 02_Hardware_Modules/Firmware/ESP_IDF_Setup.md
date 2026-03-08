@@ -47,7 +47,7 @@ source $HOME/esp/esp-idf/export.sh
 TrailCurrent modules follow ESP-IDF project structure:
 
 ```
-TrailCurrentGpsModule/
+TrailCurrentGnssModule/
 ├── main/
 │   ├── main.c                    # Application entry point
 │   ├── CMakeLists.txt           # Build configuration
@@ -67,7 +67,7 @@ TrailCurrentGpsModule/
 ### 1. Set Target
 
 ```bash
-cd /Product/TrailCurrentGpsModule
+cd /Product/TrailCurrentGnssModule
 idf.py set-target esp32  # or esp32s3
 ```
 
@@ -190,7 +190,7 @@ idf_component_register(
 
 1. Copy library path to components:
 ```bash
-cp -r /Product/Libraries/TwaiTaskBased components/
+cp -r /Product/Esp32C6TwaiTaskBasedLibrary components/
 ```
 
 2. Reference in main CMakeLists.txt:

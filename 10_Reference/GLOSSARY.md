@@ -50,7 +50,7 @@ Synchronous serial communication protocol. Used for high-speed communication wit
 Serial communication interface used for GPS modules, debug output, and other serial devices.
 
 ### Relay
-Electromechanical switch controlled by an electrical signal. Used in Power Control Module for switching high-power loads.
+Electromechanical switch controlled by an electrical signal. Used in Torrent for switching high-power loads.
 
 ### Bootloader
 Small firmware program that runs first on ESP32, initializes hardware, and loads main application.
@@ -124,7 +124,7 @@ Speed of serial communication. CAN bus typically runs at 500 kbps or 1 Mbps.
 | NAT | Network Address Translation | Firewall/router feature |
 | NVS | Non-Volatile Storage | Persistent memory on ESP32 |
 | OTA | Over-The-Air | Wireless firmware update |
-| PCM | Power Control Module | Central device distribution hardware |
+| PDM | Power Delivery Module | See Torrent - 8-channel smart power distribution |
 | PNG | Portable Network Graphics | Image format |
 | PWM | Pulse Width Modulation | Signal control technique |
 | QoS | Quality of Service | Message delivery guarantee |
@@ -156,25 +156,23 @@ Speed of serial communication. CAN bus typically runs at 500 kbps or 1 Mbps.
 
 ## Module Abbreviations
 
-| Abbreviation | Full Name | Type |
-|--------------|-----------|------|
-| GPS | GPS Module | Sensor |
-| TEMP | Temperature Sensor | Sensor |
-| AQI | Air Quality Module | Sensor |
-| DOOR | Cabinet & Door Sensor | Sensor |
-| SHUNT | Shunt Gateway | Sensor |
-| PCM | Power Control Module | Control |
-| HEATER | Electric Heater Control | Control |
-| LEVEL | Vehicle Leveler | Control |
-| MPPT | MPPT CAN Gateway | Control |
-| BT | Bluetooth Gateway | Gateway |
-| ESPNOW | CAN/EspNow Gateway | Gateway |
-| EXT_SYS | External Systems Monitor | Gateway |
-| BUTTON | 8-Button Panel | Interface |
-| DISPLAY | Wall Mounted Display | Interface |
-| DISPLAY_7IN | 7" Sunton Display | Interface |
-| REMOTE | EspNow Remote | Interface |
-| WAVESHARE | Waveshare Remote | Interface |
+| Abbreviation | Product Name | Description | Type |
+|--------------|-------------|-------------|------|
+| BEARING | Bearing | GNSS location, heading, altitude, timing | Sensor |
+| BOREALIS | Borealis | Temp, humidity, CO2, air quality | Sensor |
+| PICKET | Picket | Cabinet & door sensors | Sensor |
+| AMPLINE | Ampline | Power consumption & state-of-charge | Sensor |
+| PLATEAU | Plateau | Tilt/level measurement | Sensor |
+| TORRENT | Torrent | 8-channel smart power delivery | Control |
+| THERMA | Therma | Dual-relay climate control | Control |
+| SOLSTICE | Solstice | MPPT solar controller interface | Control |
+| AFTLINE | Aftline | Trailer wiring harness monitor | Gateway |
+| RVC | RV-C Gateway | RV-C protocol gateway (coming soon) | Gateway |
+| TAPPER | Tapper | Physical 8-button panel | Interface |
+| FIRESIDE | Fireside | Wireless touchscreen display | Interface |
+| MILEPOST | Milepost | Hardwired CAN bus touchscreen | Interface |
+| SPOTTER | Spotter | In-vehicle trailer monitor display | Interface |
+| PEREGRINE | Peregrine | AI voice assistant | Voice & AI |
 
 ---
 

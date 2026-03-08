@@ -97,7 +97,7 @@ Complete electrical and physical specifications for all TrailCurrent hardware co
 
 ## Sensor Specifications
 
-### GPS Module
+### Bearing (GNSS Module)
 
 **NEEDS TO BE COMPLETED** - Document:
 - Position accuracy
@@ -109,14 +109,15 @@ Complete electrical and physical specifications for all TrailCurrent hardware co
 - Communication protocol
 - Connector type
 
-### Temperature Sensor
+### Borealis (Environment Module)
 
 **NEEDS TO BE COMPLETED** - Document:
-- Temperature range
-- Accuracy
+- Temperature range and accuracy
+- Humidity range and accuracy
+- CO2 measurement range
 - Resolution
 - Response time
-- Communication protocol (1-Wire, I2C, analog)
+- Communication protocol (I2C)
 - Connector type
 - Environmental ratings
 

@@ -54,30 +54,31 @@ Complete reference for GPIO pin assignments, connections, and configurations acr
 - Communication pins (CAN, I2C, SPI, UART)
 - Power pins and current limits
 
-### GPS Module (GPS_Module.md expected)
+### Bearing (GNSS Module)
 
 **NEEDS TO BE COMPLETED** - Reference diagram and pin list
 
-### Temperature Sensor (TEMP_Sensor.md expected)
+### Borealis (Environment Module)
 
 **NEEDS TO BE COMPLETED** - Reference diagram and pin list
 
-### Power Control Module (PCM.md expected)
+### Torrent (Power Delivery Module)
 
 **NEEDS TO BE COMPLETED** - Reference diagram and pin list
 
 ### Other Modules
 
 **NEEDS TO BE COMPLETED** - Pin assignments for:
-- Heater Control Module
-- Leveler Control Module
-- Door/Cabinet Sensor
-- Shunt Monitor
-- MPPT Gateway
-- Bluetooth Gateway
-- EspNow Gateway
-- Button Panel
-- Display Modules
+- Therma (climate relay controller)
+- Plateau (vehicle level sensor)
+- Picket (cabinet & door sensors)
+- Ampline (shunt interface)
+- Solstice (MPPT solar controller)
+- Aftline (trailer wiring monitor)
+- Tapper (8-button panel)
+- Fireside (wireless touchscreen display)
+- Milepost (hardwired CAN bus touchscreen)
+- Spotter (trailer monitor display)
 
 ## CAN Transceiver Wiring
 

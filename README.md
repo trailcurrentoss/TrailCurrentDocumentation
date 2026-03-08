@@ -32,9 +32,9 @@ Unlike traditional IoT platforms, TrailCurrent is specifically architected for *
 **⚠️ This is NOT production-ready commercial software.** Users must conduct extensive testing, validation, and modification for their specific use cases. It consists of:
 
 - **Multiple ESP32-based Hardware Modules** for sensing, monitoring, and control
-- **In-Vehicle Compute System** for edge processing and gateway functionality (Raspberry Pi, Orange Pi, Jetson Nano, or similar)
-- **Cloud Application** for remote monitoring, analytics, and management
-- **Android Mobile App** for user interaction
+- **TrailCurrent Headwaters** - In-vehicle compute system for edge processing and gateway functionality (Raspberry Pi, Orange Pi, Jetson Nano, or similar)
+- **TrailCurrent Farwatch** - Cloud platform for remote monitoring, analytics, and management
+- **TrailCurrent Outbound** - Native Android app for user interaction
 - **Docker-based Infrastructure** for deployment and scaling
 
 ## Quick Navigation
@@ -105,12 +105,14 @@ Every component of TrailCurrent is open source: firmware, hardware designs (CAD/
 
 ## Links to Source Code
 
-- **MCU Projects**: Parent folder `/Product/`
-- **Shared Libraries**: `/Product/Libraries/`
-- **Vehicle Compute**: `/Product/TrailCurrentHeadwaters/`
-- **Cloud App**: `/Product/TrailCurrentCloud/`
-- **Android App**: `/Product/TrailCurrentAndroidApp/`
-- **Deployment**: `/Product/TrailCurrentDeployment/`
+- **Hardware Modules**: Parent folder `/Product/` (one repo per module)
+- **Shared Libraries**: Standalone repos under `/Product/` (e.g., `Esp32C6OtaUpdateLibrary`, `Esp32C6TwaiTaskBasedLibrary`)
+- **Vehicle Compute (Headwaters)**: `/Product/TrailCurrentHeadwaters/`
+- **Cloud Platform (Farwatch)**: `/Product/TrailCurrentFarwatch/`
+- **Mobile App (Outbound)**: `/Product/TrailCurrentOutbound/`
+- **Trailer Monitor (Spotter)**: `/Product/TrailCurrentSpotter/`
+- **Voice Assistant (Peregrine)**: `/Product/TrailCurrentPeregrine/`
+- **KiCAD Libraries**: `/Product/TrailCurrentKiCADLibraries/`
 
 ## Contributing
 

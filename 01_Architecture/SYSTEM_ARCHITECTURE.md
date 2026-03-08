@@ -84,12 +84,12 @@ TrailCurrent implements a **Software Defined Vehicle (SDV) architecture** where 
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐        │
 │  │   Sensors    │  │  Controllers │  │   Interfaces │        │
 │  ├──────────────┤  ├──────────────┤  ├──────────────┤        │
-│  │ GPS Module   │  │ Power Control│  │ 8-Button     │        │
-│  │ Temp Sensor  │  │ Heater Ctrl  │  │ Panel        │        │
-│  │ Air Quality  │  │ Leveler      │  │ Wall Display │        │
-│  │ Door Sensor  │  │ MPPT Gateway │  │ Remote Ctrl  │        │
-│  │ Shunt        │  └──────────────┘  │ Waveshare    │        │
-│  └──────┬───────┘                     │ Remote       │        │
+│  │ Bearing      │  │ Torrent      │  │ Tapper       │        │
+│  │ Borealis     │  │ Therma       │  │ Fireside     │        │
+│  │ Picket       │  │ Solstice     │  │ Milepost     │        │
+│  │ Ampline      │  │              │  │ Spotter      │        │
+│  │ Plateau      │  └──────────────┘  │              │        │
+│  └──────┬───────┘                     │              │        │
 │         │                              └──────┬───────┘        │
 │         └──────────┬────────────────────────┬─┘               │
 │                    │ CAN Messages           │ CAN Messages    │
@@ -102,9 +102,8 @@ TrailCurrent implements a **Software Defined Vehicle (SDV) architecture** where 
 │            ┌───────┴──────┬────────────┐                      │
 │            │              │            │                      │
 │  ┌─────────▼────┐  ┌──────▼──────┐  ┌─▼───────────┐         │
-│  │ CAN/EspNow   │  │   BT        │  │  Secondary  │         │
-│  │ Gateway      │  │   Gateway   │  │  Gateways   │         │
-│  │ (to Pi)      │  │ (Optional)  │  │ (Optional)  │         │
+│  │ Aftline      │  │  Peregrine  │  │  RV-C       │         │
+│  │ (Trailer)    │  │  (Voice AI) │  │  (Planned)  │         │
 │  └──────────────┘  └─────────────┘  └─────────────┘         │
 │                                                                 │
 └────────────────────────────────────────────────────────────────┘

@@ -26,9 +26,9 @@ Complete reference for CAN message formats, IDs, and protocols used in TrailCurr
 
 | Range | Category | MQTT Topic | Description |
 |-------|----------|-----------|-------------|
-| 0x000-0x0FF | GPS & Location | tc/gps/* | Location, heading, speed |
-| 0x100-0x1FF | Temperature | tc/temp/* | Temperature sensors |
-| 0x200-0x2FF | Power Control | tc/power/* | Power, voltage, current |
+| 0x000-0x0FF | Bearing (GNSS) | tc/gps/* | Location, heading, altitude, timing |
+| 0x100-0x1FF | Borealis (Environment) | tc/temp/* | Temperature, humidity, CO2 |
+| 0x200-0x2FF | Torrent (Power) | tc/power/* | Power delivery, voltage, current |
 | 0x300-0x3FF | Status & Telemetry | tc/status/* | System status, diagnostics |
 | 0x400-0x4FF | User Interface | tc/ui/* | Buttons, displays, controls |
 | 0x500-0x5FF | Gateway/Bridge | tc/gateway/* | MQTT gateway messages |
@@ -38,17 +38,17 @@ Complete reference for CAN message formats, IDs, and protocols used in TrailCurr
 
 ## Module-Specific Messages
 
-### GPS Module (0x000-0x00F)
+### Bearing - GNSS Module (0x000-0x00F)
 
-**NEEDS TO BE COMPLETED** - Document GPS message formats, latitude/longitude encoding, precision, update rates
+**NEEDS TO BE COMPLETED** - Document GNSS message formats, latitude/longitude encoding, heading, altitude, precision, update rates
 
-### Temperature Sensor (0x100-0x10F)
+### Borealis - Environment Module (0x100-0x10F)
 
-**NEEDS TO BE COMPLETED** - Document temperature message formats, sensor types, precision, units
+**NEEDS TO BE COMPLETED** - Document temperature, humidity, CO2 message formats, sensor types, precision, units
 
-### Power Control Module (0x200-0x20F)
+### Torrent - Power Delivery Module (0x200-0x20F)
 
-**NEEDS TO BE COMPLETED** - Document power status, voltage, current, state messages
+**NEEDS TO BE COMPLETED** - Document power channel status, voltage, current, PWM state messages
 
 ### Status & Telemetry (0x300-0x30F)
 

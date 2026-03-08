@@ -106,7 +106,7 @@ Follow coding standards and best practices
 
 ### Building a Hardware Module
 ```bash
-cd /Product/TrailCurrentGpsModule
+cd /Product/TrailCurrentGnssModule  # Bearing (GNSS module) as example
 idf.py set-target esp32
 idf.py build
 idf.py flash
@@ -115,7 +115,7 @@ idf.py monitor
 
 ### Running Cloud Locally
 ```bash
-cd /Product/TrailCurrentCloud
+cd /Product/TrailCurrentFarwatch
 docker-compose -f docker-compose.dev.yml up
 # API: http://localhost:3000
 # Frontend: http://localhost:8080
@@ -129,7 +129,7 @@ cd /Product/TrailCurrentHeadwaters
 
 ### Building Android App
 ```bash
-cd /Product/TrailCurrentAndroidApp
+cd /Product/TrailCurrentOutbound
 ./gradlew assembleDebug
 # APK: app/build/outputs/apk/debug/
 ```
@@ -139,11 +139,14 @@ cd /Product/TrailCurrentAndroidApp
 ### Directory Structure
 ```
 /Product/
-├── Libraries/              # Shared libraries
-├── TrailCurrent*/          # Hardware modules
-├── TrailCurrentCloud/      # Cloud application
-├── TrailCurrentHeadwaters/            # Vehicle Pi
-├── TrailCurrentAndroidApp/ # Mobile app
+├── [LibraryName]/              # Shared libraries (standalone repos)
+├── TrailCurrent[Module]/       # Hardware modules (one repo each)
+├── TrailCurrentFarwatch/       # Cloud platform (Farwatch)
+├── TrailCurrentHeadwaters/     # Vehicle compute (Headwaters)
+├── TrailCurrentOutbound/       # Mobile app (Outbound)
+├── TrailCurrentSpotter/        # Trailer monitor display (Spotter)
+├── TrailCurrentPeregrine/      # Voice assistant (Peregrine)
+├── TrailCurrentKiCADLibraries/ # Hardware design libraries
 └── TrailCurrentDocumentation/  # This documentation
 ```
 

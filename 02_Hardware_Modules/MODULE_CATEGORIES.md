@@ -6,45 +6,45 @@ Organizational guide to TrailCurrent hardware modules by function and purpose.
 
 These modules collect data from the environment and vehicle systems.
 
-### GPS Module
-- **Purpose**: Vehicle location tracking
-- **Inputs**: GPS antenna, power
-- **Outputs**: CAN messages with latitude, longitude, altitude, satellites
+### TrailCurrent Bearing (GNSS Module)
+- **Purpose**: GPS location, heading, altitude, and precise timing
+- **Inputs**: GNSS antenna, power
+- **Outputs**: CAN messages with latitude, longitude, altitude, heading, satellites, timing
 - **CAN ID Range**: 0x100-0x10F
-- **Documentation**: [GPS_Module.md](GPS_Module.md)
-- **Source**: `/Product/TrailCurrentGpsModule/`
+- **Documentation**: [Bearing.md](Bearing.md)
+- **Source**: `/Product/TrailCurrentGnssModule/`
 
-### Temperature Sensor
-- **Purpose**: Environmental and system temperature monitoring
-- **Inputs**: One or more temperature sensors (DS18B20, DHT22, etc.)
-- **Outputs**: CAN messages with temperature data
-- **CAN ID Range**: 0x120-0x12F
-- **Documentation**: [Temperature_Sensor.md](Temperature_Sensor.md)
-- **Source**: `/Product/TrailCurrentTempSensor/`
-
-### Air Quality Module
-- **Purpose**: Monitor air quality, pollution, and particulates
-- **Inputs**: PM2.5/PM10 sensor, optional gas sensors
-- **Outputs**: CAN messages with AQI and particulate readings
+### TrailCurrent Borealis (Air Quality & Environment)
+- **Purpose**: Monitor temperature, humidity, CO2, and indoor air quality
+- **Inputs**: Integrated environmental sensors (temp, humidity, CO2)
+- **Outputs**: CAN messages with environmental readings
 - **CAN ID Range**: 0x130-0x13F
-- **Documentation**: [Air_Quality_Module.md](Air_Quality_Module.md)
-- **Source**: `/Product/TrailCurrentAirQualityModule/`
+- **Documentation**: [Borealis.md](Borealis.md)
+- **Source**: `/Product/TrailCurrentBorealis/`
 
-### Cabinet & Door Sensor
-- **Purpose**: Detect when cabinet doors or enclosures are opened
+### TrailCurrent Picket (Cabinet & Door Sensors)
+- **Purpose**: Monitor open/closed status of doors, windows, cabinets, and bays
 - **Inputs**: Magnetic switches or motion sensors
 - **Outputs**: CAN messages with door/cabinet state
 - **CAN ID Range**: 0x140-0x14F
-- **Documentation**: [Cabinet_Door_Sensor.md](Cabinet_Door_Sensor.md)
-- **Source**: `/Product/TrailCurrentCabinetAndDoorSensor/`
+- **Documentation**: [Picket.md](Picket.md)
+- **Source**: `/Product/TrailCurrentPicket/`
 
-### Shunt Gateway
-- **Purpose**: Monitor power consumption and battery voltage
-- **Inputs**: Current shunt for measuring current draw
-- **Outputs**: CAN messages with voltage, current, power
+### TrailCurrent Ampline (Shunt Interface)
+- **Purpose**: Track power consumption and state-of-charge via Victron Shunt
+- **Inputs**: Victron Shunt connection
+- **Outputs**: CAN messages with voltage, current, power, state-of-charge
 - **CAN ID Range**: 0x150-0x15F
-- **Documentation**: [Shunt_Gateway.md](Shunt_Gateway.md)
-- **Source**: `/Product/TrailCurrentShuntGateway/`
+- **Documentation**: [Ampline.md](Ampline.md)
+- **Source**: `/Product/TrailCurrentAmpline/`
+
+### TrailCurrent Plateau (Vehicle Level Sensor)
+- **Purpose**: Tilt/level measurement on both axes
+- **Inputs**: Integrated inclinometer/accelerometer
+- **Outputs**: CAN messages with level/tilt data
+- **CAN ID Range**: 0x220-0x22F (commands), 0x2A0-0x2AF (status)
+- **Documentation**: [Plateau.md](Plateau.md)
+- **Source**: `/Product/TrailCurrentPlateau/`
 
 ---
 
@@ -52,42 +52,33 @@ These modules collect data from the environment and vehicle systems.
 
 These modules execute commands and control physical systems.
 
-### Power Control Module (PCM)
-- **Purpose**: Main power distribution and management
+### TrailCurrent Torrent (Power Delivery Module)
+- **Purpose**: 8-channel smart power distribution with on/off switching and PWM dimming
 - **Inputs**: CAN commands from user interface or cloud
-- **Outputs**: Relay activations, status on CAN
+- **Outputs**: 8 switched/dimmed power channels, status on CAN
 - **Power**: Typically 12V or 24V vehicle power
 - **CAN ID Range**: 0x200-0x20F (commands), 0x280-0x28F (status)
-- **Documentation**: [Power_Control_Module.md](Power_Control_Module.md)
-- **Source**: `/Product/TrailCurrentPowerControlModule/`
+- **Documentation**: [Torrent.md](Torrent.md)
+- **Source**: `/Product/TrailCurrentTorrent/`
 - **Key Feature**: Central hub for power distribution to other devices
 
-### Electric Heater Control
-- **Purpose**: Control heating elements (e.g., water heater, space heater)
-- **Inputs**: CAN commands, temperature sensor feedback
-- **Outputs**: PWM output to heating element, status on CAN
+### TrailCurrent Therma (Climate Relay Controller)
+- **Purpose**: Dual-relay automatic heating/cooling to maintain set temperature
+- **Inputs**: CAN commands, Borealis temperature feedback
+- **Outputs**: Dual relay control for heating and cooling, status on CAN
 - **CAN ID Range**: 0x210-0x21F (commands), 0x290-0x29F (status)
-- **Documentation**: [Electric_Heater_Control.md](Electric_Heater_Control.md)
-- **Source**: `/Product/TrailCurrentElectricHeaterControl/`
-- **Key Feature**: Temperature control with safety limits
+- **Documentation**: [Therma.md](Therma.md)
+- **Source**: `/Product/TrailCurrentTherma/`
+- **Key Feature**: Automatic temperature control with safety limits
 
-### Vehicle Leveler
-- **Purpose**: Automatic leveling of vehicle (e.g., jacks)
-- **Inputs**: CAN commands, optional inclinometer feedback
-- **Outputs**: PWM output to leveling motors, status on CAN
-- **CAN ID Range**: 0x220-0x22F (commands), 0x2A0-0x2AF (status)
-- **Documentation**: [Vehicle_Leveler.md](Vehicle_Leveler.md)
-- **Source**: `/Product/TrailCurrentVehicleLeveler/`
-- **Key Feature**: Auto-leveling with mechanical fail-safes
-
-### MPPT CAN Gateway
-- **Purpose**: Interface with MPPT solar charge controller
-- **Inputs**: CAN bus communication with MPPT device
-- **Outputs**: Solar charging data, control commands to MPPT
+### TrailCurrent Solstice (MPPT Solar Controller Interface)
+- **Purpose**: Connect Victron MPPT solar charge controller and stream solar harvest data
+- **Inputs**: Victron MPPT connection
+- **Outputs**: Solar charging data on CAN
 - **CAN ID Range**: 0x230-0x23F
-- **Documentation**: [MPPT_CAN_Gateway.md](MPPT_CAN_Gateway.md)
-- **Source**: `/Product/TrailCurrentMpptCanGateway/`
-- **Key Feature**: Bridges MPPT controller to TrailCurrent system
+- **Documentation**: [Solstice.md](Solstice.md)
+- **Source**: `/Product/TrailCurrentSolstice/`
+- **Key Feature**: Bridges Victron MPPT controller to TrailCurrent system
 
 ---
 
@@ -95,32 +86,23 @@ These modules execute commands and control physical systems.
 
 These modules provide connectivity and bridge external devices.
 
-### BT Gateway
-- **Purpose**: Enable Bluetooth communication with mobile devices
-- **Inputs**: Wireless Bluetooth signal
-- **Outputs**: CAN bus messages, status/telemetry
-- **CAN ID Range**: 0x500-0x50F
-- **Documentation**: [BT_Gateway.md](BT_Gateway.md)
-- **Source**: `/Product/TrailCurrentBtGateway/`
-- **Key Feature**: Direct mobile app communication without internet
-
-### CAN/EspNow Gateway
-- **Purpose**: Extend CAN bus range and provide redundant communication
-- **Inputs**: CAN bus, WiFi/EspNow signals
-- **Outputs**: Relayed CAN messages, status on CAN
-- **CAN ID Range**: 0x510-0x51F
-- **Documentation**: [CAN_EspNow_Gateway.md](CAN_EspNow_Gateway.md)
-- **Source**: `/Product/TrailCurrentCanEspNowGateway/`
-- **Key Feature**: Mesh networking with ESP-NOW protocol
-
-### External Systems Monitor (7-pin Connector Module)
-- **Purpose**: Monitor external systems via standard connectors (7-pin and others)
-- **Inputs**: 7-pin connector, CAN bus
-- **Outputs**: External system status on CAN (lights, brakes, backup systems, etc.)
+### TrailCurrent Aftline (Trailer Wiring Harness Monitor)
+- **Purpose**: Monitor all 7 pins of trailer wiring (signals, lights, connection status)
+- **Inputs**: 7-pin trailer connector, CAN bus
+- **Outputs**: Trailer wiring status on CAN (lights, brakes, signals, connection)
 - **CAN ID Range**: 0x520-0x52F
-- **Documentation**: [Trailer_Monitoring.md](Trailer_Monitoring.md)
-- **Source**: `/Product/TrailCurrentSevenPinTrailerMonitor/`
-- **Key Feature**: Standard connector integration for external subsystems
+- **Documentation**: [Aftline.md](Aftline.md)
+- **Source**: `/Product/TrailCurrentAftline/`
+- **Key Feature**: Complete trailer wiring harness monitoring
+
+### RV-C Gateway *(Coming Soon)*
+- **Purpose**: RV-C protocol gateway for industry-standard RV device integration
+- **Inputs**: RV-C bus, CAN bus
+- **Outputs**: Bridged RV-C data on TrailCurrent CAN
+- **CAN ID Range**: TBD
+- **Documentation**: TBD
+- **Source**: TBD
+- **Key Feature**: Industry-standard RV device interoperability
 
 ---
 
@@ -128,53 +110,56 @@ These modules provide connectivity and bridge external devices.
 
 These modules allow users to view status and issue commands.
 
-### Eight Button Panel
-- **Purpose**: Physical button interface for basic control
+### TrailCurrent Tapper (8-Button Panel)
+- **Purpose**: Physical button interface for Torrent commands
 - **Inputs**: 8 physical buttons
 - **Outputs**: CAN commands based on button presses
 - **CAN ID Range**: 0x400-0x40F
-- **Documentation**: [Eight_Button_Panel.md](Eight_Button_Panel.md)
-- **Source**: `/Product/TrailCurrentEightButtonPanel/`
+- **Documentation**: [Tapper.md](Tapper.md)
+- **Source**: `/Product/TrailCurrentTapper/`
 - **Key Feature**: Simple, reliable physical control
 
-### Wall-Mounted Display (Standard)
-- **Purpose**: Display vehicle status and provide control interface
-- **Inputs**: CAN bus for status data
-- **Outputs**: CAN commands from user touch/buttons
-- **Display**: LCD or LED screen with buttons
+### TrailCurrent Fireside (Wireless Touchscreen Display)
+- **Purpose**: Wireless battery-powered touchscreen display with wall cradle
+- **Inputs**: CAN bus for status data, WiFi
+- **Outputs**: CAN commands from touchscreen
+- **Display**: Touchscreen with wall cradle for charging
 - **CAN ID Range**: 0x410-0x41F
-- **Documentation**: [Wall_Mounted_Display.md](Wall_Mounted_Display.md)
-- **Source**: `/Product/TrailCurrentWallMountedDisplay/`
-- **Key Feature**: Compact dashboard for basic control
+- **Documentation**: [Fireside.md](Fireside.md)
+- **Source**: `/Product/TrailCurrentFireside/`
+- **Key Feature**: Portable wireless display that doubles as a remote
 
-### Wall-Mounted Display (7" Sunton)
-- **Purpose**: High-resolution touchscreen display
-- **Inputs**: CAN bus, WiFi (optional)
+### TrailCurrent Milepost (Hardwired CAN Bus Touchscreen)
+- **Purpose**: Always-on hardwired touchscreen display, mountable in multiple locations
+- **Inputs**: CAN bus, hardwired power
 - **Outputs**: CAN commands from touchscreen
 - **Display**: 7" high-resolution touchscreen
 - **CAN ID Range**: 0x420-0x42F
-- **Documentation**: [Wall_Mounted_Display_Sunton.md](Wall_Mounted_Display_Sunton.md)
-- **Source**: `/Product/TrailCurrentWallMountedDisplaySunton7Inch/`
-- **Key Feature**: Full web-based dashboard interface
+- **Documentation**: [Milepost.md](Milepost.md)
+- **Source**: `/Product/TrailCurrentMilepost/`
+- **Key Feature**: Full web-based dashboard interface, always powered
 
-### EspNow Remote Control
-- **Purpose**: Wireless remote control using ESP-NOW protocol
-- **Inputs**: Physical buttons
-- **Outputs**: EspNow commands, relayed to CAN via gateway
-- **Range**: 100+ meters (line of sight)
-- **CAN ID Range**: 0x430-0x43F
-- **Documentation**: [EspNow_Remote_Control.md](EspNow_Remote_Control.md)
-- **Source**: `/Product/TrailCurrentEspNowRemoteControl/`
-- **Key Feature**: Mesh-capable wireless remote
-
-### Waveshare ESP32S3 Remote
-- **Purpose**: Feature-rich wireless remote with specific hardware
-- **Inputs**: Buttons, optional display
-- **Outputs**: Wireless commands, status feedback
+### TrailCurrent Spotter (In-Vehicle Trailer Monitor)
+- **Purpose**: In-vehicle ESP32S3 display that monitors trailer status while towing
+- **Inputs**: CAN bus, wireless connection to trailer modules
+- **Outputs**: Real-time trailer status alerts
 - **CAN ID Range**: 0x440-0x44F
-- **Documentation**: [Waveshare_ESP32S3_Remote.md](Waveshare_ESP32S3_Remote.md)
-- **Source**: `/Product/TrailCurrentWaveshareEsp32s3Remote/`
-- **Key Feature**: Advanced hardware platform for custom remotes
+- **Documentation**: [Spotter.md](Spotter.md)
+- **Source**: `/Product/TrailCurrentSpotter/`
+- **Key Feature**: Compact dash-mounted display for real-time trailer alerts
+
+---
+
+## Voice & AI Modules
+
+### TrailCurrent Peregrine (AI Voice Assistant)
+- **Purpose**: AI voice companion with system access and hands-free control
+- **Inputs**: Microphone, system data via CAN/MQTT
+- **Outputs**: Voice responses, system commands
+- **Wake Word**: "Hey Peregrine"
+- **Documentation**: [Peregrine.md](Peregrine.md)
+- **Source**: `/Product/TrailCurrentPeregrine/`
+- **Key Feature**: Hands-free intelligent control of entire TrailCurrent system
 
 ---
 
@@ -182,28 +167,29 @@ These modules allow users to view status and issue commands.
 
 ### Basic Vehicle Monitoring
 Minimum modules needed:
-- Power Control Module (PCM)
-- GPS Module
-- Temperature Sensor
-- 8-Button Panel or wall display
+- Torrent (power delivery)
+- Bearing (GNSS)
+- Borealis (environment)
+- Tapper or Fireside (user interface)
 
 ### Full Environmental Control
 Add to above:
-- Electric Heater Control
-- Shunt Gateway
-- Air Quality Module
-- 7" Wall Display
+- Therma (climate control)
+- Ampline (power monitoring)
+- Milepost (always-on display)
 
-### Remote-Capable System
+### Towing Setup
 Add to above:
-- CAN/EspNow Gateway
-- BT Gateway
-- Wireless remote
+- Aftline (trailer wiring monitor)
+- Spotter (in-vehicle trailer status display)
 
-### External Systems Integration
-Add support for external systems/subsystems:
-- 7-Pin Connector Monitor
-- External systems monitoring dashboard
+### Complete System
+Add to above:
+- Solstice (solar monitoring)
+- Picket (cabinet & door sensors)
+- Plateau (vehicle leveling)
+- Peregrine (voice assistant)
+- Fireside (portable wireless display)
 
 ---
 
@@ -211,36 +197,38 @@ Add support for external systems/subsystems:
 
 ```
 ┌─────────────────────────────────────────┐
-│  Power Control Module (PCM)             │
-│  Central Hub                            │
+│  Torrent (Power Delivery Module)        │
+│  Central Hub - 8 switched channels      │
 └────────────┬────────────────────────────┘
              │
      ┌───────┼──────────┐
      │       │          │
      ▼       ▼          ▼
-┌────────┐ ┌───────┐ ┌──────────────┐
-│Heater  │ │Leveler│ │External      │
-│Control │ │Control│ │Systems       │
-└────────┘ └───────┘ └──────────────┘
+┌────────┐ ┌────────┐ ┌──────────────┐
+│Therma  │ │Solstice│ │Aftline       │
+│Climate │ │Solar   │ │Trailer       │
+└────────┘ └────────┘ └──────────────┘
      ▲       ▲          ▲
      │       │          │
      └───────┼──────────┘
              │
      Feedback Sensors:
-     ├─ Temperature
-     ├─ Shunt (Power)
-     ├─ GPS
-     ├─ Air Quality
-     └─ Door/Cabinet
+     ├─ Borealis (environment)
+     ├─ Ampline (power/SoC)
+     ├─ Bearing (GNSS)
+     ├─ Plateau (level)
+     └─ Picket (doors/cabinets)
 
 User Interfaces:
-├─ 8-Button Panel
-├─ Wall Display
-├─ 7" Touch Display
-├─ EspNow Remote
-└─ Waveshare Remote
+├─ Tapper (8-button panel)
+├─ Fireside (wireless touchscreen)
+├─ Milepost (hardwired touchscreen)
+└─ Spotter (trailer monitor display)
      │
-     └─ All can control via PCM
+     └─ All can control via Torrent
+
+Voice & AI:
+└─ Peregrine (voice assistant)
 ```
 
 ---

@@ -1,6 +1,6 @@
-# TrailCurrent Android Application
+# TrailCurrent Outbound (Mobile App)
 
-Documentation for the TrailCurrent Android mobile application.
+Documentation for TrailCurrent Outbound, the native Android mobile application.
 
 ## Overview
 
@@ -92,7 +92,7 @@ The TrailCurrent Android app provides mobile access to the vehicle monitoring an
 
 ### Development Setup
 
-1. Clone the repository from `/Product/TrailCurrentAndroidApp/`
+1. Clone the repository from `/Product/TrailCurrentOutbound/`
 2. Open in Android Studio
 3. Configure API endpoints in config files
 4. Build and run on emulator or device
@@ -115,7 +115,7 @@ See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed instructions.
 ## Project Structure
 
 ```
-TrailCurrentAndroidApp/
+TrailCurrentOutbound/
 ├── app/
 │   ├── src/
 │   │   ├── main/
@@ -363,7 +363,7 @@ Common issues:
 
 ## Source Code
 
-Android application source: `/Product/TrailCurrentAndroidApp/`
+Android application source: `/Product/TrailCurrentOutbound/`
 
 ---
 

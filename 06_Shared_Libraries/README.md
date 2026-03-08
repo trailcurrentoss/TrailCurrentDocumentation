@@ -18,12 +18,12 @@ Shared libraries provide common functionality to multiple hardware modules, redu
 - Timestamped output
 - Circular buffer for recent logs
 
-**Source**: `/Product/Libraries/DebugLibrary/`
+**Source**: `/Product/ESP32ArduinoDebugLibrary/`
 
 **Used By**: All modules
 
-### OTA Library (Standard)
-**Purpose**: Over-the-air firmware updates for WROOM32 modules
+### OTA Library (ESP32-C6)
+**Purpose**: Over-the-air firmware updates for ESP32-C6 modules
 
 **Features**:
 - Firmware binary reception via CAN bus
@@ -32,9 +32,9 @@ Shared libraries provide common functionality to multiple hardware modules, redu
 - Update progress tracking
 - Automatic reboot after update
 
-**Source**: `/Product/Libraries/OtaLibrary/`
+**Source**: `/Product/Esp32C6OtaUpdateLibrary/`
 
-**Used By**: Most modules with standard ESP32
+**Used By**: ESP32-C6-based modules
 
 ### OTA Library (WROOM32)
 **Purpose**: OTA updates specifically for WROOM32 variants
@@ -45,12 +45,12 @@ Shared libraries provide common functionality to multiple hardware modules, redu
 - Enhanced stability
 - Factory reset capability
 
-**Source**: `/Product/Libraries/OtaUpdateLibraryWROOM32/`
+**Source**: `/Product/OtaUpdateLibraryWROOM32/`
 
 **Used By**: WROOM32-based modules
 
 ### RGB LED Library
-**Purpose**: Unified RGB LED status indication
+**Purpose**: Unified RGB LED status indication for ESP32-C6 Super Mini
 
 **Features**:
 - Color definitions
@@ -59,12 +59,12 @@ Shared libraries provide common functionality to multiple hardware modules, redu
 - Status indication modes
 - Low-level GPIO control
 
-**Source**: `/Product/Libraries/RgbLedLibrary/`
+**Source**: `/Product/C6SuperMiniRgbLedLibrary/`
 
 **Used By**: Modules with status LEDs
 
-### TWAI CAN Library (Standard)
-**Purpose**: CAN communication using ESP32 TWAI peripheral
+### TWAI CAN Library (ESP32-C6)
+**Purpose**: CAN communication using ESP32-C6 TWAI peripheral
 
 **Features**:
 - Hardware CAN interface
@@ -73,9 +73,9 @@ Shared libraries provide common functionality to multiple hardware modules, redu
 - Interrupt-driven reception
 - Error handling and diagnostics
 
-**Source**: `/Product/Libraries/TwaiTaskBased/`
+**Source**: `/Product/Esp32C6TwaiTaskBasedLibrary/`
 
-**Used By**: Modules without external CAN transceiver
+**Used By**: ESP32-C6-based modules
 
 ### TWAI CAN Library (WROOM32)
 **Purpose**: TWAI CAN for WROOM32-specific implementations
@@ -86,7 +86,7 @@ Shared libraries provide common functionality to multiple hardware modules, redu
 - Enhanced throughput
 - Memory-efficient buffering
 
-**Source**: `/Product/Libraries/TwaiTaskBasedLibraryWROOM32/`
+**Source**: `/Product/TwaiTaskBasedLibraryWROOM32/`
 
 **Used By**: WROOM32 modules using built-in CAN
 
@@ -204,7 +204,7 @@ Libraries are compiled into the application binary.
 
 ### Testing Library Changes
 
-1. Modify library source in `/Product/Libraries/`
+1. Modify library source in its repo under `/Product/`
 2. Test in one module first
 3. Validate with multiple modules
 4. Update documentation
@@ -212,7 +212,7 @@ Libraries are compiled into the application binary.
 
 ### Adding New Library
 
-1. Create directory in `/Product/Libraries/NewLibrary/`
+1. Create a new repo under `/Product/NewLibrary/`
 2. Create CMakeLists.txt
 3. Add include/ and src/ directories
 4. Create README.md
@@ -244,7 +244,7 @@ Each library has:
 
 ## Source Code
 
-Shared libraries location: `/Product/Libraries/`
+Shared libraries are standalone repos under `/Product/`, each hosted at `github.com/trailcurrentoss/`.
 
 ---
 

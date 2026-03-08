@@ -14,8 +14,7 @@ Guide to available deployment automation scripts.
 ## Script Locations
 
 **NEEDS TO BE COMPLETED** - Document:
-- /Product/TrailCurrentDeployment/ - Main deployment scripts
-- /Product/TrailCurrentCloud/ - Cloud deployment
+- /Product/TrailCurrentFarwatch/ - Cloud platform deployment
 - /Product/TrailCurrentHeadwaters/ - Pi deployment
 - /Product/[Modules]/ - Module-specific scripts
 

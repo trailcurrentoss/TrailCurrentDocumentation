@@ -146,13 +146,13 @@ docker-compose up -d
 
 ### Development Deployment
 ```bash
-cd /Product/TrailCurrentCloud
+cd /Product/TrailCurrentFarwatch
 docker-compose -f docker-compose.dev.yml up
 ```
 
 ### Production Deployment
 ```bash
-cd /Product/TrailCurrentCloud
+cd /Product/TrailCurrentFarwatch
 docker-compose up -d
 docker-compose logs -f
 ```
@@ -182,7 +182,7 @@ psql [database] < rollback.sql
 
 ### Static Files
 ```bash
-cd /Product/TrailCurrentCloud/frontend
+cd /Product/TrailCurrentFarwatch/frontend
 npm run build
 # Output: dist/
 
@@ -338,10 +338,10 @@ Automate testing and deployment:
 - Manual production approval
 
 ### Deployment Scripts
-Custom scripts in `/Product/TrailCurrentDeployment/`:
-- `deploy.sh` - Deploy to Pi
-- `create-deployment-package.sh` - Package firmware
-- `build-and-save-images.sh` - Build Docker images
+Deployment scripts are located within individual product repos:
+- `TrailCurrentHeadwaters/` - Vehicle compute deployment
+- `TrailCurrentFarwatch/` - Cloud platform deployment
+- Individual module repos - Firmware build and OTA scripts
 
 ## Next Steps
 

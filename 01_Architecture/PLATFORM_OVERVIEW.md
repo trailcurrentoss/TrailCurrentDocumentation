@@ -50,10 +50,11 @@ The TrailCurrent platform is organized into three layers, where the **Device and
 **Role**: Sensing, control, and communication
 
 **Components**:
-- **Sensor Modules**: GPS, Temperature, Air Quality
-- **Control Modules**: Power Control, Heater, Vehicle Leveler
-- **Gateway Modules**: CAN/EspNow Gateway, BT Gateway, Shunt Gateway
-- **Interface Modules**: Wall displays, remote controls, button panels
+- **Sensor Modules**: Bearing (GNSS), Borealis (environment), Picket (doors), Ampline (power), Plateau (level)
+- **Control Modules**: Torrent (power delivery), Therma (climate), Solstice (solar)
+- **Gateway Modules**: Aftline (trailer monitor), RV-C Gateway (coming soon)
+- **Interface Modules**: Tapper (buttons), Fireside (wireless display), Milepost (hardwired display), Spotter (trailer monitor display)
+- **Voice & AI**: Peregrine (voice assistant)
 
 **Communication**: CAN bus (primary), EspNow (secondary), Bluetooth
 
@@ -122,28 +123,29 @@ Hardware Modules
 ## Hardware Module Categories
 
 ### Sensors
-- GPS Module - Vehicle location tracking
-- Temperature Sensor - Environmental monitoring
-- Air Quality Module - Pollution/particulate tracking
-- Cabinet & Door Sensor - Intrusion detection
-- Shunt Gateway - Power monitoring
+- Bearing - GNSS location, heading, altitude, and precise timing
+- Borealis - Temperature, humidity, CO2, indoor air quality
+- Picket - Cabinet and door open/closed status monitoring
+- Ampline - Power consumption and state-of-charge via Victron Shunt
+- Plateau - Tilt/level measurement on both axes
 
 ### Control Systems
-- Power Control Module (PCM) - Main power distribution
-- Electric Heater Control - Heater management
-- Vehicle Leveler - Auto-leveling control
-- MPPT CAN Gateway - Solar charge controller
+- Torrent - 8-channel smart power delivery with switching and PWM dimming
+- Therma - Dual-relay automatic heating/cooling
+- Solstice - Victron MPPT solar charge controller interface
 
 ### Communication & External Systems
-- BT Gateway - Bluetooth connectivity
-- CAN/EspNow Gateway - Multi-protocol gateway
-- External Systems Monitor - Interface with external subsystems via standard connectors
+- Aftline - Trailer wiring harness monitor (all 7 pins)
+- RV-C Gateway *(Coming Soon)* - RV-C protocol gateway
 
 ### User Interfaces
-- 8-Button Panel - Physical control
-- Wall-Mounted Displays - Status display (7", standard)
-- EspNow Remote Control - Wireless remote
-- Waveshare Remote - Specific remote model
+- Tapper - Physical 8-button interface for Torrent commands
+- Fireside - Wireless battery-powered touchscreen display with wall cradle
+- Milepost - Hardwired CAN bus touchscreen (always-on)
+- Spotter - In-vehicle display for monitoring trailer while towing
+
+### Voice & AI
+- Peregrine - AI voice assistant with hands-free system control
 
 ## Data Flow
 
