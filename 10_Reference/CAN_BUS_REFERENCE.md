@@ -64,20 +64,20 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x32 (decimal 0-50
 
 ### Bus Nodes
 
-| Module Name | DBC Node Name | Platform | Description |
-|-------------|--------------|----------|-------------|
-| Bearing | GpsModule | ESP32 | GPS receiver. Broadcasts GNSS position, altitude, speed, course, and date/time |
-| Torrent | PowerControlModule | ESP32 | 8-channel PWM power distribution module (PDM) |
-| Tapper | EightButtonPanel | ESP32 | Physical 8-button control panel |
-| Ampline | ShuntGateway | ESP32 | Battery shunt monitor. Reads Victron BMV via VE.Direct serial (19200 baud) |
-| Solstice | MpptCanGateway | ESP32 | Solar charge controller gateway. Reads Victron MPPT via VE.Direct serial (19200 baud) |
-| Borealis | Borealis | ESP32-S3-Zero | Environment/air quality sensor. DHT22 + SGP30 |
-| Picket | Picket | ESP32-C6 | Cabinet/door sensor. Up to 10 reed switch inputs, DIP-addressable (8 modules max) |
-| Switchback | Switchback | ESP32-S3 | 6-channel relay module (Waveshare S3-Relay-6CH). Up to 3 on same bus |
-| Plateau | VehicleLeveler | ESP32-S3-Zero | Vehicle leveling with Adafruit BNO055 IMU |
-| Aftline | SevenPinTrailerMonitor | ESP32-C6 | Trailer connector monitor. Under active development |
-| Therma | ElectricHeaterControl | ESP32-C6 | Electric heater control. Under active development |
-| Headwaters | PiCanToMqtt | Raspberry Pi | CAN-to-MQTT bridge. Python script bridging CAN and MQTT (with TLS) |
+| Node | Platform | Description |
+|------|----------|-------------|
+| Bearing | ESP32 | GPS receiver. Broadcasts GNSS position, altitude, speed, course, and date/time |
+| Torrent | ESP32 | 8-channel PWM power distribution module |
+| Tapper | ESP32 | Physical 8-button control panel |
+| Ampline | ESP32 | Battery shunt monitor. Reads Victron BMV via VE.Direct serial (19200 baud) |
+| Solstice | ESP32 | Solar charge controller gateway. Reads Victron MPPT via VE.Direct serial (19200 baud) |
+| Borealis | ESP32-S3-Zero | Environment/air quality sensor. DHT22 + SGP30 |
+| Picket | ESP32-C6 | Cabinet/door sensor. Up to 10 reed switch inputs, DIP-addressable (8 modules max) |
+| Switchback | ESP32-S3 | 6-channel relay module (Waveshare S3-Relay-6CH). Up to 3 on same bus |
+| Plateau | ESP32-S3-Zero | Vehicle leveling with Adafruit BNO055 IMU |
+| Aftline | ESP32-C6 | Trailer connector monitor. Under active development |
+| Therma | ESP32-C6 | Heater control. Under active development |
+| Headwaters | Raspberry Pi | CAN-to-MQTT bridge. Python script bridging CAN and MQTT (with TLS) |
 
 ---
 

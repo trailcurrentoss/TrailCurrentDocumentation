@@ -26,187 +26,184 @@ NS_ :
 
 BS_: 500000
 
-BU_: GpsModule PowerControlModule EightButtonPanel BtGateway ShuntGateway MpptCanGateway TempSensor Borealis CanEspNowGateway PiCanToMqtt SevenPinTrailerMonitor ElectricHeaterControl VehicleLeveler Picket Switchback
+BU_: Bearing Torrent Tapper Ampline Solstice Borealis Headwaters Aftline Therma Plateau Picket Switchback
 
-BO_ 0 OtaUpdateNotification: 3 PiCanToMqtt
- SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" Borealis,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,Picket,Switchback
- SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,Picket,Switchback
- SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,ElectricHeaterControl,VehicleLeveler,SevenPinTrailerMonitor,Picket,Switchback
+BO_ 0 OtaUpdateNotification: 3 Headwaters
+ SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback
+ SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback
+ SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback
 
-BO_ 6 GpsDateTime: 7 GpsModule
- SG_ Year : 7|16@0+ (1,0) [2000|2099] "year" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ Month : 23|8@0+ (1,0) [1|12] "month" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ Day : 31|8@0+ (1,0) [1|31] "day" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ Hour : 39|8@0+ (1,0) [0|23] "hour" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ Minute : 47|8@0+ (1,0) [0|59] "min" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ Second : 55|8@0+ (1,0) [0|59] "sec" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 6 GpsDateTime: 7 Bearing
+ SG_ Year : 7|16@0+ (1,0) [2000|2099] "year" Headwaters
+ SG_ Month : 23|8@0+ (1,0) [1|12] "month" Headwaters
+ SG_ Day : 31|8@0+ (1,0) [1|31] "day" Headwaters
+ SG_ Hour : 39|8@0+ (1,0) [0|23] "hour" Headwaters
+ SG_ Minute : 47|8@0+ (1,0) [0|59] "min" Headwaters
+ SG_ Second : 55|8@0+ (1,0) [0|59] "sec" Headwaters
 
-BO_ 7 GpsSatSpeedCourseMode: 6 GpsModule
- SG_ NumSatellitesUsed : 7|8@0+ (1,0) [0|255] "satellites" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ SpeedOverGround : 15|16@0+ (0.01,0) [0|655.35] "knots" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ CourseOverGround : 31|16@0+ (0.1,0) [0|6553.5] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ GnssMode : 47|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 7 GpsSatSpeedCourseMode: 6 Bearing
+ SG_ NumSatellitesUsed : 7|8@0+ (1,0) [0|255] "satellites" Headwaters
+ SG_ SpeedOverGround : 15|16@0+ (0.01,0) [0|655.35] "knots" Headwaters
+ SG_ CourseOverGround : 31|16@0+ (0.1,0) [0|6553.5] "deg" Headwaters
+ SG_ GnssMode : 47|8@0+ (1,0) [0|255] "" Headwaters
 
-BO_ 8 GpsAltitude: 4 GpsModule
- SG_ Altitude : 7|32@0+ (0.01,0) [0|42949672.95] "m" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 8 GpsAltitude: 4 Bearing
+ SG_ Altitude : 7|32@0+ (0.01,0) [0|42949672.95] "m" Headwaters
 
-BO_ 9 GpsLatitudeLongitude: 8 GpsModule
- SG_ LatitudeSign : 7|8@0+ (1,0) [0|1] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ LatitudeRaw : 15|24@0+ (0.0001,0) [0|1677.7215] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ LongitudeSign : 39|8@0+ (1,0) [0|1] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ LongitudeRaw : 47|24@0+ (0.0001,0) [0|1677.7215] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 9 GpsLatitudeLongitude: 8 Bearing
+ SG_ LatitudeSign : 7|8@0+ (1,0) [0|1] "" Headwaters
+ SG_ LatitudeRaw : 15|24@0+ (0.0001,0) [0|1677.7215] "deg" Headwaters
+ SG_ LongitudeSign : 39|8@0+ (1,0) [0|1] "" Headwaters
+ SG_ LongitudeRaw : 47|24@0+ (0.0001,0) [0|1677.7215] "deg" Headwaters
 
 BO_ 10 PicketStatus0: 2 Picket
- SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
 
 BO_ 11 PicketStatus1: 2 Picket
- SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
 
 BO_ 12 PicketStatus2: 2 Picket
- SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
 
 BO_ 13 PicketStatus3: 2 Picket
- SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
 
 BO_ 14 PicketStatus4: 2 Picket
- SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
 
 BO_ 15 PicketStatus5: 2 Picket
- SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
 
 BO_ 16 PicketStatus6: 2 Picket
- SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
 
 BO_ 17 PicketStatus7: 2 Picket
- SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
 
-BO_ 21 BrightnessControl: 2 BtGateway
- SG_ ChannelIndex : 7|8@0+ (1,0) [0|7] "" PowerControlModule
- SG_ BrightnessLevel : 15|8@0+ (1,0) [0|255] "" PowerControlModule
+BO_ 21 BrightnessControl: 2 Vector__XXX
+ SG_ ChannelIndex : 7|8@0+ (1,0) [0|7] "" Torrent
+ SG_ BrightnessLevel : 15|8@0+ (1,0) [0|255] "" Torrent
 
-BO_ 24 ToggleOnOffCommand: 2 EightButtonPanel
- SG_ ButtonOrCommand : 7|8@0+ (1,0) [0|9] "" PowerControlModule
- SG_ CommandValue : 15|8@0+ (1,0) [0|255] "" PowerControlModule
+BO_ 24 ToggleOnOffCommand: 2 Vector__XXX
+ SG_ ButtonOrCommand : 7|8@0+ (1,0) [0|9] "" Torrent
+ SG_ CommandValue : 15|8@0+ (1,0) [0|255] "" Torrent
 
-BO_ 27 DeviceStatusReport: 8 PowerControlModule
- SG_ Output1Value : 7|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
- SG_ Output2Value : 15|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
- SG_ Output3Value : 23|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
- SG_ Output4Value : 31|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
- SG_ Output5Value : 39|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
- SG_ Output6Value : 47|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
- SG_ Output7Value : 55|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
- SG_ Output8Value : 63|8@0+ (1,0) [0|255] "" BtGateway,EightButtonPanel,CanEspNowGateway,PiCanToMqtt
+BO_ 27 DeviceStatusReport: 8 Torrent
+ SG_ Output1Value : 7|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output2Value : 15|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output3Value : 23|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output4Value : 31|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output5Value : 39|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output6Value : 47|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output7Value : 55|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output8Value : 63|8@0+ (1,0) [0|255] "" Tapper,Headwaters
 
-BO_ 30 LightSequenceCommand: 1 BtGateway
- SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" PowerControlModule
+BO_ 30 LightSequenceCommand: 1 Vector__XXX
+ SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" Torrent
 
-BO_ 32 LevelingConfig: 7 PiCanToMqtt
- SG_ ConfigCommand : 7|8@0+ (1,0) [0|3] "" VehicleLeveler
- SG_ MountingSurface : 15|8@0+ (1,0) [0|2] "" VehicleLeveler
- SG_ VehicleLengthCm : 23|16@0+ (1,0) [0|65535] "cm" VehicleLeveler
- SG_ VehicleWidthCm : 39|16@0+ (1,0) [0|65535] "cm" VehicleLeveler
- SG_ SaveToNvs : 55|8@0+ (1,0) [0|1] "" VehicleLeveler
+BO_ 32 LevelingConfig: 7 Headwaters
+ SG_ ConfigCommand : 7|8@0+ (1,0) [0|3] "" Plateau
+ SG_ MountingSurface : 15|8@0+ (1,0) [0|2] "" Plateau
+ SG_ VehicleLengthCm : 23|16@0+ (1,0) [0|65535] "cm" Plateau
+ SG_ VehicleWidthCm : 39|16@0+ (1,0) [0|65535] "cm" Plateau
+ SG_ SaveToNvs : 55|8@0+ (1,0) [0|1] "" Plateau
 
 BO_ 31 EnvironmentSensorData: 8 Borealis
- SG_ TemperatureCelsius : 7|8@0+ (1,0) [-40|125] "degC" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ TemperatureFahrenheit : 15|8@0+ (1,0) [-40|257] "degF" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ HumidityScaled : 23|16@0+ (0.01,0) [0|100] "%" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ TVOC : 39|16@0+ (1,0) [0|60000] "ppb" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ eCO2 : 55|16@0+ (1,0) [400|60000] "ppm" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ TemperatureCelsius : 7|8@0+ (1,0) [-40|125] "degC" Headwaters
+ SG_ TemperatureFahrenheit : 15|8@0+ (1,0) [-40|257] "degF" Headwaters
+ SG_ HumidityScaled : 23|16@0+ (0.01,0) [0|100] "%" Headwaters
+ SG_ TVOC : 39|16@0+ (1,0) [0|60000] "ppb" Headwaters
+ SG_ eCO2 : 55|16@0+ (1,0) [400|60000] "ppm" Headwaters
 
-BO_ 35 BatteryShuntData1: 7 ShuntGateway
- SG_ BattVoltageWhole : 7|8@0+ (1,0) [0|255] "V" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ BattVoltageDecimal : 15|8@0+ (1,0) [0|99] "0.01V" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ IsCurrentNegative : 23|8@0+ (1,0) [0|1] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ ShuntCurrentWhole : 31|8@0+ (1,0) [0|255] "A" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ ShuntCurrentDecimal : 39|8@0+ (1,0) [0|99] "0.01A" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ BattSocWhole : 47|8@0+ (1,0) [0|100] "%" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ BattSocDecimal : 55|8@0+ (1,0) [0|99] "0.01%" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 35 BatteryShuntData1: 7 Ampline
+ SG_ BattVoltageWhole : 7|8@0+ (1,0) [0|255] "V" Headwaters
+ SG_ BattVoltageDecimal : 15|8@0+ (1,0) [0|99] "0.01V" Headwaters
+ SG_ IsCurrentNegative : 23|8@0+ (1,0) [0|1] "" Headwaters
+ SG_ ShuntCurrentWhole : 31|8@0+ (1,0) [0|255] "A" Headwaters
+ SG_ ShuntCurrentDecimal : 39|8@0+ (1,0) [0|99] "0.01A" Headwaters
+ SG_ BattSocWhole : 47|8@0+ (1,0) [0|100] "%" Headwaters
+ SG_ BattSocDecimal : 55|8@0+ (1,0) [0|99] "0.01%" Headwaters
 
-BO_ 36 BatteryShuntData2: 5 ShuntGateway
- SG_ IsWattageNegative : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ Wattage : 15|16@0+ (1,0) [0|65535] "W" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ TimeToGo : 31|16@0+ (1,0) [0|65535] "min" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 36 BatteryShuntData2: 5 Ampline
+ SG_ IsWattageNegative : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ Wattage : 15|16@0+ (1,0) [0|65535] "W" Headwaters
+ SG_ TimeToGo : 31|16@0+ (1,0) [0|65535] "min" Headwaters
 
-BO_ 48 TiltData: 8 VehicleLeveler
- SG_ PitchScaled : 7|16@0- (0.01,0) [-327.68|327.67] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ RollScaled : 23|16@0- (0.01,0) [-327.68|327.67] "deg" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ FrontBackDiffMm : 39|16@0- (1,0) [-32768|32767] "mm" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ LeftRightDiffMm : 55|16@0- (1,0) [-32768|32767] "mm" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 48 TiltData: 8 Plateau
+ SG_ PitchScaled : 7|16@0- (0.01,0) [-327.68|327.67] "deg" Headwaters
+ SG_ RollScaled : 23|16@0- (0.01,0) [-327.68|327.67] "deg" Headwaters
+ SG_ FrontBackDiffMm : 39|16@0- (1,0) [-32768|32767] "mm" Headwaters
+ SG_ LeftRightDiffMm : 55|16@0- (1,0) [-32768|32767] "mm" Headwaters
 
-BO_ 49 CornerData: 8 VehicleLeveler
- SG_ FrontLeftMm : 7|16@0+ (1,0) [0|65535] "mm" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ FrontRightMm : 23|16@0+ (1,0) [0|65535] "mm" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ RearLeftMm : 39|16@0+ (1,0) [0|65535] "mm" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ RearRightMm : 55|16@0+ (1,0) [0|65535] "mm" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 49 CornerData: 8 Plateau
+ SG_ FrontLeftMm : 7|16@0+ (1,0) [0|65535] "mm" Headwaters
+ SG_ FrontRightMm : 23|16@0+ (1,0) [0|65535] "mm" Headwaters
+ SG_ RearLeftMm : 39|16@0+ (1,0) [0|65535] "mm" Headwaters
+ SG_ RearRightMm : 55|16@0+ (1,0) [0|65535] "mm" Headwaters
 
-BO_ 50 StatusData: 4 VehicleLeveler
- SG_ StatusFlags : 7|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ CalibrationPacked : 15|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ MountingOrientation : 23|8@0+ (1,0) [0|2] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ Reserved0 : 31|8@0+ (1,0) [0|0] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 50 StatusData: 4 Plateau
+ SG_ StatusFlags : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ CalibrationPacked : 15|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ MountingOrientation : 23|8@0+ (1,0) [0|2] "" Headwaters
+ SG_ Reserved0 : 31|8@0+ (1,0) [0|0] "" Headwaters
 
-BO_ 44 SolarMpptData1: 7 MpptCanGateway
- SG_ PanelVoltageWhole : 7|8@0+ (1,0) [0|255] "V" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ PanelVoltageDecimal : 15|8@0+ (1,0) [0|99] "0.01V" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ SolarWattage : 23|16@0+ (1,0) [0|65535] "W" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ SolarBattVoltageWhole : 39|8@0+ (1,0) [0|255] "V" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ SolarBattVoltageDecimal : 47|8@0+ (1,0) [0|99] "0.01V" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ SolarChargeStatus : 55|8@0+ (1,0) [0|255] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 44 SolarMpptData1: 7 Solstice
+ SG_ PanelVoltageWhole : 7|8@0+ (1,0) [0|255] "V" Headwaters
+ SG_ PanelVoltageDecimal : 15|8@0+ (1,0) [0|99] "0.01V" Headwaters
+ SG_ SolarWattage : 23|16@0+ (1,0) [0|65535] "W" Headwaters
+ SG_ SolarBattVoltageWhole : 39|8@0+ (1,0) [0|255] "V" Headwaters
+ SG_ SolarBattVoltageDecimal : 47|8@0+ (1,0) [0|99] "0.01V" Headwaters
+ SG_ SolarChargeStatus : 55|8@0+ (1,0) [0|255] "" Headwaters
 
-BO_ 45 SolarMpptData2: 3 MpptCanGateway
- SG_ IsPanelCurrentNegative : 7|8@0+ (1,0) [0|1] "" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ PanelCurrentWhole : 15|8@0+ (1,0) [0|255] "A" BtGateway,CanEspNowGateway,PiCanToMqtt
- SG_ PanelCurrentDecimal : 23|8@0+ (1,0) [0|99] "0.01A" BtGateway,CanEspNowGateway,PiCanToMqtt
+BO_ 45 SolarMpptData2: 3 Solstice
+ SG_ IsPanelCurrentNegative : 7|8@0+ (1,0) [0|1] "" Headwaters
+ SG_ PanelCurrentWhole : 15|8@0+ (1,0) [0|255] "A" Headwaters
+ SG_ PanelCurrentDecimal : 23|8@0+ (1,0) [0|99] "0.01A" Headwaters
 
-BO_ 37 SwitchbackToggle0: 2 BtGateway
+BO_ 37 SwitchbackToggle0: 2 Vector__XXX
  SG_ RelayOrCommand : 7|8@0+ (1,0) [0|6] "" Switchback
  SG_ CommandValue : 15|8@0+ (1,0) [0|1] "" Switchback
 
-BO_ 38 SwitchbackToggle1: 2 BtGateway
+BO_ 38 SwitchbackToggle1: 2 Vector__XXX
  SG_ RelayOrCommand : 7|8@0+ (1,0) [0|6] "" Switchback
  SG_ CommandValue : 15|8@0+ (1,0) [0|1] "" Switchback
 
-BO_ 39 SwitchbackToggle2: 2 BtGateway
+BO_ 39 SwitchbackToggle2: 2 Vector__XXX
  SG_ RelayOrCommand : 7|8@0+ (1,0) [0|6] "" Switchback
  SG_ CommandValue : 15|8@0+ (1,0) [0|1] "" Switchback
 
 BO_ 40 SwitchbackStatus0: 1 Switchback
- SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|63] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|63] "" Headwaters
 
 BO_ 41 SwitchbackStatus1: 1 Switchback
- SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|63] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|63] "" Headwaters
 
 BO_ 42 SwitchbackStatus2: 1 Switchback
- SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|63] "" BtGateway,CanEspNowGateway,PiCanToMqtt
+ SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|63] "" Headwaters
 
-CM_ BU_ GpsModule "GPS receiver module (ESP32). Reads GNSS data from a connected GPS receiver and broadcasts position, altitude, speed, course, and date/time onto the CAN bus. Transmit-only device.";
-CM_ BU_ PowerControlModule "8-channel PWM power distribution module (ESP32). Controls up to 8 MOSFET outputs for lights and accessories. Receives on/off toggle, brightness, and sequence commands. Sends status reports showing current state of all 8 outputs. Also known as the PDM (Power Distribution Module).";
-CM_ BU_ EightButtonPanel "Physical 8-button panel (ESP32). Each button sends a toggle command to the Power Control Module to turn a corresponding output channel on or off. Has 8 status LEDs that reflect current output states by listening to DeviceStatusReport messages.";
-CM_ BU_ BtGateway "Bluetooth Low Energy gateway (ESP32). Bridges the CAN bus to a smartphone app (Android). Receives sensor data and status from the CAN bus, converts it to BLE characteristic notifications. Also sends user commands from the phone app onto the CAN bus (toggles, brightness, sequences). Accepts ALL CAN messages.";
-CM_ BU_ ShuntGateway "Battery shunt monitor gateway (ESP32). Reads Victron BMV battery monitor data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports battery voltage, current draw, state of charge, wattage, and time-to-go. Transmit-only on CAN.";
-CM_ BU_ MpptCanGateway "Solar charge controller gateway (ESP32). Reads Victron MPPT solar charge controller data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports panel voltage, solar wattage, battery voltage, charge status, and panel current. Transmit-only on CAN.";
-CM_ BU_ TempSensor "Temperature and humidity sensor module (ESP32). Reads a DHT22 sensor and broadcasts temperature (Celsius and Fahrenheit) and relative humidity onto the CAN bus. Uses the original canHelper approach with direct TWAI calls.";
-CM_ BU_ Borealis "Environment and air quality sensor module (ESP32-S3-Zero). Reads DHT22 for temperature/humidity and SGP30 for TVOC/eCO2. Sends all data in a single 8-byte CAN frame at ID 0x1F. Bytes 0-3 are backwards-compatible with the predecessor AirQualityModule format. Bytes 4-7 add TVOC and eCO2 readings. Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
-CM_ BU_ CanEspNowGateway "CAN-to-ESP-NOW bridge (ESP32). Listens to ALL messages on the CAN bus and forwards them wirelessly over ESP-NOW protocol to remote displays and controllers that are not physically wired to the CAN bus. Acts as a transparent CAN bus repeater over wireless.";
-CM_ BU_ PiCanToMqtt "Raspberry Pi CAN-to-MQTT bridge. Runs a Python script that reads all CAN bus messages and publishes them as JSON over MQTT (with TLS). Also subscribes to MQTT and writes received commands back onto the CAN bus. Enables cloud connectivity and remote monitoring.";
-CM_ BU_ SevenPinTrailerMonitor "Seven-pin trailer connector monitor (ESP32-C6). Monitors the standard 7-pin trailer connection for voltage, turn signals, brake signals, and running lights. Reports trailer connection state. Uses TwaiTaskBased library. Under active development.";
-CM_ BU_ ElectricHeaterControl "Electric heater control module (ESP32-C6). Placeholder for controlling an electric heater. Uses TwaiTaskBased library. Listens for OTA update notifications on CAN. Under active development.";
-CM_ BU_ VehicleLeveler "Vehicle leveling module (ESP32-S3-Zero with Adafruit BNO055 IMU). Reads pitch and roll from the BNO055 9-DOF IMU and computes per-corner height adjustments based on configurable vehicle dimensions. Supports three mounting orientations (floor, left wall, right wall) with automatic axis remapping. BNO055 calibration offsets are auto-saved to NVS when fully calibrated. Receives leveling configuration commands via CAN (ID 0x20). Transmits tilt data at 2Hz (ID 0x30), corner height data (ID 0x31), and calibration status every 2s (ID 0x32). Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
-CM_ BU_ Picket "Picket module (ESP32-C6). Monitors up to 10 magnetic reed switch inputs to detect open/closed state of cabinet doors and enclosures. Uses a 3-position DIP switch to set a unique CAN address (0-7), allowing up to 8 modules on the same bus (CAN IDs 0x0A-0x11). A 4th DIP switch controls the 120 ohm CAN bus termination resistor. Uses TwaiTaskBased library. Supports OTA firmware updates via CAN.";
-CM_ BU_ Switchback "6-channel relay control module (ESP32-S3, Waveshare ESP32-S3-Relay-6CH). Controls 6 mechanical relays for switching high-current loads. Receives toggle commands via CAN (ID 0x25-0x27, one per module instance). Sends relay status bitmask via CAN (ID 0x28-0x2A). Supports up to 3 modules on the same bus. Relays are binary on/off (not PWM). Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
+CM_ BU_ Bearing "Bearing (GNSS) module (ESP32). Reads GNSS data from a connected GPS receiver and broadcasts position, altitude, speed, course, and date/time onto the CAN bus. Transmit-only device.";
+CM_ BU_ Torrent "Torrent power distribution module (ESP32). 8-channel PWM module controlling MOSFET outputs for lights and accessories. Receives on/off toggle, brightness, and sequence commands. Sends status reports showing current state of all 8 outputs.";
+CM_ BU_ Tapper "Tapper button panel (ESP32). Physical 8-button interface. Each button sends a toggle command to Torrent to turn a corresponding output channel on or off. Has 8 status LEDs that reflect current output states by listening to DeviceStatusReport messages.";
+CM_ BU_ Ampline "Ampline battery shunt monitor (ESP32). Reads Victron BMV battery monitor data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports battery voltage, current draw, state of charge, wattage, and time-to-go. Transmit-only on CAN.";
+CM_ BU_ Solstice "Solstice solar charge controller gateway (ESP32). Reads Victron MPPT solar charge controller data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports panel voltage, solar wattage, battery voltage, charge status, and panel current. Transmit-only on CAN.";
+CM_ BU_ Borealis "Borealis environment and air quality sensor module (ESP32-S3-Zero). Reads DHT22 for temperature/humidity and SGP30 for TVOC/eCO2. Sends all data in a single 8-byte CAN frame at ID 0x1F. Bytes 0-3 are backwards-compatible with the predecessor AirQualityModule format. Bytes 4-7 add TVOC and eCO2 readings. Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
+CM_ BU_ Headwaters "Headwaters in-vehicle compute (Raspberry Pi). CAN-to-MQTT bridge running a Python script that reads all CAN bus messages and publishes them as JSON over MQTT (with TLS). Also subscribes to MQTT and writes received commands back onto the CAN bus. Enables cloud connectivity and remote monitoring.";
+CM_ BU_ Aftline "Aftline trailer connector monitor (ESP32-C6). Monitors the standard 7-pin trailer connection for voltage, turn signals, brake signals, and running lights. Reports trailer connection state. Uses TwaiTaskBased library. Under active development.";
+CM_ BU_ Therma "Therma heater control module (ESP32-C6). Controls an electric heater via dual relay. Uses TwaiTaskBased library. Listens for OTA update notifications on CAN. Under active development.";
+CM_ BU_ Plateau "Plateau vehicle leveling module (ESP32-S3-Zero with Adafruit BNO055 IMU). Reads pitch and roll from the BNO055 9-DOF IMU and computes per-corner height adjustments based on configurable vehicle dimensions. Supports three mounting orientations (floor, left wall, right wall) with automatic axis remapping. BNO055 calibration offsets are auto-saved to NVS when fully calibrated. Receives leveling configuration commands via CAN (ID 0x20). Transmits tilt data at 2Hz (ID 0x30), corner height data (ID 0x31), and calibration status every 2s (ID 0x32). Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
+CM_ BU_ Picket "Picket cabinet/door sensor module (ESP32-C6). Monitors up to 10 magnetic reed switch inputs to detect open/closed state of cabinet doors and enclosures. Uses a 3-position DIP switch to set a unique CAN address (0-7), allowing up to 8 modules on the same bus (CAN IDs 0x0A-0x11). A 4th DIP switch controls the 120 ohm CAN bus termination resistor. Uses TwaiTaskBased library. Supports OTA firmware updates via CAN.";
+CM_ BU_ Switchback "Switchback relay control module (ESP32-S3, Waveshare ESP32-S3-Relay-6CH). Controls 6 mechanical relays for switching high-current loads. Receives toggle commands via CAN (ID 0x25-0x27, one per module instance). Sends relay status bitmask via CAN (ID 0x28-0x2A). Supports up to 3 modules on the same bus. Relays are binary on/off (not PWM). Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
 
-CM_ BO_ 0 "OTA (Over-The-Air) firmware update notification. Sent by the Raspberry Pi when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device on the bus checks if the MAC matches its own hostname (formatted as esp32c6-XXYYZZ). If it matches, the device pauses normal operation, connects to WiFi, and checks for the OTA update. This allows targeted firmware updates to individual devices without disrupting others.";
-CM_ BO_ 6 "GPS date and time data from the GNSS receiver. Sent periodically by the GPS Module. Year is encoded as a 16-bit unsigned integer split across bytes 0 and 1 (big-endian). Month, day, hour, minute, and second are each a single byte with their natural value. Time is in UTC.";
+CM_ BO_ 0 "OTA (Over-The-Air) firmware update notification. Sent by Headwaters when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device on the bus checks if the MAC matches its own hostname (formatted as esp32c6-XXYYZZ). If it matches, the device pauses normal operation, connects to WiFi, and checks for the OTA update. This allows targeted firmware updates to individual devices without disrupting others.";
+CM_ BO_ 6 "GPS date and time data from the GNSS receiver. Sent periodically by Bearing. Year is encoded as a 16-bit unsigned integer split across bytes 0 and 1 (big-endian). Month, day, hour, minute, and second are each a single byte with their natural value. Time is in UTC.";
 CM_ BO_ 7 "GPS navigation data: number of satellites being tracked, speed over ground, course over ground (heading), and the active GNSS constellation. Speed is in knots multiplied by 100 (divide raw value by 100 to get knots). Course is in degrees multiplied by 10 (divide raw value by 10 to get degrees, 0-360). GNSS mode indicates which satellite constellation combination is active (GPS, BeiDou, GLONASS, or combinations thereof).";
 CM_ BO_ 8 "GPS altitude above mean sea level. Encoded as a 32-bit unsigned integer representing altitude in meters multiplied by 100 (divide raw value by 100 to get meters). For example, a raw value of 152340 means 1523.40 meters.";
 CM_ BO_ 9 "GPS position: latitude and longitude. Each coordinate uses 4 bytes: a sign byte (0 = North/East positive, 1 = South/West negative) followed by a 24-bit unsigned integer representing the absolute value multiplied by 10000. To decode: take the 24-bit value, divide by 10000, and apply the sign. For example, sign=0 and raw=339876 means +33.9876 degrees.";
@@ -218,11 +215,11 @@ CM_ BO_ 14 "Picket status from module with DIP address 4. Same signal layout as 
 CM_ BO_ 15 "Picket status from module with DIP address 5. Same signal layout as PicketStatus0 (ID 0x0A).";
 CM_ BO_ 16 "Picket status from module with DIP address 6. Same signal layout as PicketStatus0 (ID 0x0A).";
 CM_ BO_ 17 "Picket status from module with DIP address 7 (all address switches ON). Same signal layout as PicketStatus0 (ID 0x0A).";
-CM_ BO_ 21 "Brightness control command for the Power Control Module. Sets a specific PWM brightness level (0-255) for one of the 8 output channels. Byte 0 selects the channel (0-7), byte 1 sets the brightness level. A value of 0 turns the channel fully off, 255 is full brightness. Sent from the BtGateway (originating from the phone app) or from the PiCanToMqtt bridge.";
-CM_ BO_ 24 "Toggle on/off command for the Power Control Module. Sent by the EightButtonPanel (physical buttons) or BtGateway (phone app). Byte 0 indicates which action: values 0-7 toggle the corresponding output channel on or off (if on turns off, if off turns on). Value 8 with byte 1 = 0 turns ALL outputs off, value 8 with byte 1 = 1 turns ALL outputs on. Value 9 with byte 1 = 1 turns ALL outputs on (similar to command 8 with value 1).";
-CM_ BO_ 27 "Device status report from the Power Control Module. Sent continuously at ~30Hz. Each of the 8 data bytes represents the current PWM value (0 = off, 255 = full on) of the corresponding output channel. Used by the EightButtonPanel to update its status LEDs, by the BtGateway to update the phone app display, and by the CanEspNowGateway to relay to wireless displays.";
-CM_ BO_ 30 "Light sequence animation command for the Power Control Module. Triggers a pre-programmed light show effect. Byte 0 value 0 starts the interior sequence (smooth fade in/out followed by a chase pattern on outputs 5-8). Byte 0 value 1 starts the exterior sequence (smooth fade in/out followed by an alternating flash on outputs 3-4). Sequences run to completion before normal control resumes.";
-CM_ BO_ 31 "Environment sensor data. Sent by the Borealis module (replaces TempSensor/AirQualityModule). Bytes 0-3 are backwards-compatible: byte 0 is temperature in whole degrees Celsius, byte 1 is temperature in whole degrees Fahrenheit (F = (C * 9 + 3) / 5 + 32), bytes 2-3 are a 16-bit big-endian humidity value multiplied by 100. Bytes 4-5 are TVOC in ppb (16-bit big-endian, 0-60000). Bytes 6-7 are eCO2 in ppm (16-bit big-endian, 400-60000). TVOC and eCO2 read from an SGP30 sensor. The SGP30 needs ~15 seconds warm-up; initial values are TVOC=0, eCO2=400.";
+CM_ BO_ 21 "Brightness control command for Torrent. Sets a specific PWM brightness level (0-255) for one of the 8 output channels. Byte 0 selects the channel (0-7), byte 1 sets the brightness level. A value of 0 turns the channel fully off, 255 is full brightness. Sent by multiple sources (Headwaters, Tapper, Spotter, Milepost, etc.).";
+CM_ BO_ 24 "Toggle on/off command for Torrent. Sent by multiple sources (Tapper, Headwaters, Spotter, Milepost, etc.). Byte 0 indicates which action: values 0-7 toggle the corresponding output channel on or off (if on turns off, if off turns on). Value 8 with byte 1 = 0 turns ALL outputs off, value 8 with byte 1 = 1 turns ALL outputs on. Value 9 with byte 1 = 1 turns ALL outputs on (similar to command 8 with value 1).";
+CM_ BO_ 27 "Device status report from Torrent. Sent continuously at ~30Hz. Each of the 8 data bytes represents the current PWM value (0 = off, 255 = full on) of the corresponding output channel. Used by Tapper to update its status LEDs, by Headwaters for MQTT publishing, and by UI modules (Spotter, Milepost, Fireside) for display.";
+CM_ BO_ 30 "Light sequence animation command for Torrent. Triggers a pre-programmed light show effect. Byte 0 value 0 starts the interior sequence (smooth fade in/out followed by a chase pattern on outputs 5-8). Byte 0 value 1 starts the exterior sequence (smooth fade in/out followed by an alternating flash on outputs 3-4). Sequences run to completion before normal control resumes.";
+CM_ BO_ 31 "Environment sensor data from Borealis. Bytes 0-3 are backwards-compatible: byte 0 is temperature in whole degrees Celsius, byte 1 is temperature in whole degrees Fahrenheit (F = (C * 9 + 3) / 5 + 32), bytes 2-3 are a 16-bit big-endian humidity value multiplied by 100. Bytes 4-5 are TVOC in ppb (16-bit big-endian, 0-60000). Bytes 6-7 are eCO2 in ppm (16-bit big-endian, 400-60000). TVOC and eCO2 read from an SGP30 sensor. The SGP30 needs ~15 seconds warm-up; initial values are TVOC=0, eCO2=400.";
 CM_ BO_ 35 "Battery shunt monitor data part 1, from the Victron BMV battery monitor. Reports core battery metrics. Battery voltage is split into whole number (byte 0) and decimal part (byte 1) - combine as: voltage = byte0 + byte1/100. Byte 2 indicates if current is flowing out of the battery (1 = discharging/negative, 0 = charging/positive). Current is split similarly into whole (byte 3) and decimal (byte 4). State of charge percentage is split into whole (byte 5) and decimal (byte 6). For example: bytes 13, 45, 1, 5, 30, 85, 50 means 13.45V, -5.30A discharge, 85.50% SOC.";
 CM_ BO_ 36 "Battery shunt monitor data part 2, from the Victron BMV battery monitor. Byte 0 indicates if wattage is negative (0xFF = battery discharging/negative, 0x00 = charging/positive). Bytes 1-2 form a 16-bit big-endian unsigned value for the absolute wattage in whole watts. Bytes 3-4 form a 16-bit big-endian unsigned value for time-to-go in minutes (how long until the battery is empty at the current discharge rate). For example: bytes 0xFF, 0x01, 0x2C, 0x02, 0x58 means -300W discharge, 600 minutes remaining.";
 CM_ BO_ 37 "Relay toggle command for Switchback module instance 0. Byte 0 values 0-5 toggle the corresponding relay channel (0=CH1 ... 5=CH6). Value 6 is an all-channels command: byte 1 = 0 turns all relays off, byte 1 = 1 turns all relays on. CAN IDs 0x25-0x27 share this identical signal layout, each targeting a different physical Switchback module.";
@@ -231,7 +228,7 @@ CM_ BO_ 39 "Relay toggle command for Switchback module instance 2. Same signal l
 CM_ BO_ 40 "Relay status report from Switchback module instance 0. Sent immediately on state change (event-driven, not periodic). Byte 0 is a bitmask of relay states: bit 0 = CH1, bit 1 = CH2, ... bit 5 = CH6. Value 1 = relay ON (energized), 0 = relay OFF. Bits 6-7 are reserved. CAN IDs 0x28-0x2A share this identical signal layout, each sent by a different physical Switchback module.";
 CM_ BO_ 41 "Relay status report from Switchback module instance 1. Same signal layout as SwitchbackStatus0 (ID 0x28).";
 CM_ BO_ 42 "Relay status report from Switchback module instance 2. Same signal layout as SwitchbackStatus0 (ID 0x28).";
-CM_ BO_ 32 "Leveling configuration command for the VehicleLeveler. Byte 0 is the command type: 0x01 = set configuration (bytes 1-6 contain mounting surface, vehicle length, vehicle width, and save flag), 0x02 = request immediate status report on ID 0x32, 0x03 = zero/tare calibration (reserved). For command 0x01: byte 1 is the mounting surface (0=floor, 1=left wall, 2=right wall), bytes 2-3 are vehicle length in cm (big-endian uint16), bytes 4-5 are vehicle width in cm (big-endian uint16), byte 6 = 0x01 to persist to NVS. Configuration is applied immediately (including axis remap) even without saving.";
+CM_ BO_ 32 "Leveling configuration command for Plateau. Byte 0 is the command type: 0x01 = set configuration (bytes 1-6 contain mounting surface, vehicle length, vehicle width, and save flag), 0x02 = request immediate status report on ID 0x32, 0x03 = zero/tare calibration (reserved). For command 0x01: byte 1 is the mounting surface (0=floor, 1=left wall, 2=right wall), bytes 2-3 are vehicle length in cm (big-endian uint16), bytes 4-5 are vehicle width in cm (big-endian uint16), byte 6 = 0x01 to persist to NVS. Configuration is applied immediately (including axis remap) even without saving.";
 CM_ BO_ 48 "Vehicle tilt and height difference data from the BNO055 IMU. Sent at 2Hz (500ms interval). Pitch and roll are in degrees multiplied by 100 as signed 16-bit big-endian integers (divide by 100 for degrees). Positive pitch = front tilted up. Positive roll = right side tilted up. Front-back and left-right height differences are in millimeters, computed from tilt angles and configured vehicle dimensions using: diff_mm = dimension_cm * 10 * tan(angle_rad).";
 CM_ BO_ 49 "Per-corner height adjustment data. Derived from pitch/roll and vehicle dimensions. Values represent how much each corner needs to be raised to achieve level, normalized so the lowest corner = 0. All values are unsigned 16-bit big-endian in millimeters. Corners are: front-left, front-right, rear-left, rear-right.";
 CM_ BO_ 50 "Vehicle leveling system status. Sent every 2 seconds. Byte 0 is a flags bitmask: bit 0 = IMU connected, bit 1 = fully calibrated (cal_sys==3), bit 2 = leveling active. Byte 1 is packed BNO055 calibration levels: bits 7-6 = system (0-3), bits 5-4 = gyro (0-3), bits 3-2 = accel (0-3), bits 1-0 = mag (0-3). Byte 2 is the current mounting surface enum (0=floor, 1=left wall, 2=right wall). Byte 3 is reserved.";
