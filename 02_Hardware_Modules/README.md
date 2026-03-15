@@ -25,6 +25,7 @@ Modules that control equipment and systems
 - [Torrent](./Torrent.md) - 8-channel smart power delivery module with on/off switching and PWM dimming
 - [Therma](./Therma.md) - Dual-relay automatic heating/cooling to maintain set temperature
 - [Solstice](./Solstice.md) - Victron MPPT solar charge controller interface
+- [Switchback](./Switchback.md) - 6-channel relay module for switching high-current loads (up to 3 modules per bus)
 
 ### 3. **Communication/Gateway Modules** - Integration
 Modules that connect external devices or provide communication bridges
@@ -49,34 +50,39 @@ Modules that allow user control and status display
 | Category | Modules | Primary Function |
 |----------|---------|------------------|
 | Sensors | 5 | Data collection |
-| Control | 3 | System control |
+| Control | 4 | System control |
 | Gateway | 2 | Device integration (1 coming soon) |
 | Interface | 4 | User interaction |
 | Voice & AI | 1 | Intelligent assistance |
-| **Total** | **15** | - |
+| **Total** | **16** | - |
 
 ## Communication Protocol
 
 All hardware modules communicate using **CAN Bus (Controller Area Network)**:
 
-- **Standard**: ISO 11898-1
-- **Speed**: 500 kbps or 1 Mbps (configured per project)
+- **Standard**: ISO 11898-1 (CAN 2.0A)
+- **Speed**: 500 kbps
 - **Isolation**: Galvanically isolated from other networks
-- **Range**: 40m at 500 kbps, shorter at higher speeds
+- **Range**: 40m at 500 kbps
 - **Reliability**: High noise immunity, automatic error detection
 
-### CAN IDs by Module Type
+### CAN IDs by Module
 
 ```
-0x000-0x0FF: GPS & Location
-0x100-0x1FF: Temperature & Environment
-0x200-0x2FF: Power & Control (Commands)
-0x300-0x3FF: Status & Telemetry
-0x400-0x4FF: User Interface
-0x500-0x5FF: Gateway/Bridge
-0x600-0x6FF: External Systems & Subsystems
-0x700-0x7FF: Reserved
-0x800-0x8FF: Diagnostic/Debug
+0x00:       OTA Update Notification (PiCanToMqtt)
+0x06-0x09:  Bearing (GNSS) - DateTime, Speed/Course, Altitude, Lat/Lon
+0x0A-0x11:  Picket - Door/cabinet sensor status (8 addressable modules)
+0x15:       Brightness Control (BtGateway → Torrent)
+0x18:       Toggle On/Off Command (Tapper/BtGateway → Torrent)
+0x1B:       Device Status Report (Torrent → all)
+0x1E:       Light Sequence Command (BtGateway → Torrent)
+0x1F:       Environment Sensor Data (Borealis)
+0x20:       Leveling Config (PiCanToMqtt → Plateau)
+0x23-0x24:  Battery Shunt Data (Ampline)
+0x25-0x27:  Switchback Toggle Commands (3 module instances)
+0x28-0x2A:  Switchback Status Reports (3 module instances)
+0x2C-0x2D:  Solar MPPT Data (Solstice)
+0x30-0x32:  Vehicle Leveler Data (Plateau) - Tilt, Corners, Status
 ```
 
 (See [10_Reference/CAN_BUS_REFERENCE.md](../10_Reference/CAN_BUS_REFERENCE.md) for full details)
@@ -84,22 +90,31 @@ All hardware modules communicate using **CAN Bus (Controller Area Network)**:
 ## Development & Firmware
 
 ### Firmware Development
-- **Framework**: ESP-IDF (Espressif IoT Development Framework)
+- **Primary Framework**: PlatformIO with Arduino framework (most modules)
+- **Alternative Framework**: ESP-IDF (Fireside wireless display)
 - **Language**: C/C++
-- **IDE**: VS Code + ESP-IDF extension (recommended)
-- **Build System**: CMake + idf.py
+- **IDE**: VS Code + PlatformIO extension (recommended)
+- **Build System**: PlatformIO CLI (`pio run`, `pio run -t upload`, `pio device monitor`)
 - **Version Control**: Git (one repo per module)
 
 ### Setup for Hardware Development
 
+**PlatformIO modules (most modules):**
+1. Install PlatformIO (VS Code extension or CLI)
+2. Clone the module repository
+3. PlatformIO auto-resolves dependencies from `platformio.ini`
+4. Build with `pio run`
+5. Flash with `pio run -t upload`
+6. Monitor with `pio device monitor`
+
+**ESP-IDF modules (Fireside):**
 1. Install ESP-IDF
 2. Clone the module repository
-3. Configure CAN parameters (if needed)
-4. Build with `idf.py build`
-5. Flash with `idf.py flash`
-6. Monitor with `idf.py monitor`
+3. Build with `idf.py build`
+4. Flash with `idf.py flash`
+5. Monitor with `idf.py monitor`
 
-See [Firmware/ESP_IDF_Setup.md](./Firmware/ESP_IDF_Setup.md) for detailed setup.
+See [Firmware/PlatformIO_Setup.md](./Firmware/PlatformIO_Setup.md) for PlatformIO setup or [Firmware/ESP_IDF_Setup.md](./Firmware/ESP_IDF_Setup.md) for ESP-IDF setup.
 
 ## Key Features Across Modules
 
@@ -144,6 +159,11 @@ Therma (Climate Control)
 ├─ Depends on: Borealis temperature feedback
 └─ Outputs: Heating/cooling relay control
 
+Switchback (Relay Control)
+├─ Requires: CAN bus, 6 relay outputs
+├─ Depends on: Toggle commands from BtGateway/PiCanToMqtt
+└─ Outputs: Relay state bitmask to CAN
+
 User Interface (Tapper, Fireside, Milepost, Spotter)
 ├─ Requires: CAN bus, buttons/display
 ├─ Depends on: Status from other modules
@@ -153,21 +173,25 @@ User Interface (Tapper, Fireside, Milepost, Spotter)
 ## Hardware Specifications
 
 ### Common Hardware
-- **Microcontroller**: ESP32 or ESP32-S3
+
+Three ESP32 variants are used across the platform:
+
+| Variant | Board | Used By |
+|---------|-------|---------|
+| ESP32 (WROOM) | Various dev boards | Ampline, Torrent, Tapper, Solstice, BtGateway, CanEspNowGateway |
+| ESP32-C6 | Waveshare ESP32-C6-Zero | Picket, Aftline, Therma |
+| ESP32-S3 | S3-Zero / Waveshare S3-Relay-6CH | Plateau, Switchback, Borealis |
+
 - **Operating Voltage**: 3.3V (internal), 5-24V (input with regulator)
 - **Power Consumption**: 80mA typical, 10µA deep sleep
 - **Storage**: 4MB Flash (variable)
-- **RAM**: 320KB (variable)
+- **RAM**: 320KB (variable per variant)
 - **GPIO**: 25+ (variable per module)
-- **SPI**: 2-3 buses
-- **I2C**: 2 buses
-- **UART**: 2-3 buses
-- **PWM**: 16 channels
-- **ADC**: 12-bit, 8 channels
 
 ### CAN Interface
-- **Transceiver**: MCP2515 (SPI) or TJA1050 (built-in)
-- **Speed**: Configurable (500 kbps or 1 Mbps typical)
+- **Controller**: ESP32 built-in TWAI (Two-Wire Automotive Interface)
+- **Transceiver**: SN65HVD230 (external, converts TWAI signals to CAN bus levels)
+- **Speed**: 500 kbps
 - **Termination**: 120Ω resistors at both ends of bus
 
 See [10_Reference/HARDWARE_SPECIFICATIONS.md](../10_Reference/HARDWARE_SPECIFICATIONS.md) for detailed specs per module.
@@ -245,6 +269,7 @@ All module source code is in `/Product/`:
 - `TrailCurrentMilepost/` - Milepost (hardwired CAN bus touchscreen)
 - `TrailCurrentSpotter/` - Spotter (in-vehicle trailer monitor display)
 - `TrailCurrentPeregrine/` - Peregrine (AI voice assistant)
+- `TrailCurrentSwitchback/` - Switchback (6-channel relay module)
 
 ---
 

@@ -4,7 +4,7 @@ Guide to setting up the Espressif IoT Development Framework for TrailCurrent har
 
 ## Overview
 
-ESP-IDF is the official development framework for ESP32 modules. All TrailCurrent hardware modules use ESP-IDF for firmware development.
+ESP-IDF is the official development framework from Espressif. The Fireside (wireless display) module uses ESP-IDF natively. Most other TrailCurrent modules use PlatformIO with the Arduino framework — see [PlatformIO_Setup.md](./PlatformIO_Setup.md) for those modules.
 
 ## Installation
 

@@ -4,21 +4,23 @@
 
 This document tracks the status of TrailCurrent documentation creation and completion.
 
-**Last Updated**: 2025-02-11
-**Total Markdown Files**: 43
-**Status**: Core structure complete with placeholder files for full implementation
+**Last Updated**: 2026-03-14
+**Total Markdown Files**: 46
+**Status**: Core structure complete. CAN Bus Reference fully populated from DBC. PlatformIO setup guide added.
 
 ---
 
 ## Documentation Categories
 
-### ✅ Root Documentation (3/3 Complete)
+### ✅ Root Documentation (5/5 Complete)
 
 Core project documentation providing overview and guidance:
 
 - [x] **README.md** - Main entry point with platform overview
 - [x] **CORE_PRINCIPLES.md** - Foundational principles (Cloud Optional, Data Private, 100% Open Source, Safety First)
 - [x] **QUICK_START.md** - 5-minute getting started guide
+- [x] **WHAT_IS_SOFTWARE_DEFINED_VEHICLE.md** - Why TrailCurrent differs from generic IoT
+- [x] **LIABILITY_AND_DISCLAIMER.md** - Legal notice and disclaimer
 
 ### ✅ Architecture Documentation (5/5 Complete)
 
@@ -30,15 +32,16 @@ System design and architecture:
 - [x] **01_Architecture/DATA_FLOW.md** - Information flow through system
 - [x] **01_Architecture/DEPLOYMENT_ARCHITECTURE.md** - Infrastructure design
 
-### ✅ Hardware Module Documentation (3/3 Complete)
+### ✅ Hardware Module Documentation (4/4 Complete)
 
 Hardware module documentation:
 
-- [x] **02_Hardware_Modules/README.md** - Hardware overview and module list
+- [x] **02_Hardware_Modules/README.md** - Hardware overview and module list (16 modules)
 - [x] **02_Hardware_Modules/MODULE_CATEGORIES.md** - Module classification and organization
-- [x] **02_Hardware_Modules/Firmware/ESP_IDF_Setup.md** - Firmware development framework
+- [x] **02_Hardware_Modules/Firmware/ESP_IDF_Setup.md** - ESP-IDF firmware setup (used by Fireside)
+- [x] **02_Hardware_Modules/Firmware/PlatformIO_Setup.md** - PlatformIO firmware setup (used by most modules)
 
-**📋 Placeholder/Stub Files Needed** (14 module-specific files):
+**📋 Placeholder/Stub Files Needed** (15 module-specific files):
 - Bearing (GNSS) documentation
 - Borealis (environment) documentation
 - Torrent (power delivery) documentation
@@ -47,6 +50,7 @@ Hardware module documentation:
 - Ampline (shunt interface) documentation
 - Plateau (vehicle level) documentation
 - Picket (cabinet & door sensors) documentation
+- Switchback (6-channel relay) documentation
 - Aftline (trailer wiring) documentation
 - Tapper (8-button panel) documentation
 - Fireside (wireless display) documentation
@@ -113,17 +117,18 @@ Diagnostic and problem-solving guides:
 - [x] **09_Troubleshooting/FIRMWARE_ISSUES.md** - Firmware troubleshooting guide
 - [x] **09_Troubleshooting/LOGGING_AND_DIAGNOSTICS.md** - Diagnostic procedures
 
-### ✅ Reference Documentation (6/6 Complete)
+### ✅ Reference Documentation (7/7 Complete)
 
 Technical reference materials:
 
 - [x] **10_Reference/README.md** - Reference overview
 - [x] **10_Reference/GLOSSARY.md** - Technical terminology and acronyms
-- [x] **10_Reference/CAN_BUS_REFERENCE.md** - CAN message formats and IDs
+- [x] **10_Reference/CAN_BUS_REFERENCE.md** - CAN message formats and IDs (fully populated from DBC)
 - [x] **10_Reference/MQTT_TOPICS.md** - MQTT topic hierarchy and messages
 - [x] **10_Reference/GPIO_PIN_MAPPING.md** - Pin assignments and wiring
 - [x] **10_Reference/HARDWARE_SPECIFICATIONS.md** - Electrical and physical specs
 - [x] **10_Reference/EXTERNAL_LINKS.md** - External resources and documentation
+- [x] **TrailCurrent.dbc** - Machine-readable CAN database file (authoritative source for all CAN message definitions)
 
 ---
 
@@ -131,20 +136,23 @@ Technical reference materials:
 
 ```
 TrailCurrent Documentation (43 total files)
-├── Root Documents (3)
+├── Root Documents (5)
 │   ├── README.md
 │   ├── CORE_PRINCIPLES.md ⭐ CRITICAL
-│   └── QUICK_START.md
+│   ├── QUICK_START.md
+│   ├── WHAT_IS_SOFTWARE_DEFINED_VEHICLE.md
+│   └── LIABILITY_AND_DISCLAIMER.md
 ├── 01_Architecture (5)
 │   ├── PLATFORM_OVERVIEW.md
 │   ├── SYSTEM_ARCHITECTURE.md
 │   ├── NETWORK_TOPOLOGY.md
 │   ├── DATA_FLOW.md
 │   └── DEPLOYMENT_ARCHITECTURE.md
-├── 02_Hardware_Modules (3 + 17 placeholders)
+├── 02_Hardware_Modules (4 + 15 placeholders)
 │   ├── README.md
 │   ├── MODULE_CATEGORIES.md
-│   └── Firmware/ESP_IDF_Setup.md
+│   ├── Firmware/ESP_IDF_Setup.md
+│   └── Firmware/PlatformIO_Setup.md
 ├── 03_Vehicle_Compute (3)
 │   ├── README.md
 │   ├── SETUP_GUIDE.md
@@ -176,14 +184,15 @@ TrailCurrent Documentation (43 total files)
 │   ├── NETWORK_ISSUES.md
 │   ├── FIRMWARE_ISSUES.md
 │   └── LOGGING_AND_DIAGNOSTICS.md
-└── 10_Reference (7)
-    ├── README.md
-    ├── GLOSSARY.md
-    ├── CAN_BUS_REFERENCE.md
-    ├── MQTT_TOPICS.md
-    ├── GPIO_PIN_MAPPING.md
-    ├── HARDWARE_SPECIFICATIONS.md
-    └── EXTERNAL_LINKS.md
+├── 10_Reference (7)
+│   ├── README.md
+│   ├── GLOSSARY.md
+│   ├── CAN_BUS_REFERENCE.md ⭐ FULLY POPULATED
+│   ├── MQTT_TOPICS.md
+│   ├── GPIO_PIN_MAPPING.md
+│   ├── HARDWARE_SPECIFICATIONS.md
+│   └── EXTERNAL_LINKS.md
+└── TrailCurrent.dbc ⭐ AUTHORITATIVE CAN DATABASE
 ```
 
 ---
@@ -266,9 +275,9 @@ TrailCurrent Documentation (43 total files)
 
 ### Priority 1 (Referenced 5+ times)
 Complete these to resolve most broken links:
-- [ ] CAN_BUS_REFERENCE.md - message formats
+- [x] CAN_BUS_REFERENCE.md - message formats ✅ Fully populated from DBC (2026-03-14)
 - [ ] MQTT_TOPICS.md - topic definitions
-- [ ] GPIO_PIN_MAPPING.md - complete pin assignments
+- [ ] GPIO_PIN_MAPPING.md - complete pin assignments per module
 - [ ] HARDWARE_SPECIFICATIONS.md - electrical specs
 - [ ] COMMON_ISSUES.md - solutions for each issue type
 
@@ -312,8 +321,8 @@ Additional content that enhances but isn't critical:
 
 ## Statistics
 
-- **Total Files Created**: 43
-- **Files with Full Content**: 23
+- **Total Files Created**: 46 (43 markdown + 1 DBC + 2 new)
+- **Files with Full Content**: 26
 - **Files with Complete Structure/Placeholders**: 20
 - **Total Documentation Pages** (estimated): 80-100 pages
 - **Cross-references**: 100+

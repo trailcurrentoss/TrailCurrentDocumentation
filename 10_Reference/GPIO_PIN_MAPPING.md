@@ -74,6 +74,7 @@ Complete reference for GPIO pin assignments, connections, and configurations acr
 - Picket (cabinet & door sensors)
 - Ampline (shunt interface)
 - Solstice (MPPT solar controller)
+- Switchback (6-channel relay module)
 - Aftline (trailer wiring monitor)
 - Tapper (8-button panel)
 - Fireside (wireless touchscreen display)
@@ -82,22 +83,30 @@ Complete reference for GPIO pin assignments, connections, and configurations acr
 
 ## CAN Transceiver Wiring
 
-### MCP2515 (SPI-based)
+### SN65HVD230 (ESP32 Modules)
+
+All ESP32 hardware modules use the built-in TWAI (Two-Wire Automotive Interface) controller paired with an external SN65HVD230 CAN transceiver. The TWAI controller handles protocol and timing; the SN65HVD230 converts logic-level signals to CAN bus differential voltages.
+
+**Connections:**
+- **TWAI TX** (ESP32 GPIO) → SN65HVD230 **D** (driver input)
+- **TWAI RX** (ESP32 GPIO) → SN65HVD230 **R** (receiver output)
+- **SN65HVD230 CANH/CANL** → CAN bus wiring
+- **VCC**: 3.3V
+- **RS** (slope control): Tie to GND for high-speed mode
+
+TX and RX GPIO pins vary per module — defined in each module's `src/globals.h`.
+
+**NEEDS TO BE COMPLETED** - Document specific TX/RX pins per module.
+
+### MCP2515 (Raspberry Pi / Headwaters Only)
+
+The Raspberry Pi does not have a built-in CAN controller, so Headwaters uses an MCP2515 SPI-based CAN controller on a HAT/shield.
 
 **NEEDS TO BE COMPLETED** - Document:
 - SPI pin connections (MOSI, MISO, SCK, CS)
 - INT pin connection
 - Crystal specifications
 - Termination resistor placement
-- Schematic diagram
-
-### TJA1050 (Direct CAN)
-
-**NEEDS TO BE COMPLETED** - Document:
-- GPIO to CAN pins mapping
-- Termination resistor placement
-- Biasing resistors
-- Power supply requirements
 - Schematic diagram
 
 ## Power Distribution
