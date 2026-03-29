@@ -24,9 +24,12 @@ These modules collect data from the environment and vehicle systems.
 
 ### TrailCurrent Picket (Cabinet & Door Sensors)
 - **Purpose**: Monitor open/closed status of doors, windows, cabinets, and bays
-- **Inputs**: Magnetic switches or motion sensors
+- **Hardware**: Waveshare ESP32-S3-RS485-CAN (off-the-shelf board with onboard CAN transceiver)
+- **Framework**: ESP-IDF
+- **Inputs**: Up to 13 magnetic reed switches (via pin header, internal pull-ups, no external resistors)
 - **Outputs**: CAN messages with door/cabinet state
-- **CAN ID Range**: 0x140-0x14F
+- **Addressing**: Compile-time `PICKET_ADDRESS` build flag (0-7, up to 8 modules per bus)
+- **CAN ID Range**: 0x0A-0x11
 - **Documentation**: [Picket.md](Picket.md)
 - **Source**: `/Product/TrailCurrentPicket/`
 

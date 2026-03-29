@@ -4,7 +4,13 @@ Guide to setting up the Espressif IoT Development Framework for TrailCurrent har
 
 ## Overview
 
-ESP-IDF is the official development framework from Espressif. The Fireside (wireless display) module uses ESP-IDF natively. Most other TrailCurrent modules use PlatformIO with the Arduino framework — see [PlatformIO_Setup.md](./PlatformIO_Setup.md) for those modules.
+ESP-IDF is the official development framework from Espressif. The following TrailCurrent modules use ESP-IDF natively:
+
+- **Fireside** — Wireless touchscreen display
+- **Solstice** — MPPT solar controller interface (Waveshare ESP32-S3-RS485-CAN)
+- **Picket** — Cabinet & door sensor (Waveshare ESP32-S3-RS485-CAN)
+
+Other modules use PlatformIO with the Arduino framework — see [PlatformIO_Setup.md](./PlatformIO_Setup.md) for those.
 
 ## Installation
 

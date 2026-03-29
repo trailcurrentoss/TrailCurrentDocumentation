@@ -33,6 +33,13 @@ BO_ 0 OtaUpdateNotification: 3 Headwaters
  SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback
  SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback
 
+BO_ 2 DiscoveryTrigger: 0 Headwaters
+
+BO_ 3 DiscoveryReset: 3 Headwaters
+ SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Solstice
+ SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Solstice
+ SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Solstice
+
 BO_ 6 GpsDateTime: 7 Bearing
  SG_ Year : 7|16@0+ (1,0) [2000|2099] "year" Headwaters
  SG_ Month : 23|8@0+ (1,0) [1|12] "month" Headwaters
@@ -88,15 +95,31 @@ BO_ 17 PicketStatus7: 2 Picket
  SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
  SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
 
-BO_ 21 BrightnessControl: 2 Vector__XXX
+BO_ 21 TorrentBrightness0: 2 Vector__XXX
  SG_ ChannelIndex : 7|8@0+ (1,0) [0|7] "" Torrent
  SG_ BrightnessLevel : 15|8@0+ (1,0) [0|255] "" Torrent
 
-BO_ 24 ToggleOnOffCommand: 2 Vector__XXX
+BO_ 22 TorrentBrightness1: 2 Vector__XXX
+ SG_ ChannelIndex : 7|8@0+ (1,0) [0|7] "" Torrent
+ SG_ BrightnessLevel : 15|8@0+ (1,0) [0|255] "" Torrent
+
+BO_ 23 TorrentBrightness2: 2 Vector__XXX
+ SG_ ChannelIndex : 7|8@0+ (1,0) [0|7] "" Torrent
+ SG_ BrightnessLevel : 15|8@0+ (1,0) [0|255] "" Torrent
+
+BO_ 24 TorrentToggle0: 2 Vector__XXX
  SG_ ButtonOrCommand : 7|8@0+ (1,0) [0|9] "" Torrent
  SG_ CommandValue : 15|8@0+ (1,0) [0|255] "" Torrent
 
-BO_ 27 DeviceStatusReport: 8 Torrent
+BO_ 25 TorrentToggle1: 2 Vector__XXX
+ SG_ ButtonOrCommand : 7|8@0+ (1,0) [0|9] "" Torrent
+ SG_ CommandValue : 15|8@0+ (1,0) [0|255] "" Torrent
+
+BO_ 26 TorrentToggle2: 2 Vector__XXX
+ SG_ ButtonOrCommand : 7|8@0+ (1,0) [0|9] "" Torrent
+ SG_ CommandValue : 15|8@0+ (1,0) [0|255] "" Torrent
+
+BO_ 27 TorrentStatus0: 8 Torrent
  SG_ Output1Value : 7|8@0+ (1,0) [0|255] "" Tapper,Headwaters
  SG_ Output2Value : 15|8@0+ (1,0) [0|255] "" Tapper,Headwaters
  SG_ Output3Value : 23|8@0+ (1,0) [0|255] "" Tapper,Headwaters
@@ -106,8 +129,25 @@ BO_ 27 DeviceStatusReport: 8 Torrent
  SG_ Output7Value : 55|8@0+ (1,0) [0|255] "" Tapper,Headwaters
  SG_ Output8Value : 63|8@0+ (1,0) [0|255] "" Tapper,Headwaters
 
-BO_ 30 LightSequenceCommand: 1 Vector__XXX
- SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" Torrent
+BO_ 28 TorrentStatus1: 8 Torrent
+ SG_ Output1Value : 7|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output2Value : 15|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output3Value : 23|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output4Value : 31|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output5Value : 39|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output6Value : 47|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output7Value : 55|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output8Value : 63|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+
+BO_ 29 TorrentStatus2: 8 Torrent
+ SG_ Output1Value : 7|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output2Value : 15|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output3Value : 23|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output4Value : 31|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output5Value : 39|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output6Value : 47|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output7Value : 55|8@0+ (1,0) [0|255] "" Tapper,Headwaters
+ SG_ Output8Value : 63|8@0+ (1,0) [0|255] "" Tapper,Headwaters
 
 BO_ 32 LevelingConfig: 7 Headwaters
  SG_ ConfigCommand : 7|8@0+ (1,0) [0|3] "" Plateau
@@ -122,6 +162,9 @@ BO_ 31 EnvironmentSensorData: 8 Borealis
  SG_ HumidityScaled : 23|16@0+ (0.01,0) [0|100] "%" Headwaters
  SG_ TVOC : 39|16@0+ (1,0) [0|60000] "ppb" Headwaters
  SG_ eCO2 : 55|16@0+ (1,0) [400|60000] "ppm" Headwaters
+
+BO_ 33 BorealisCalibration: 2 Headwaters
+ SG_ TempOffsetTenths : 7|16@0- (0.1,0) [-100|100] "degC" Borealis
 
 BO_ 35 BatteryShuntData1: 7 Ampline
  SG_ BattVoltageWhole : 7|8@0+ (1,0) [0|255] "V" Headwaters
@@ -168,64 +211,97 @@ BO_ 45 SolarMpptData2: 3 Solstice
  SG_ PanelCurrentWhole : 15|8@0+ (1,0) [0|255] "A" Headwaters
  SG_ PanelCurrentDecimal : 23|8@0+ (1,0) [0|99] "0.01A" Headwaters
 
+BO_ 46 SolarLoadControl: 1 Vector__XXX
+ SG_ LoadState : 7|8@0+ (1,0) [0|4] "" Solstice
+
+BO_ 43 ShuntExtLive: 6 Solstice
+ SG_ ShuntTemperature : 7|16@0- (0.01,0) [-327.68|327.67] "degC" Headwaters
+ SG_ MidpointVoltage : 23|16@0+ (1,0) [0|65535] "mV" Headwaters
+ SG_ AlarmReason : 39|16@0+ (1,0) [0|65535] "" Headwaters
+
+BO_ 47 ShuntExtHistory: 6 Solstice
+ SG_ DeepestDischarge : 7|16@0+ (1,0) [0|65535] "Ah" Headwaters
+ SG_ CumulativeAh : 23|16@0+ (1,0) [0|65535] "Ah" Headwaters
+ SG_ ChargeCycles : 39|16@0+ (1,0) [0|65535] "" Headwaters
+
 BO_ 37 SwitchbackToggle0: 2 Vector__XXX
- SG_ RelayOrCommand : 7|8@0+ (1,0) [0|6] "" Switchback
+ SG_ RelayOrCommand : 7|8@0+ (1,0) [0|8] "" Switchback
  SG_ CommandValue : 15|8@0+ (1,0) [0|1] "" Switchback
 
 BO_ 38 SwitchbackToggle1: 2 Vector__XXX
- SG_ RelayOrCommand : 7|8@0+ (1,0) [0|6] "" Switchback
+ SG_ RelayOrCommand : 7|8@0+ (1,0) [0|8] "" Switchback
  SG_ CommandValue : 15|8@0+ (1,0) [0|1] "" Switchback
 
 BO_ 39 SwitchbackToggle2: 2 Vector__XXX
- SG_ RelayOrCommand : 7|8@0+ (1,0) [0|6] "" Switchback
+ SG_ RelayOrCommand : 7|8@0+ (1,0) [0|8] "" Switchback
  SG_ CommandValue : 15|8@0+ (1,0) [0|1] "" Switchback
 
 BO_ 40 SwitchbackStatus0: 1 Switchback
- SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|63] "" Headwaters
+ SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|255] "" Headwaters
 
 BO_ 41 SwitchbackStatus1: 1 Switchback
- SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|63] "" Headwaters
+ SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|255] "" Headwaters
 
 BO_ 42 SwitchbackStatus2: 1 Switchback
- SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|63] "" Headwaters
+ SG_ RelayStateBitmask : 7|8@0+ (1,0) [0|255] "" Headwaters
+
+BO_ 51 TorrentSequence0: 1 Vector__XXX
+ SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" Torrent
+
+BO_ 52 TorrentSequence1: 1 Vector__XXX
+ SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" Torrent
+
+BO_ 53 TorrentSequence2: 1 Vector__XXX
+ SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" Torrent
 
 CM_ BU_ Bearing "Bearing (GNSS) module (ESP32). Reads GNSS data from a connected GPS receiver and broadcasts position, altitude, speed, course, and date/time onto the CAN bus. Transmit-only device.";
-CM_ BU_ Torrent "Torrent power distribution module (ESP32). 8-channel PWM module controlling MOSFET outputs for lights and accessories. Receives on/off toggle, brightness, and sequence commands. Sends status reports showing current state of all 8 outputs.";
+CM_ BU_ Torrent "Torrent power distribution module (ESP32). 8-channel PWM module controlling MOSFET outputs for lights and accessories. Module address (0-2) set at compile time via TORRENT_ADDRESS build flag, allowing up to 3 modules on the same bus. Receives brightness commands (ID 0x15-0x17), toggle commands (ID 0x18-0x1A), and sequence commands (ID 0x33-0x35), one per module instance. Sends status reports (ID 0x1B-0x1D) showing current state of all 8 outputs. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
 CM_ BU_ Tapper "Tapper button panel (ESP32). Physical 8-button interface. Each button sends a toggle command to Torrent to turn a corresponding output channel on or off. Has 8 status LEDs that reflect current output states by listening to DeviceStatusReport messages.";
 CM_ BU_ Ampline "Ampline battery shunt monitor (ESP32). Reads Victron BMV battery monitor data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports battery voltage, current draw, state of charge, wattage, and time-to-go. Transmit-only on CAN.";
-CM_ BU_ Solstice "Solstice solar charge controller gateway (ESP32). Reads Victron MPPT solar charge controller data via VE.Direct serial protocol (UART at 19200 baud) and converts it to CAN messages. Reports panel voltage, solar wattage, battery voltage, charge status, and panel current. Transmit-only on CAN.";
+CM_ BU_ Solstice "Solstice solar charge controller gateway (ESP32-S3, Waveshare ESP32-S3-RS485-CAN). Reads Victron MPPT solar charge controller data via VE.Direct serial protocol (UART at 19200 baud, RX on GPIO1, TX on GPIO2) and converts it to CAN messages. Reports panel voltage, solar wattage, battery voltage, charge status, and panel current. Receives SolarLoadControl (ID 0x2E) to command the MPPT load output ON/OFF/Default via VE.Direct HEX protocol (register 0xEDAB). Also polls Victron SmartShunt registers via VE.Direct HEX GET for extended data: battery temperature, midpoint voltage, alarm states (ShuntExtLive ID 0x2B), deepest discharge, cumulative Ah, and charge cycles (ShuntExtHistory ID 0x2F).";
 CM_ BU_ Borealis "Borealis environment and air quality sensor module (ESP32-S3-Zero). Reads DHT22 for temperature/humidity and SGP30 for TVOC/eCO2. Sends all data in a single 8-byte CAN frame at ID 0x1F. Bytes 0-3 are backwards-compatible with the predecessor AirQualityModule format. Bytes 4-7 add TVOC and eCO2 readings. Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
 CM_ BU_ Headwaters "Headwaters in-vehicle compute (Raspberry Pi). CAN-to-MQTT bridge running a Python script that reads all CAN bus messages and publishes them as JSON over MQTT (with TLS). Also subscribes to MQTT and writes received commands back onto the CAN bus. Enables cloud connectivity and remote monitoring.";
 CM_ BU_ Aftline "Aftline trailer connector monitor (ESP32-C6). Monitors the standard 7-pin trailer connection for voltage, turn signals, brake signals, and running lights. Reports trailer connection state. Uses TwaiTaskBased library. Under active development.";
 CM_ BU_ Therma "Therma heater control module (ESP32-C6). Controls an electric heater via dual relay. Uses TwaiTaskBased library. Listens for OTA update notifications on CAN. Under active development.";
 CM_ BU_ Plateau "Plateau vehicle leveling module (ESP32-S3-Zero with Adafruit BNO055 IMU). Reads pitch and roll from the BNO055 9-DOF IMU and computes per-corner height adjustments based on configurable vehicle dimensions. Supports three mounting orientations (floor, left wall, right wall) with automatic axis remapping. BNO055 calibration offsets are auto-saved to NVS when fully calibrated. Receives leveling configuration commands via CAN (ID 0x20). Transmits tilt data at 2Hz (ID 0x30), corner height data (ID 0x31), and calibration status every 2s (ID 0x32). Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
-CM_ BU_ Picket "Picket cabinet/door sensor module (ESP32-C6). Monitors up to 10 magnetic reed switch inputs to detect open/closed state of cabinet doors and enclosures. Uses a 3-position DIP switch to set a unique CAN address (0-7), allowing up to 8 modules on the same bus (CAN IDs 0x0A-0x11). A 4th DIP switch controls the 120 ohm CAN bus termination resistor. Uses TwaiTaskBased library. Supports OTA firmware updates via CAN.";
-CM_ BU_ Switchback "Switchback relay control module (ESP32-S3, Waveshare ESP32-S3-Relay-6CH). Controls 6 mechanical relays for switching high-current loads. Receives toggle commands via CAN (ID 0x25-0x27, one per module instance). Sends relay status bitmask via CAN (ID 0x28-0x2A). Supports up to 3 modules on the same bus. Relays are binary on/off (not PWM). Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
+CM_ BU_ Picket "Picket cabinet/door sensor module (ESP32-S3, Waveshare ESP32-S3-RS485-CAN). Monitors up to 13 magnetic reed switch inputs to detect open/closed state of cabinet doors and enclosures. Module address (0-7) set at compile time via PICKET_ADDRESS build flag, allowing up to 8 modules on the same bus (CAN IDs 0x0A-0x11). Onboard TJA1051 CAN transceiver. ESP-IDF firmware. Supports OTA firmware updates via CAN.";
+CM_ BU_ Switchback "Switchback relay control module (ESP32-S3, Waveshare ESP32-S3-ETH-8DI-8RO-C). Controls 8 mechanical relays for switching high-current loads. Module address (0-2) set at compile time via SWITCHBACK_ADDRESS build flag, allowing up to 3 modules on the same bus. Receives toggle commands via CAN (ID 0x25-0x27, one per module instance). Sends relay status bitmask via CAN (ID 0x28-0x2A). Relays are binary on/off (not PWM). 8 optocoupler-isolated digital inputs. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
 
-CM_ BO_ 0 "OTA (Over-The-Air) firmware update notification. Sent by Headwaters when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device on the bus checks if the MAC matches its own hostname (formatted as esp32c6-XXYYZZ). If it matches, the device pauses normal operation, connects to WiFi, and checks for the OTA update. This allows targeted firmware updates to individual devices without disrupting others.";
+CM_ BO_ 2 "Module self-discovery trigger. Broadcast by Headwaters with no payload (DLC 0). All unconfigured modules on the bus respond by connecting to WiFi and advertising a _trailcurrent._tcp mDNS service with TXT records: type (module type), addr (instance address), canid (hex CAN ID), fw (firmware version). Headwaters browses mDNS to discover the module, then sends GET /discovery/confirm to acknowledge. The module marks itself configured in NVS and tears down WiFi. Only unconfigured modules respond; configured modules ignore this message silently.";
+CM_ BO_ 3 "Discovery reset. Targeted by MAC address (same format as OTA trigger). Clears the configured flag in NVS on the targeted module so it responds to the next DiscoveryTrigger (0x02) broadcast.";
+CM_ BO_ 0 "OTA (Over-The-Air) firmware update notification. Sent by Headwaters when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device on the bus checks if the MAC matches its own hostname (formatted as esp32-XXYYZZ). If it matches, the device pauses normal operation, connects to WiFi, and checks for the OTA update. This allows targeted firmware updates to individual devices without disrupting others.";
 CM_ BO_ 6 "GPS date and time data from the GNSS receiver. Sent periodically by Bearing. Year is encoded as a 16-bit unsigned integer split across bytes 0 and 1 (big-endian). Month, day, hour, minute, and second are each a single byte with their natural value. Time is in UTC.";
 CM_ BO_ 7 "GPS navigation data: number of satellites being tracked, speed over ground, course over ground (heading), and the active GNSS constellation. Speed is in knots multiplied by 100 (divide raw value by 100 to get knots). Course is in degrees multiplied by 10 (divide raw value by 10 to get degrees, 0-360). GNSS mode indicates which satellite constellation combination is active (GPS, BeiDou, GLONASS, or combinations thereof).";
 CM_ BO_ 8 "GPS altitude above mean sea level. Encoded as a 32-bit unsigned integer representing altitude in meters multiplied by 100 (divide raw value by 100 to get meters). For example, a raw value of 152340 means 1523.40 meters.";
 CM_ BO_ 9 "GPS position: latitude and longitude. Each coordinate uses 4 bytes: a sign byte (0 = North/East positive, 1 = South/West negative) followed by a 24-bit unsigned integer representing the absolute value multiplied by 10000. To decode: take the 24-bit value, divide by 10000, and apply the sign. For example, sign=0 and raw=339876 means +33.9876 degrees.";
-CM_ BO_ 10 "Picket status from module with DIP address 0 (all switches OFF). Sent at 5Hz. Each bit represents one reed switch input: 1 = door open (no magnet), 0 = door closed (magnet present). Byte 0 contains doors 1-8 (bit 0 = door 1 LSB, bit 7 = door 8 MSB). Byte 1 bits 0-1 contain doors 9-10, bits 2-7 are reserved. CAN IDs 0x0A through 0x11 share this identical signal layout, each sent by a different physical module selected via DIP switch address 0-7.";
-CM_ BO_ 11 "Picket status from module with DIP address 1. Same signal layout as PicketStatus0 (ID 0x0A). See that message for full signal description.";
-CM_ BO_ 12 "Picket status from module with DIP address 2. Same signal layout as PicketStatus0 (ID 0x0A).";
-CM_ BO_ 13 "Picket status from module with DIP address 3. Same signal layout as PicketStatus0 (ID 0x0A).";
-CM_ BO_ 14 "Picket status from module with DIP address 4. Same signal layout as PicketStatus0 (ID 0x0A).";
-CM_ BO_ 15 "Picket status from module with DIP address 5. Same signal layout as PicketStatus0 (ID 0x0A).";
-CM_ BO_ 16 "Picket status from module with DIP address 6. Same signal layout as PicketStatus0 (ID 0x0A).";
-CM_ BO_ 17 "Picket status from module with DIP address 7 (all address switches ON). Same signal layout as PicketStatus0 (ID 0x0A).";
-CM_ BO_ 21 "Brightness control command for Torrent. Sets a specific PWM brightness level (0-255) for one of the 8 output channels. Byte 0 selects the channel (0-7), byte 1 sets the brightness level. A value of 0 turns the channel fully off, 255 is full brightness. Sent by multiple sources (Headwaters, Tapper, Spotter, Milepost, etc.).";
-CM_ BO_ 24 "Toggle on/off command for Torrent. Sent by multiple sources (Tapper, Headwaters, Spotter, Milepost, etc.). Byte 0 indicates which action: values 0-7 toggle the corresponding output channel on or off (if on turns off, if off turns on). Value 8 with byte 1 = 0 turns ALL outputs off, value 8 with byte 1 = 1 turns ALL outputs on. Value 9 with byte 1 = 1 turns ALL outputs on (similar to command 8 with value 1).";
-CM_ BO_ 27 "Device status report from Torrent. Sent continuously at ~30Hz. Each of the 8 data bytes represents the current PWM value (0 = off, 255 = full on) of the corresponding output channel. Used by Tapper to update its status LEDs, by Headwaters for MQTT publishing, and by UI modules (Spotter, Milepost, Fireside) for display.";
-CM_ BO_ 30 "Light sequence animation command for Torrent. Triggers a pre-programmed light show effect. Byte 0 value 0 starts the interior sequence (smooth fade in/out followed by a chase pattern on outputs 5-8). Byte 0 value 1 starts the exterior sequence (smooth fade in/out followed by an alternating flash on outputs 3-4). Sequences run to completion before normal control resumes.";
+CM_ BO_ 10 "Picket status from module with address 0 (default). Sent at 5Hz. Each bit represents one reed switch input: 1 = door open (no magnet), 0 = door closed (magnet present). Byte 0 contains doors 1-8 (bit 0 = door 1 LSB, bit 7 = door 8 MSB). Byte 1 bits 0-4 contain doors 9-13, bits 5-7 are reserved. CAN IDs 0x0A through 0x11 share this identical signal layout, each sent by a different physical module with PICKET_ADDRESS build flag 0-7.";
+CM_ BO_ 11 "Picket status from module with build address 1. Same signal layout as PicketStatus0 (ID 0x0A). See that message for full signal description.";
+CM_ BO_ 12 "Picket status from module with build address 2. Same signal layout as PicketStatus0 (ID 0x0A).";
+CM_ BO_ 13 "Picket status from module with build address 3. Same signal layout as PicketStatus0 (ID 0x0A).";
+CM_ BO_ 14 "Picket status from module with build address 4. Same signal layout as PicketStatus0 (ID 0x0A).";
+CM_ BO_ 15 "Picket status from module with build address 5. Same signal layout as PicketStatus0 (ID 0x0A).";
+CM_ BO_ 16 "Picket status from module with build address 6. Same signal layout as PicketStatus0 (ID 0x0A).";
+CM_ BO_ 17 "Picket status from module with build address 7. Same signal layout as PicketStatus0 (ID 0x0A).";
+CM_ BO_ 21 "Brightness control command for Torrent module instance 0. Sets a specific PWM brightness level (0-255) for one of the 8 output channels. Byte 0 selects the channel (0-7), byte 1 sets the brightness level. A value of 0 turns the channel fully off, 255 is full brightness. CAN IDs 0x15-0x17 share this identical signal layout, each targeting a different physical Torrent module.";
+CM_ BO_ 22 "Brightness control command for Torrent module instance 1. Same signal layout as TorrentBrightness0 (ID 0x15).";
+CM_ BO_ 23 "Brightness control command for Torrent module instance 2. Same signal layout as TorrentBrightness0 (ID 0x15).";
+CM_ BO_ 24 "Toggle on/off command for Torrent module instance 0. Byte 0 indicates which action: values 0-7 toggle the corresponding output channel on or off (if on turns off, if off turns on). Value 8 with byte 1 = 0 turns ALL outputs off, value 8 with byte 1 = 1 turns ALL outputs on. Value 9 with byte 1 = 1 turns ALL outputs on. CAN IDs 0x18-0x1A share this identical signal layout, each targeting a different physical Torrent module.";
+CM_ BO_ 25 "Toggle on/off command for Torrent module instance 1. Same signal layout as TorrentToggle0 (ID 0x18).";
+CM_ BO_ 26 "Toggle on/off command for Torrent module instance 2. Same signal layout as TorrentToggle0 (ID 0x18).";
+CM_ BO_ 27 "Status report from Torrent module instance 0. Sent continuously at ~30Hz. Each of the 8 data bytes represents the current PWM value (0 = off, 255 = full on) of the corresponding output channel. Used by Tapper to update its status LEDs, by Headwaters for MQTT publishing, and by UI modules for display. CAN IDs 0x1B-0x1D share this identical signal layout, each sent by a different physical Torrent module.";
+CM_ BO_ 28 "Status report from Torrent module instance 1. Same signal layout as TorrentStatus0 (ID 0x1B).";
+CM_ BO_ 29 "Status report from Torrent module instance 2. Same signal layout as TorrentStatus0 (ID 0x1B).";
+CM_ BO_ 51 "Light sequence animation command for Torrent module instance 0. Triggers a pre-programmed light show effect. Byte 0 value 0 starts the interior sequence (smooth fade in/out followed by a chase pattern on outputs 5-8). Byte 0 value 1 starts the exterior sequence (smooth fade in/out followed by an alternating flash on outputs 3-4). Sequences run to completion before normal control resumes. CAN IDs 0x33-0x35 share this identical signal layout, each targeting a different physical Torrent module.";
+CM_ BO_ 52 "Light sequence animation command for Torrent module instance 1. Same signal layout as TorrentSequence0 (ID 0x33).";
+CM_ BO_ 53 "Light sequence animation command for Torrent module instance 2. Same signal layout as TorrentSequence0 (ID 0x33).";
 CM_ BO_ 31 "Environment sensor data from Borealis. Bytes 0-3 are backwards-compatible: byte 0 is temperature in whole degrees Celsius, byte 1 is temperature in whole degrees Fahrenheit (F = (C * 9 + 3) / 5 + 32), bytes 2-3 are a 16-bit big-endian humidity value multiplied by 100. Bytes 4-5 are TVOC in ppb (16-bit big-endian, 0-60000). Bytes 6-7 are eCO2 in ppm (16-bit big-endian, 400-60000). TVOC and eCO2 read from an SGP30 sensor. The SGP30 needs ~15 seconds warm-up; initial values are TVOC=0, eCO2=400.";
+CM_ BO_ 33 "Temperature calibration offset for Borealis. Sent by Headwaters. Bytes 0-1 are a signed 16-bit big-endian value in tenths of degrees Celsius (e.g. -28 = -2.8C). Stored to NVS on receipt and applied to all SHT31 temperature readings before conversion or transmission.";
 CM_ BO_ 35 "Battery shunt monitor data part 1, from the Victron BMV battery monitor. Reports core battery metrics. Battery voltage is split into whole number (byte 0) and decimal part (byte 1) - combine as: voltage = byte0 + byte1/100. Byte 2 indicates if current is flowing out of the battery (1 = discharging/negative, 0 = charging/positive). Current is split similarly into whole (byte 3) and decimal (byte 4). State of charge percentage is split into whole (byte 5) and decimal (byte 6). For example: bytes 13, 45, 1, 5, 30, 85, 50 means 13.45V, -5.30A discharge, 85.50% SOC.";
 CM_ BO_ 36 "Battery shunt monitor data part 2, from the Victron BMV battery monitor. Byte 0 indicates if wattage is negative (0xFF = battery discharging/negative, 0x00 = charging/positive). Bytes 1-2 form a 16-bit big-endian unsigned value for the absolute wattage in whole watts. Bytes 3-4 form a 16-bit big-endian unsigned value for time-to-go in minutes (how long until the battery is empty at the current discharge rate). For example: bytes 0xFF, 0x01, 0x2C, 0x02, 0x58 means -300W discharge, 600 minutes remaining.";
-CM_ BO_ 37 "Relay toggle command for Switchback module instance 0. Byte 0 values 0-5 toggle the corresponding relay channel (0=CH1 ... 5=CH6). Value 6 is an all-channels command: byte 1 = 0 turns all relays off, byte 1 = 1 turns all relays on. CAN IDs 0x25-0x27 share this identical signal layout, each targeting a different physical Switchback module.";
+CM_ BO_ 37 "Relay toggle command for Switchback module instance 0. Byte 0 values 0-7 toggle the corresponding relay channel (0=CH1 ... 7=CH8). Value 8 is an all-channels command: byte 1 = 0 turns all relays off, byte 1 = 1 turns all relays on. CAN IDs 0x25-0x27 share this identical signal layout, each targeting a different physical Switchback module.";
 CM_ BO_ 38 "Relay toggle command for Switchback module instance 1. Same signal layout as SwitchbackToggle0 (ID 0x25).";
 CM_ BO_ 39 "Relay toggle command for Switchback module instance 2. Same signal layout as SwitchbackToggle0 (ID 0x25).";
-CM_ BO_ 40 "Relay status report from Switchback module instance 0. Sent immediately on state change (event-driven, not periodic). Byte 0 is a bitmask of relay states: bit 0 = CH1, bit 1 = CH2, ... bit 5 = CH6. Value 1 = relay ON (energized), 0 = relay OFF. Bits 6-7 are reserved. CAN IDs 0x28-0x2A share this identical signal layout, each sent by a different physical Switchback module.";
+CM_ BO_ 40 "Relay status report from Switchback module instance 0. Sent immediately on state change (event-driven, not periodic). Byte 0 is a bitmask of relay states: bit 0 = CH1, bit 1 = CH2, ... bit 7 = CH8. Value 1 = relay ON (energized), 0 = relay OFF. CAN IDs 0x28-0x2A share this identical signal layout, each sent by a different physical Switchback module.";
 CM_ BO_ 41 "Relay status report from Switchback module instance 1. Same signal layout as SwitchbackStatus0 (ID 0x28).";
 CM_ BO_ 42 "Relay status report from Switchback module instance 2. Same signal layout as SwitchbackStatus0 (ID 0x28).";
 CM_ BO_ 32 "Leveling configuration command for Plateau. Byte 0 is the command type: 0x01 = set configuration (bytes 1-6 contain mounting surface, vehicle length, vehicle width, and save flag), 0x02 = request immediate status report on ID 0x32, 0x03 = zero/tare calibration (reserved). For command 0x01: byte 1 is the mounting surface (0=floor, 1=left wall, 2=right wall), bytes 2-3 are vehicle length in cm (big-endian uint16), bytes 4-5 are vehicle width in cm (big-endian uint16), byte 6 = 0x01 to persist to NVS. Configuration is applied immediately (including axis remap) even without saving.";
@@ -234,8 +310,18 @@ CM_ BO_ 49 "Per-corner height adjustment data. Derived from pitch/roll and vehic
 CM_ BO_ 50 "Vehicle leveling system status. Sent every 2 seconds. Byte 0 is a flags bitmask: bit 0 = IMU connected, bit 1 = fully calibrated (cal_sys==3), bit 2 = leveling active. Byte 1 is packed BNO055 calibration levels: bits 7-6 = system (0-3), bits 5-4 = gyro (0-3), bits 3-2 = accel (0-3), bits 1-0 = mag (0-3). Byte 2 is the current mounting surface enum (0=floor, 1=left wall, 2=right wall). Byte 3 is reserved.";
 CM_ BO_ 44 "Solar MPPT charge controller data part 1, from the Victron MPPT solar charger. Panel voltage is split into whole (byte 0) and decimal (byte 1) - combine as: panelV = byte0 + byte1/100. Bytes 2-3 form a 16-bit big-endian value for solar power in watts. Battery voltage (as seen by the charger) is split into whole (byte 4) and decimal (byte 5). Byte 6 is the solar charge status enum from the Victron CS field (0 = Off, 2 = Fault, 3 = Bulk, 4 = Absorption, 5 = Float).";
 CM_ BO_ 45 "Solar MPPT charge controller data part 2, from the Victron MPPT solar charger. Byte 0 indicates if panel current is negative (1 = yes, 0 = no). Panel current is split into whole number (byte 1) and decimal (byte 2) - combine as: current = byte1 + byte2/100 amps. Apply sign from byte 0.";
+CM_ BO_ 46 "Solar MPPT load output control command. Sent to Solstice to control the Victron MPPT load output terminal via VE.Direct HEX protocol (register 0xEDAB). Byte 0 is the desired load state: 0 = OFF, 1 = ON, 4 = Default (use MPPT built-in algorithm).";
+CM_ BO_ 43 "Shunt extended live data, retrieved from Victron SmartShunt via VE.Direct HEX GET protocol. Temperature (bytes 0-1) is signed 16-bit big-endian in centidegrees C (multiply by 0.01 for degrees). Midpoint voltage (bytes 2-3) is unsigned 16-bit big-endian in millivolts. Alarm reason (bytes 4-5) is a bitmask of active alarm conditions.";
+CM_ BO_ 47 "Shunt extended history data, retrieved from Victron SmartShunt via VE.Direct HEX GET protocol. Deepest discharge (bytes 0-1) is unsigned 16-bit big-endian in whole Ah. Cumulative Ah drawn (bytes 2-3) is unsigned 16-bit big-endian in whole Ah. Charge cycles (bytes 4-5) is unsigned 16-bit big-endian count.";
+CM_ SG_ 46 LoadState "Desired MPPT load output state. 0 = Force OFF, 1 = Force ON, 4 = Default (MPPT manages load based on its own voltage thresholds). Solstice forwards this to the Victron via VE.Direct HEX SET command.";
+CM_ SG_ 43 ShuntTemperature "Battery temperature from SmartShunt auxiliary sense input. Signed 16-bit big-endian, scaled by 0.01 to get degrees Celsius. Retrieved via VE.Direct HEX GET register 0xEDEC.";
+CM_ SG_ 43 MidpointVoltage "Midpoint voltage of the battery bank in millivolts. For systems with a midpoint tap, this indicates balance between battery halves. Retrieved via VE.Direct HEX GET register 0x0382.";
+CM_ SG_ 43 AlarmReason "Active alarm bitmask from the SmartShunt. Nonzero indicates an alarm condition (low voltage, high voltage, low SOC, etc). Retrieved via VE.Direct HEX GET register 0x031E.";
+CM_ SG_ 47 DeepestDischarge "Deepest discharge in the battery history, in whole amp-hours. Retrieved via VE.Direct HEX GET register 0x0300 (H1).";
+CM_ SG_ 47 CumulativeAh "Total cumulative amp-hours drawn from the battery over its lifetime, in whole Ah. Retrieved via VE.Direct HEX GET register 0x0305 (H6).";
+CM_ SG_ 47 ChargeCycles "Total number of charge cycles recorded by the SmartShunt. Retrieved via VE.Direct HEX GET register 0x0303 (H4).";
 
-CM_ SG_ 0 MacAddressByte1 "First byte of the target device MAC address for OTA update. Combined with bytes 2 and 3, forms the hostname pattern esp32c6-XXYYZZ where XX is this byte in hex.";
+CM_ SG_ 0 MacAddressByte1 "First byte of the target device MAC address for OTA update. Combined with bytes 2 and 3, forms the hostname pattern esp32-XXYYZZ where XX is this byte in hex.";
 CM_ SG_ 0 MacAddressByte2 "Second byte of the target device MAC address for OTA update.";
 CM_ SG_ 0 MacAddressByte3 "Third byte of the target device MAC address for OTA update.";
 CM_ SG_ 6 Year "Calendar year in UTC (e.g. 2025). Encoded as 16-bit big-endian unsigned integer.";
@@ -273,6 +359,7 @@ CM_ SG_ 31 TemperatureFahrenheit "Air temperature reading in whole degrees Fahre
 CM_ SG_ 31 HumidityScaled "Relative humidity percentage. Raw 16-bit value is humidity multiplied by 100. The factor of 0.01 converts automatically. For example, raw 5523 means 55.23% relative humidity.";
 CM_ SG_ 31 TVOC "Total Volatile Organic Compounds in parts per billion from the SGP30 sensor. Range 0-60000 ppb. Air quality interpretation: 0-65 Excellent, 65-220 Good, 220-660 Moderate, 660-2200 Poor, 2200+ Unhealthy. Reads 0 during the ~15 second warm-up period.";
 CM_ SG_ 31 eCO2 "Equivalent CO2 concentration in parts per million from the SGP30 sensor. Range 400-60000 ppm. Levels: <400 Low (fresh/outdoor air), 400-999 Normal (well-ventilated indoor), 1000-1999 High (poor ventilation), >=2000 Alarm (immediate ventilation needed). Reads 400 during warm-up.";
+CM_ SG_ 33 TempOffsetTenths "Signed temperature calibration offset in tenths of a degree Celsius. Applied to raw SHT31 readings to compensate for self-heating or sensor placement. For example, -28 means subtract 2.8C from the raw reading.";
 CM_ SG_ 32 ConfigCommand "Configuration command type. 0x01 = set vehicle config (use remaining bytes). 0x02 = request immediate status report on CAN ID 0x32. 0x03 = zero/tare calibration reset (reserved for future use).";
 CM_ SG_ 32 MountingSurface "Mounting orientation of the IMU on the vehicle. 0 = floor (horizontal, default), 1 = left wall (vertical, left side), 2 = right wall (vertical, right side). Determines BNO055 axis remapping for correct pitch/roll interpretation.";
 CM_ SG_ 32 VehicleLengthCm "Vehicle length in centimeters, front axle to rear axle. 16-bit big-endian unsigned. Used to compute front-to-back height difference from pitch angle. Default 500 (5 meters).";
@@ -300,9 +387,9 @@ CM_ SG_ 35 BattSocDecimal "Battery state of charge decimal part (hundredths of a
 CM_ SG_ 36 IsWattageNegative "Indicates direction of power flow. 0x00 (0) = positive/charging. 0xFF (255) = negative/discharging. Note: uses 0xFF rather than 1 to indicate negative.";
 CM_ SG_ 36 Wattage "Battery power consumption in whole watts. 16-bit big-endian unsigned value. Apply sign from IsWattageNegative. Positive means power flowing into battery (charging), negative means power drawn from battery (loads active).";
 CM_ SG_ 36 TimeToGo "Estimated time remaining until battery is depleted at the current discharge rate, in minutes. 16-bit big-endian unsigned value. Value of 65535 may indicate infinite (battery is charging). Divide by 60 to get hours.";
-CM_ SG_ 37 RelayOrCommand "Relay channel or special command code. Values 0-5: toggle the corresponding relay (0=CH1 ... 5=CH6). Value 6: all-channels command (use CommandValue byte). Applies identically to CAN IDs 0x25-0x27.";
-CM_ SG_ 37 CommandValue "Value parameter for the all-channels command. When RelayOrCommand=6: 0 = turn all relays off, 1 = turn all relays on. Ignored for single-channel toggles (0-5).";
-CM_ SG_ 40 RelayStateBitmask "Bitmask of current relay states. Bit 0 = CH1, bit 1 = CH2, bit 2 = CH3, bit 3 = CH4, bit 4 = CH5, bit 5 = CH6. Value 1 = relay ON (energized), 0 = relay OFF. Bits 6-7 are reserved and always 0. Applies identically to CAN IDs 0x28-0x2A.";
+CM_ SG_ 37 RelayOrCommand "Relay channel or special command code. Values 0-7: toggle the corresponding relay (0=CH1 ... 7=CH8). Value 8: all-channels command (use CommandValue byte). Applies identically to CAN IDs 0x25-0x27.";
+CM_ SG_ 37 CommandValue "Value parameter for the all-channels command. When RelayOrCommand=8: 0 = turn all relays off, 1 = turn all relays on. Ignored for single-channel toggles (0-7).";
+CM_ SG_ 40 RelayStateBitmask "Bitmask of current relay states. Bit 0 = CH1, bit 1 = CH2, bit 2 = CH3, bit 3 = CH4, bit 4 = CH5, bit 5 = CH6, bit 6 = CH7, bit 7 = CH8. Value 1 = relay ON (energized), 0 = relay OFF. Applies identically to CAN IDs 0x28-0x2A.";
 CM_ SG_ 44 PanelVoltageWhole "Solar panel voltage whole number part in volts. Combine with PanelVoltageDecimal as: panelV = PanelVoltageWhole + PanelVoltageDecimal / 100.0.";
 CM_ SG_ 44 PanelVoltageDecimal "Solar panel voltage decimal part (hundredths of a volt, 0-99).";
 CM_ SG_ 44 SolarWattage "Total solar power output in whole watts. 16-bit big-endian unsigned value. This is the instantaneous power being generated by the solar panels.";
@@ -342,6 +429,8 @@ BA_ "CycleTime" BO_ 15 200;
 BA_ "CycleTime" BO_ 16 200;
 BA_ "CycleTime" BO_ 17 200;
 BA_ "CycleTime" BO_ 27 33;
+BA_ "CycleTime" BO_ 28 33;
+BA_ "CycleTime" BO_ 29 33;
 BA_ "CycleTime" BO_ 48 500;
 BA_ "CycleTime" BO_ 49 500;
 BA_ "CycleTime" BO_ 50 2000;
@@ -354,14 +443,17 @@ BA_ "CycleTime" BO_ 45 33;
 VAL_ 9 LatitudeSign 0 "North_Positive" 1 "South_Negative";
 VAL_ 9 LongitudeSign 0 "East_Positive" 1 "West_Negative";
 VAL_ 24 ButtonOrCommand 0 "Toggle_Output1" 1 "Toggle_Output2" 2 "Toggle_Output3" 3 "Toggle_Output4" 4 "Toggle_Output5" 5 "Toggle_Output6" 6 "Toggle_Output7" 7 "Toggle_Output8" 8 "All_Channels_Command" 9 "All_Channels_On";
-VAL_ 30 SequenceType 0 "Interior_FadeAndChase" 1 "Exterior_FadeAndFlash";
+VAL_ 51 SequenceType 0 "Interior_FadeAndChase" 1 "Exterior_FadeAndFlash";
+VAL_ 52 SequenceType 0 "Interior_FadeAndChase" 1 "Exterior_FadeAndFlash";
+VAL_ 53 SequenceType 0 "Interior_FadeAndChase" 1 "Exterior_FadeAndFlash";
 VAL_ 35 IsCurrentNegative 0 "Charging_Positive" 1 "Discharging_Negative";
 VAL_ 36 IsWattageNegative 0 "Charging_Positive" 255 "Discharging_Negative";
 VAL_ 44 SolarChargeStatus 0 "Off" 2 "Fault" 3 "Bulk_Charging" 4 "Absorption_Charging" 5 "Float_Charging";
 VAL_ 45 IsPanelCurrentNegative 0 "Normal_Positive" 1 "Reverse_Negative";
+VAL_ 46 LoadState 0 "Off" 1 "On" 4 "Default";
 VAL_ 32 ConfigCommand 1 "Set_Vehicle_Config" 2 "Request_Status" 3 "Zero_Tare";
 VAL_ 32 MountingSurface 0 "Floor" 1 "Left_Wall" 2 "Right_Wall";
 VAL_ 50 MountingOrientation 0 "Floor" 1 "Left_Wall" 2 "Right_Wall";
-VAL_ 37 RelayOrCommand 0 "Toggle_Relay1" 1 "Toggle_Relay2" 2 "Toggle_Relay3" 3 "Toggle_Relay4" 4 "Toggle_Relay5" 5 "Toggle_Relay6" 6 "All_Relays_Command";
+VAL_ 37 RelayOrCommand 0 "Toggle_Relay1" 1 "Toggle_Relay2" 2 "Toggle_Relay3" 3 "Toggle_Relay4" 4 "Toggle_Relay5" 5 "Toggle_Relay6" 6 "Toggle_Relay7" 7 "Toggle_Relay8" 8 "All_Relays_Command";
 VAL_ 7 GnssMode 0 "No_Constellation" 1 "GPS" 2 "BeiDou" 3 "GPS_BeiDou" 4 "GLONASS" 5 "GPS_GLONASS" 6 "BeiDou_GLONASS" 7 "GPS_BeiDou_GLONASS";
 

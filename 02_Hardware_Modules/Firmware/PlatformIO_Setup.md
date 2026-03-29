@@ -1,6 +1,6 @@
 # PlatformIO Setup and Configuration
 
-Guide to setting up PlatformIO for TrailCurrent hardware module development. Most TrailCurrent modules use PlatformIO with the Arduino framework. For Fireside (which uses ESP-IDF natively), see [ESP_IDF_Setup.md](./ESP_IDF_Setup.md).
+Guide to setting up PlatformIO for TrailCurrent hardware module development. Some TrailCurrent modules use PlatformIO with the Arduino framework. For modules using ESP-IDF natively (Fireside, Solstice, Picket), see [ESP_IDF_Setup.md](./ESP_IDF_Setup.md).
 
 ## Overview
 
@@ -69,7 +69,7 @@ lib_deps =
 | Board ID | ESP32 Variant | Used By |
 |----------|--------------|---------|
 | `esp32dev` | ESP32 (WROOM) | Ampline, Torrent, Tapper, Solstice |
-| `esp32-c6-devkitm-1` | ESP32-C6 (Waveshare C6-Zero) | Picket, Aftline, Therma |
+| `esp32-c6-devkitm-1` | ESP32-C6 (Waveshare C6-Zero) | Aftline, Therma |
 | `esp32s3zero` | ESP32-S3 (S3-Zero) | Plateau, Borealis |
 | `esp32-s3-devkitm-1` | ESP32-S3 (Waveshare Relay-6CH) | Switchback |
 

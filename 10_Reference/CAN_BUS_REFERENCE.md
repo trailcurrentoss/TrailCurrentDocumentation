@@ -30,6 +30,9 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x32 (decimal 0-50
 | CAN ID (hex) | CAN ID (dec) | Message Name | DLC | Sender | Cycle Time |
 |--------------|-------------|--------------|-----|--------|------------|
 | 0x00 | 0 | OtaUpdateNotification | 3 | Headwaters | Event-driven |
+| 0x01 | 1 | WifiConfigProvisioning | 8 | Headwaters | Event-driven |
+| 0x02 | 2 | DiscoveryTrigger | 0 | Headwaters | Event-driven |
+| 0x03 | 3 | DiscoveryReset | 3 | Headwaters | Event-driven |
 | 0x06 | 6 | GpsDateTime | 7 | Bearing | 1000 ms |
 | 0x07 | 7 | GpsSatSpeedCourseMode | 6 | Bearing | 1000 ms |
 | 0x08 | 8 | GpsAltitude | 4 | Bearing | 1000 ms |
@@ -70,9 +73,9 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x32 (decimal 0-50
 | Torrent | ESP32 | 8-channel PWM power distribution module |
 | Tapper | ESP32 | Physical 8-button control panel |
 | Ampline | ESP32 | Battery shunt monitor. Reads Victron BMV via VE.Direct serial (19200 baud) |
-| Solstice | ESP32 | Solar charge controller gateway. Reads Victron MPPT via VE.Direct serial (19200 baud) |
+| Solstice | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Solar charge controller gateway. Reads Victron MPPT via VE.Direct serial (19200 baud). ESP-IDF firmware |
 | Borealis | ESP32-S3-Zero | Environment/air quality sensor. DHT22 + SGP30 |
-| Picket | ESP32-C6 | Cabinet/door sensor. Up to 10 reed switch inputs, DIP-addressable (8 modules max) |
+| Picket | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Cabinet/door sensor. Up to 13 reed switch inputs, NVS-addressed (8 modules max). ESP-IDF firmware |
 | Switchback | ESP32-S3 | 6-channel relay module (Waveshare S3-Relay-6CH). Up to 3 on same bus |
 | Plateau | ESP32-S3-Zero | Vehicle leveling with Adafruit BNO055 IMU |
 | Aftline | ESP32-C6 | Trailer connector monitor. Under active development |
@@ -85,7 +88,36 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x32 (decimal 0-50
 
 ### OTA Update (0x00)
 
-**OtaUpdateNotification** (3 bytes) — Sent by Headwaters when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device checks if the MAC matches its hostname (`esp32c6-XXYYZZ`). On match, the device connects to WiFi and checks for the OTA update.
+**OtaUpdateNotification** (3 bytes) — Sent by Headwaters when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device checks if the MAC matches its hostname (`esp32-XXYYZZ`). On match, the device connects to WiFi and checks for the OTA update.
+
+| Byte | Signal | Bits | Type | Range | Description |
+|------|--------|------|------|-------|-------------|
+| 0 | MacAddressByte1 | 7:0 | uint8 | 0-255 | First byte of target MAC address |
+| 1 | MacAddressByte2 | 15:8 | uint8 | 0-255 | Second byte of target MAC address |
+| 2 | MacAddressByte3 | 23:16 | uint8 | 0-255 | Third byte of target MAC address |
+
+---
+
+### Module Discovery (0x02, 0x03)
+
+Self-discovery protocol for automatic module registration with Headwaters.
+
+#### DiscoveryTrigger (0x02, 0 bytes)
+
+Broadcast by Headwaters with no payload. All unconfigured modules respond by connecting to WiFi and advertising a `_trailcurrent._tcp` mDNS service with TXT records:
+
+| TXT Key | Example Value | Description |
+|---------|---------------|-------------|
+| `type`  | `picket`      | Module type (compile-time) |
+| `addr`  | `3`           | Instance address (compile-time) |
+| `canid` | `0x0D`        | CAN message ID |
+| `fw`    | `1.0.0`       | Firmware version |
+
+Headwaters browses mDNS, reads the TXT records, then sends `GET http://<hostname>.local/discovery/confirm` to acknowledge. The module marks itself configured in NVS and tears down WiFi. Already-configured modules ignore this message.
+
+#### DiscoveryReset (0x03, 3 bytes)
+
+Targeted reset using the same MAC-matching format as OTA (0x00). Clears the configured flag on one module so it responds to the next DiscoveryTrigger.
 
 | Byte | Signal | Bits | Type | Range | Description |
 |------|--------|------|------|-------|-------------|
@@ -161,29 +193,29 @@ Position coordinates. Each coordinate is a sign byte followed by a 24-bit absolu
 
 ### Picket - Cabinet & Door Sensors (0x0A-0x11)
 
-Monitors up to 10 magnetic reed switch inputs per module. Uses a 3-position DIP switch to set a unique CAN address (0-7), allowing up to 8 Picket modules on the same bus. CAN IDs 0x0A through 0x11 share identical signal layout. A 4th DIP switch controls the 120Ω CAN bus termination resistor. Sent at 5 Hz (200 ms cycle).
+Monitors up to 13 magnetic reed switch inputs per module. Uses the Waveshare ESP32-S3-RS485-CAN board with onboard TJA1051 CAN transceiver. Module address (0-7) is set at compile time via `PICKET_ADDRESS` build flag (`idf.py build -DPICKET_ADDRESS=N`), allowing up to 8 Picket modules on the same bus. CAN IDs 0x0A through 0x11 share identical signal layout. Sent at 5 Hz (200 ms cycle). All reed switch inputs use internal pull-ups with no external resistors required.
 
 #### PicketStatus (0x0A-0x11, 2 bytes each)
 
 | Byte | Signal | Bits | Type | Range | Description |
 |------|--------|------|------|-------|-------------|
 | 0 | DoorStatus1to8 | 7:0 | uint8 bitmask | 0-255 | Bit 0 = door 1 (RSW01) ... bit 7 = door 8 (RSW08). 1 = open, 0 = closed |
-| 1 | DoorStatus9to10 | 15:8 | uint8 bitmask | 0-3 | Bit 0 = door 9 (RSW09), bit 1 = door 10 (RSW10). Bits 2-7 reserved |
+| 1 | DoorStatus9to13 | 15:8 | uint8 bitmask | 0-31 | Bits 0-4 = doors 9-13 (RSW09-RSW13). Bits 5-7 reserved |
 
 **Encoding:** 1 = door open (reed switch open, no magnet nearby). 0 = door closed (reed switch closed, magnet present).
 
-**DIP address to CAN ID mapping:**
+**PICKET_ADDRESS to CAN ID mapping:**
 
-| DIP Address | CAN ID | Message Name |
-|-------------|--------|--------------|
-| 0 (all OFF) | 0x0A | PicketStatus0 |
+| Address | CAN ID | Message Name |
+|---------|--------|--------------|
+| 0 (default) | 0x0A | PicketStatus0 |
 | 1 | 0x0B | PicketStatus1 |
 | 2 | 0x0C | PicketStatus2 |
 | 3 | 0x0D | PicketStatus3 |
 | 4 | 0x0E | PicketStatus4 |
 | 5 | 0x0F | PicketStatus5 |
 | 6 | 0x10 | PicketStatus6 |
-| 7 (all ON) | 0x11 | PicketStatus7 |
+| 7 | 0x11 | PicketStatus7 |
 
 ---
 

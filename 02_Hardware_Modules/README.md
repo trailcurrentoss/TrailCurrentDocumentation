@@ -179,7 +179,8 @@ Three ESP32 variants are used across the platform:
 | Variant | Board | Used By |
 |---------|-------|---------|
 | ESP32 (WROOM) | Various dev boards | Ampline, Torrent, Tapper, Solstice, BtGateway, CanEspNowGateway |
-| ESP32-C6 | Waveshare ESP32-C6-Zero | Picket, Aftline, Therma |
+| ESP32-C6 | Waveshare ESP32-C6-Zero | Aftline, Therma |
+| ESP32-S3 | Waveshare ESP32-S3-RS485-CAN | Picket, Solstice |
 | ESP32-S3 | S3-Zero / Waveshare S3-Relay-6CH | Plateau, Switchback, Borealis |
 
 - **Operating Voltage**: 3.3V (internal), 5-24V (input with regulator)
