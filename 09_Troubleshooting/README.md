@@ -159,9 +159,9 @@ See [COMMON_ISSUES.md](COMMON_ISSUES.md)
 #define CONFIG_DEBUG_ENABLE 1
 ```
 
-**Vehicle Pi**:
+**Headwaters (CM5)**:
 ```bash
-docker logs -f can-gateway
+docker logs -f backend
 docker logs -f mosquitto
 ```
 

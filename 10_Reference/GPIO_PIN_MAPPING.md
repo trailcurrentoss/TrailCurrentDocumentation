@@ -2,7 +2,7 @@
 
 Complete reference for GPIO pin assignments, connections, and configurations across all hardware modules.
 
-## In-Vehicle Compute Device (Raspberry Pi/Orange Pi/etc.)
+## In-Vehicle Compute Device (Raspberry Pi Compute Module 5)
 
 ### Raspberry Pi GPIO Header
 
@@ -98,16 +98,21 @@ TX and RX GPIO pins vary per module — defined in each module's `src/globals.h`
 
 **NEEDS TO BE COMPLETED** - Document specific TX/RX pins per module.
 
-### MCP2515 (Raspberry Pi / Headwaters Only)
+### MCP2515 (CM5 / Headwaters Only)
 
-The Raspberry Pi does not have a built-in CAN controller, so Headwaters uses an MCP2515 SPI-based CAN controller on a HAT/shield.
+The Raspberry Pi CM5 does not have a built-in CAN controller, so Headwaters uses the **Waveshare RS485 CAN HAT (B)**, which provides an MCP2515 SPI-based CAN controller on a standard Pi HAT form factor. No custom PCB or soldering is required.
+
+Enabled via device tree overlay in `/boot/firmware/config.txt`:
+
+```
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=12000000,interrupt=25
+```
 
 **NEEDS TO BE COMPLETED** - Document:
-- SPI pin connections (MOSI, MISO, SCK, CS)
-- INT pin connection
-- Crystal specifications
-- Termination resistor placement
-- Schematic diagram
+- Termination resistor jumper on the HAT
+- Waveshare HAT product link and datasheet
+- Photo/reference diagram
 
 ## Power Distribution
 

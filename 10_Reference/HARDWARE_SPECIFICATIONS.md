@@ -17,7 +17,7 @@ Complete electrical and physical specifications for all TrailCurrent hardware co
 ### Recommended Specifications
 
 **NEEDS TO BE COMPLETED** - Document:
-- Processor recommendations (Raspberry Pi 4/5, Orange Pi, Jetson Nano)
+- Reference hardware: Raspberry Pi Compute Module 5 (CM5) on a standard carrier board with Waveshare RS485 CAN HAT (B)
 - RAM recommendations
 - Storage recommendations
 - Expansion options

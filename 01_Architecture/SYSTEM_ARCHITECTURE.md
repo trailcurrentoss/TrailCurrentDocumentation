@@ -46,20 +46,20 @@ TrailCurrent implements a **Software Defined Vehicle (SDV) architecture** where 
                            │       │
 └──────────────────────────┼───────┼────────────────────────────┘
 │              EDGE TIER (In-Vehicle Compute)                   │
-│        (Raspberry Pi, Orange Pi, Jetson Nano, etc.)          │
+│     (Raspberry Pi Compute Module 5 + Waveshare CAN HAT)      │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  ┌────────────────────────────────────────────────────┐       │
 │  │         Docker Container Orchestration             │       │
 │  │                                                    │       │
 │  │  ┌─────────────┐  ┌─────────────┐  ┌──────────┐  │       │
-│  │  │CAN-to-MQTT  │  │ Mosquitto   │  │ App      │  │       │
-│  │  │ Gateway     │  │ (MQTT Broker)  │ Config   │  │       │
+│  │  │ Backend     │  │ Mosquitto   │  │ Frontend │  │       │
+│  │  │(CAN↔MQTT+API)│  │(MQTT Broker)│  │(Dashboard)│ │       │
 │  │  └────┬────────┘  └──────┬──────┘  └──────────┘  │       │
 │  │       │                  │                       │       │
 │  │  ┌────▼──────────────────▼────────┐              │       │
-│  │  │ Local Data Storage & Logging    │              │       │
-│  │  │ (SQLite, File System)           │              │       │
+│  │  │ MongoDB  +  Tile Server         │              │       │
+│  │  │ (local store, offline maps)     │              │       │
 │  │  └──────────────────────────────────┘              │       │
 │  │                                                    │       │
 │  └────────────────────────────────────────────────────┘       │

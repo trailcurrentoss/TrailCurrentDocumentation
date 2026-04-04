@@ -32,8 +32,8 @@ Detailed data movement through the TrailCurrent system across different scenario
 │ current_temp        │
 └──────┬──────────────┘
        │
-       ├─→ Container 1: Logger (stores in SQLite)
-       ├─→ Container 2: API Server (caches in memory)
+       ├─→ Backend Container (stores in MongoDB)
+       ├─→ Backend Container (REST API caches in memory)
        └─→ Cloud MQTT Client (if connected)
             │
             └─→ Cloud Server
@@ -223,7 +223,7 @@ User Dashboard
 
 ### In-Vehicle Compute (Local Storage)
 ```
-SQLite Database: /var/lib/trailcurrent/data.db
+MongoDB: mongodb://mongodb:27017 (Docker volume: mongodb-data)
 ├─ Last 24 hours of sensor data
 ├─ Command queue
 ├─ Device states

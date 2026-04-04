@@ -33,6 +33,7 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x32 (decimal 0-50
 | 0x01 | 1 | WifiConfigProvisioning | 8 | Headwaters | Event-driven |
 | 0x02 | 2 | DiscoveryTrigger | 0 | Headwaters | Event-driven |
 | 0x03 | 3 | DiscoveryReset | 3 | Headwaters | Event-driven |
+| 0x04 | 4 | FirmwareVersionReport | 6 | All modules | Event-driven (boot) |
 | 0x06 | 6 | GpsDateTime | 7 | Bearing | 1000 ms |
 | 0x07 | 7 | GpsSatSpeedCourseMode | 6 | Bearing | 1000 ms |
 | 0x08 | 8 | GpsAltitude | 4 | Bearing | 1000 ms |
@@ -110,7 +111,7 @@ Broadcast by Headwaters with no payload. All unconfigured modules respond by con
 |---------|---------------|-------------|
 | `type`  | `picket`      | Module type (compile-time) |
 | `addr`  | `3`           | Instance address (compile-time) |
-| `canid` | `0x0D`        | CAN message ID |
+| `canid` | `0x0D`        | CAN TX message ID for this instance (used by Headwaters to route data and commands) |
 | `fw`    | `1.0.0`       | Firmware version |
 
 Headwaters browses mDNS, reads the TXT records, then sends `GET http://<hostname>.local/discovery/confirm` to acknowledge. The module marks itself configured in NVS and tears down WiFi. Already-configured modules ignore this message.
@@ -124,6 +125,23 @@ Targeted reset using the same MAC-matching format as OTA (0x00). Clears the conf
 | 0 | MacAddressByte1 | 7:0 | uint8 | 0-255 | First byte of target MAC address |
 | 1 | MacAddressByte2 | 15:8 | uint8 | 0-255 | Second byte of target MAC address |
 | 2 | MacAddressByte3 | 23:16 | uint8 | 0-255 | Third byte of target MAC address |
+
+---
+
+### Firmware Version Report (0x04)
+
+**FirmwareVersionReport** (6 bytes) — Sent by every module once on boot after CAN/TWAI initialization. Reports the running firmware version so Headwaters can track what each device is actually running. This is the mechanism that confirms firmware version after an OTA update — the device reboots with new firmware and broadcasts its version on startup.
+
+| Byte | Signal | Bits | Type | Range | Description |
+|------|--------|------|------|-------|-------------|
+| 0 | MacAddressByte4 | 7:0 | uint8 | 0-255 | 4th byte of device WiFi MAC (same as hostname `esp32-XXYYZZ` byte XX) |
+| 1 | MacAddressByte5 | 15:8 | uint8 | 0-255 | 5th byte of device WiFi MAC (YY) |
+| 2 | MacAddressByte6 | 23:16 | uint8 | 0-255 | 6th byte of device WiFi MAC (ZZ) |
+| 3 | VersionMajor | 31:24 | uint8 | 0-255 | Semantic version major number |
+| 4 | VersionMinor | 39:32 | uint8 | 0-255 | Semantic version minor number |
+| 5 | VersionPatch | 47:40 | uint8 | 0-255 | Semantic version patch number |
+
+The version is read from the ESP-IDF app descriptor (`esp_app_get_description()->version`), which is embedded in the firmware binary at build time from `PROJECT_VER` in CMakeLists.txt. Headwaters CAN bridge matches the MAC bytes to a registered module hostname and updates the `fw` field in MongoDB.
 
 ---
 

@@ -99,6 +99,68 @@ Common problems and their solutions organized by component.
 - Data sync failure
 - Offline mode issues
 
+## SMS Notification Issues
+
+### SMS not received but backend logs say "SMS sent"
+
+The backend reports success when the SSH command exits 0. However, `sendsms` on the
+GL-iNet router always exits 0 -- it only queues the message. The `smsd` daemon sends
+it later and may fail silently.
+
+**Diagnose:** SSH into the router and check for failed messages:
+
+```bash
+ssh root@192.168.8.1 'ls /etc/spool/sms/failed/*/'
+```
+
+If files exist, read one to see the failure reason:
+
+```bash
+ssh root@192.168.8.1 'cat /etc/spool/sms/failed/2-1/send_XXXXXX'
+```
+
+**Common cause:** Check the `Fail_reason` line in the failed message file. Possible
+causes include SIM card not supporting SMS, no cellular signal, or modem device path
+changed.
+
+**Fix:** Clear the failed spool and re-test:
+
+```bash
+ssh root@192.168.8.1 'rm /etc/spool/sms/failed/2-1/send_*'
+```
+
+### No `[Alarm]` log lines visible
+
+Alarm logs get buried under high-frequency GPS/sensor data. Filter them:
+
+```bash
+docker compose logs backend 2>&1 | grep -i alarm | tail -20
+```
+
+If there are zero alarm lines even at startup, check that the CAN bridge initialized:
+
+```bash
+docker compose logs backend 2>&1 | grep 'CAN Bridge'
+```
+
+### Too many SMS messages
+
+Reduce **Max messages** on the Settings page (SMS Notifications section). The default
+is 3 messages per 60 minutes. Note that an "All Off" command can trigger up to 8
+relay state changes, each generating an alarm event.
+
+### Sent message files accumulating on router
+
+The `smsd` daemon does not auto-clean `/etc/spool/sms/sent/`. Periodically remove
+old files:
+
+```bash
+ssh root@192.168.8.1 'rm /etc/spool/sms/sent/2-1/send_*'
+```
+
+See [03_Vehicle_Compute/SMS_NOTIFICATIONS.md](../03_Vehicle_Compute/SMS_NOTIFICATIONS.md)
+for full documentation.
+
 ## Performance Issues
 
 **NEEDS TO BE COMPLETED** - Troubleshooting for:

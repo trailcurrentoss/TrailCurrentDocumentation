@@ -23,10 +23,9 @@ Reference to external documentation and resources used in TrailCurrent.
 
 **NEEDS TO BE COMPLETED** - Links to:
 - Raspberry Pi Official Documentation
+- Raspberry Pi Compute Module 5 Documentation
 - Raspberry Pi Pinout Reference
-- Orange Pi Documentation
-- Jetson Nano Documentation
-- Linux SBC General Resources
+- Waveshare RS485 CAN HAT (B) Wiki / Datasheet
 
 ### Communication
 

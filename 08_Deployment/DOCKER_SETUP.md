@@ -29,9 +29,7 @@ Complete guide to Docker configuration for TrailCurrent deployment.
 - Linux (various distributions)
 - macOS
 - Windows
-- Raspberry Pi (special considerations)
-- Orange Pi
-- Jetson Nano
+- Raspberry Pi / Raspberry Pi Compute Module 5 (special considerations)
 
 ### Docker Compose Installation
 

@@ -2,32 +2,30 @@
 
 Step-by-step guide to set up the edge computing system for TrailCurrent.
 
-This guide uses Raspberry Pi 4/5 as the reference implementation, but the same principles apply to other Linux-based compute devices (Orange Pi, Jetson Nano, etc.).
+The reference hardware is a **Raspberry Pi Compute Module 5 (CM5)** on a standard carrier board with a **Waveshare RS485 CAN HAT (B)** — no custom PCBs or soldering required. This replaced the previous Pi 5 + NVMe Base + custom CAN HAT stack: the CM5 + carrier board is more compact, more available, cheaper, and fully off-the-shelf.
+
+> **For a pre-built CM5 image and the full flashing procedure, see [TrailCurrentHeadwaters/CM5/SETUP.md](../../TrailCurrentHeadwaters/CM5/SETUP.md).** That is the authoritative setup path for production devices. The steps below describe a manual bring-up for development.
 
 ## Prerequisites
 
-- Edge compute device (Raspberry Pi 4 or 5 recommended - 4GB RAM minimum)
-  - Alternative devices: Orange Pi, Jetson Nano, or similar Linux-based SBC
-- Storage media (MicroSD card, eMMC, SSD - 32GB+ recommended)
-- Power supply (appropriate for your device)
+- Raspberry Pi Compute Module 5 (CM5) on a standard carrier board
+- Waveshare RS485 CAN HAT (B)
+- Storage: CM5 eMMC (recommended) or MicroSD (32GB+)
+- Power supply appropriate for the carrier board
 - Ethernet cable or WiFi connectivity
-- CAN transceiver board (SPI or GPIO-based)
 - USB UART adapter (optional, for debugging)
 
 ## Step 1: Install Operating System
 
 ### 1.1 Prepare Storage Media
 
-**For Raspberry Pi:**
-1. Download [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
-2. Insert storage media into computer
-3. Launch Raspberry Pi Imager
-4. Choose OS: **Raspberry Pi OS Lite** (64-bit)
-5. Choose storage: Your media
+**For the CM5 (recommended path):**
+Use the pre-built TrailCurrent image produced by `rpi-image-gen` — see [TrailCurrentHeadwaters/CM5/SETUP.md](../../TrailCurrentHeadwaters/CM5/SETUP.md) for the full flashing procedure (uses `usbboot` / `rpiboot` to write directly to the CM5 eMMC).
 
-**For Other Devices (Orange Pi, Jetson Nano, etc.):**
-- Use appropriate OS image and flashing tool for your device
-- Recommended: Ubuntu Server 20.04 LTS or 22.04 LTS (64-bit)
+**For manual development installs:**
+1. Download [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+2. Choose OS: **Raspberry Pi OS Lite** (64-bit, Bookworm or later)
+3. Choose storage: CM5 eMMC (via `rpiboot`) or MicroSD
 
 ### 1.2 Configure System
 
@@ -58,13 +56,18 @@ ssh [username]@trailcurrent-vehicle.local
 
 ## Step 2: Configure CAN Interface
 
-### 2.1 Enable SPI (if using SPI CAN transceiver)
+The Waveshare RS485 CAN HAT (B) uses an MCP2515 controller over SPI. The pre-built CM5 image handles this automatically via device tree overlays. For manual installs:
 
-```bash
-sudo raspi-config
-# Navigate to: Interfacing Options > SPI > Yes
-# Reboot
+### 2.1 Enable SPI and the MCP2515 overlay
+
+Add the following to `/boot/firmware/config.txt`:
+
 ```
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=12000000,interrupt=25
+```
+
+Reboot after editing.
 
 ### 2.2 Install CAN Tools
 
@@ -163,7 +166,7 @@ docker-compose up -d
 docker-compose ps
 
 # View logs
-docker-compose logs -f can-gateway
+docker-compose logs -f backend
 ```
 
 ## Step 5: Test & Validate
@@ -195,14 +198,14 @@ docker exec mosquitto mosquitto_pub -h localhost -t tc/gps/position -m '{"lat": 
 curl http://localhost:3000/api/health
 
 # View logs
-docker-compose logs api
+docker-compose logs backend
 ```
 
 ### 5.4 Test Cloud Connectivity
 
 ```bash
 # Check if cloud MQTT is connected
-docker-compose logs can-gateway | grep "cloud\|connected"
+docker-compose logs backend | grep "cloud\|connected"
 
 # Verify data flowing to cloud
 curl https://[cloud-server]/api/devices

@@ -32,7 +32,7 @@ Unlike traditional IoT platforms, TrailCurrent is specifically architected for *
 **⚠️ This is NOT production-ready commercial software.** Users must conduct extensive testing, validation, and modification for their specific use cases. It consists of:
 
 - **Multiple ESP32-based Hardware Modules** for sensing, monitoring, and control
-- **TrailCurrent Headwaters** - In-vehicle compute system for edge processing and gateway functionality (Raspberry Pi, Orange Pi, Jetson Nano, or similar)
+- **TrailCurrent Headwaters** - In-vehicle compute system for edge processing and gateway functionality (Raspberry Pi Compute Module 5 on a standard carrier board with Waveshare RS485 CAN HAT (B))
 - **TrailCurrent Farwatch** - Cloud platform for remote monitoring, analytics, and management
 - **TrailCurrent Outbound** - Native Android app for user interaction
 - **Docker-based Infrastructure** for deployment and scaling

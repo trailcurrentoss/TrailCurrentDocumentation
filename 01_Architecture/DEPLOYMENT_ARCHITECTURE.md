@@ -13,11 +13,11 @@ Infrastructure and deployment topology for the TrailCurrent platform.
 │                                     │
 │  ┌────────────────────────┐         │
 │  │  In-Vehicle Compute    │         │
-│  │  (RPi, Orange Pi, etc.)│         │
-│  │  - Linux OS            │         │
+│  │  (Raspberry Pi CM5)    │         │
+│  │  - Raspberry Pi OS     │         │
 │  │  - Docker & Compose    │         │
 │  │  - 4GB+ RAM            │         │
-│  │  - Storage 32GB+       │         │
+│  │  - eMMC/SD 32GB+       │         │
 │  └────────┬───────────────┘         │
 │           │                         │
 │           │ Ethernet + WiFi         │
@@ -25,8 +25,8 @@ Infrastructure and deployment topology for the TrailCurrent platform.
 │           │ connected               │
 │           │                         │
 │  ┌────────▼──────────────┐          │
-│  │ CAN Transceiver       │          │
-│  │ (SPI/GPIO interface)  │          │
+│  │ Waveshare RS485 CAN   │          │
+│  │ HAT (B) - MCP2515/SPI │          │
 │  └────────┬──────────────┘          │
 │           │                         │
 │           │ CAN Bus (Isolated)      │
@@ -93,12 +93,21 @@ Infrastructure and deployment topology for the TrailCurrent platform.
 │  │  Docker Network (bridge): 172.20.0.0/16  │   │
 │  │                                          │   │
 │  │  ┌────────────────────────────────────┐ │   │
-│  │  │ CAN-to-MQTT Gateway Container      │ │   │
+│  │  │ Backend Container                  │ │   │
 │  │  ├────────────────────────────────────┤ │   │
-│  │  │ Service: can-gateway               │ │   │
-│  │  │ Port: 8082 (internal metrics)      │ │   │
-│  │  │ Function: Convert CAN → MQTT       │ │   │
-│  │  │ Volumes: /dev/ttyUSB0 (CAN device)│ │   │
+│  │  │ Service: backend                   │ │   │
+│  │  │ Port: 3000 (REST API)              │ │   │
+│  │  │ Function: CAN↔MQTT + REST API      │ │   │
+│  │  │ Language: Node.js                  │ │   │
+│  │  │ Devices: /dev/can0 (MCP2515 SPI)   │ │   │
+│  │  └────────────────────────────────────┘ │   │
+│  │                                          │   │
+│  │  ┌────────────────────────────────────┐ │   │
+│  │  │ Frontend Container                 │ │   │
+│  │  ├────────────────────────────────────┤ │   │
+│  │  │ Service: frontend                  │ │   │
+│  │  │ Port: 443 (HTTPS dashboard)        │ │   │
+│  │  │ Function: Local web dashboard      │ │   │
 │  │  └────────────────────────────────────┘ │   │
 │  │                                          │   │
 │  │  ┌────────────────────────────────────┐ │   │
@@ -107,38 +116,25 @@ Infrastructure and deployment topology for the TrailCurrent platform.
 │  │  │ Service: mosquitto                 │ │   │
 │  │  │ Port: 1883 (internal), 8883 (TLS) │ │   │
 │  │  │ Function: Message broker           │ │   │
-│  │  │ Volumes: /etc/mosquitto/config    │ │   │
-│  │  │          /var/lib/mosquitto/data  │ │   │
+│  │  │ Volumes: mosquitto-data,           │ │   │
+│  │  │          mosquitto-log             │ │   │
 │  │  └────────────────────────────────────┘ │   │
 │  │                                          │   │
 │  │  ┌────────────────────────────────────┐ │   │
-│  │  │ REST API / Backend Container       │ │   │
+│  │  │ MongoDB Container                  │ │   │
 │  │  ├────────────────────────────────────┤ │   │
-│  │  │ Service: api-server                │ │   │
-│  │  │ Port: 3000 (external: 8080)        │ │   │
-│  │  │ Function: API endpoints            │ │   │
-│  │  │ Language: Node.js                  │ │   │
-│  │  │ Volumes: /app/data (persistence)  │ │   │
-│  │  │          /app/config               │ │   │
+│  │  │ Service: mongodb                   │ │   │
+│  │  │ Port: 27017 (internal)             │ │   │
+│  │  │ Function: Local document store     │ │   │
+│  │  │ Volumes: mongodb-data              │ │   │
 │  │  └────────────────────────────────────┘ │   │
 │  │                                          │   │
 │  │  ┌────────────────────────────────────┐ │   │
-│  │  │ SQLite / Local Storage Container   │ │   │
+│  │  │ Tile Server Container              │ │   │
 │  │  ├────────────────────────────────────┤ │   │
-│  │  │ Service: data-store                │ │   │
-│  │  │ Port: None (internal)              │ │   │
-│  │  │ Function: Local data cache         │ │   │
-│  │  │ Volumes: /data/sqlite.db           │ │   │
-│  │  │          /data/cache               │ │   │
-│  │  └────────────────────────────────────┘ │   │
-│  │                                          │   │
-│  │  ┌────────────────────────────────────┐ │   │
-│  │  │ Configuration Container            │ │   │
-│  │  ├────────────────────────────────────┤ │   │
-│  │  │ Service: config-manager            │ │   │
-│  │  │ Port: None (internal)              │ │   │
-│  │  │ Function: Manage app configuration │ │   │
-│  │  │ Volumes: /etc/trailcurrent/        │ │   │
+│  │  │ Service: tileserver                │ │   │
+│  │  │ Port: 8080 (internal)              │ │   │
+│  │  │ Function: Offline vector map tiles │ │   │
 │  │  └────────────────────────────────────┘ │   │
 │  │                                          │   │
 │  └──────────────────────────────────────────┘   │

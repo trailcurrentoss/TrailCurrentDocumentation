@@ -15,7 +15,7 @@ Guide to available deployment automation scripts.
 
 **NEEDS TO BE COMPLETED** - Document:
 - /Product/TrailCurrentFarwatch/ - Cloud platform deployment
-- /Product/TrailCurrentHeadwaters/ - Pi deployment
+- /Product/TrailCurrentHeadwaters/ - CM5 deployment
 - /Product/[Modules]/ - Module-specific scripts
 
 ## Hardware Module Deployment Scripts

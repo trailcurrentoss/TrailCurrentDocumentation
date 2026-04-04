@@ -202,8 +202,8 @@ When reporting bugs, include:
 [What happened]
 
 **Environment:**
-- Hardware: [Raspberry Pi 4, etc.]
-- OS: [Raspberry Pi OS, Ubuntu, etc.]
+- Hardware: [Raspberry Pi CM5 + Waveshare CAN HAT (B), etc.]
+- OS: [Raspberry Pi OS, etc.]
 - Internet: [Connected/Disconnected]
 ```
 

@@ -26,19 +26,27 @@ NS_ :
 
 BS_: 500000
 
-BU_: Bearing Torrent Tapper Ampline Solstice Borealis Headwaters Aftline Therma Plateau Picket Switchback
+BU_: Bearing Torrent Tapper Ampline Solstice Borealis Headwaters Aftline Therma Plateau Picket Switchback Reservoir
 
 BO_ 0 OtaUpdateNotification: 3 Headwaters
- SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback
- SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback
- SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback
+ SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Reservoir
+ SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Reservoir
+ SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Reservoir
 
 BO_ 2 DiscoveryTrigger: 0 Headwaters
 
 BO_ 3 DiscoveryReset: 3 Headwaters
- SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Solstice
- SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Solstice
- SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Solstice
+ SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Solstice,Reservoir
+ SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Solstice,Reservoir
+ SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Solstice,Reservoir
+
+BO_ 4 FirmwareVersionReport: 6 Vector__XXX
+ SG_ MacAddressByte4 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ MacAddressByte5 : 15|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ MacAddressByte6 : 23|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionMajor : 31|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionMinor : 39|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionPatch : 47|8@0+ (1,0) [0|255] "" Headwaters
 
 BO_ 6 GpsDateTime: 7 Bearing
  SG_ Year : 7|16@0+ (1,0) [2000|2099] "year" Headwaters
@@ -254,6 +262,11 @@ BO_ 52 TorrentSequence1: 1 Vector__XXX
 BO_ 53 TorrentSequence2: 1 Vector__XXX
  SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" Torrent
 
+BO_ 62 WaterTankLevels: 3 Reservoir
+ SG_ FreshWaterLevel : 7|8@0+ (1,0) [0|100] "%" Headwaters
+ SG_ GreyWaterLevel : 15|8@0+ (1,0) [0|100] "%" Headwaters
+ SG_ BlackWaterLevel : 23|8@0+ (1,0) [0|100] "%" Headwaters
+
 CM_ BU_ Bearing "Bearing (GNSS) module (ESP32). Reads GNSS data from a connected GPS receiver and broadcasts position, altitude, speed, course, and date/time onto the CAN bus. Transmit-only device.";
 CM_ BU_ Torrent "Torrent power distribution module (ESP32). 8-channel PWM module controlling MOSFET outputs for lights and accessories. Module address (0-2) set at compile time via TORRENT_ADDRESS build flag, allowing up to 3 modules on the same bus. Receives brightness commands (ID 0x15-0x17), toggle commands (ID 0x18-0x1A), and sequence commands (ID 0x33-0x35), one per module instance. Sends status reports (ID 0x1B-0x1D) showing current state of all 8 outputs. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
 CM_ BU_ Tapper "Tapper button panel (ESP32). Physical 8-button interface. Each button sends a toggle command to Torrent to turn a corresponding output channel on or off. Has 8 status LEDs that reflect current output states by listening to DeviceStatusReport messages.";
@@ -266,6 +279,7 @@ CM_ BU_ Therma "Therma heater control module (ESP32-C6). Controls an electric he
 CM_ BU_ Plateau "Plateau vehicle leveling module (ESP32-S3-Zero with Adafruit BNO055 IMU). Reads pitch and roll from the BNO055 9-DOF IMU and computes per-corner height adjustments based on configurable vehicle dimensions. Supports three mounting orientations (floor, left wall, right wall) with automatic axis remapping. BNO055 calibration offsets are auto-saved to NVS when fully calibrated. Receives leveling configuration commands via CAN (ID 0x20). Transmits tilt data at 2Hz (ID 0x30), corner height data (ID 0x31), and calibration status every 2s (ID 0x32). Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
 CM_ BU_ Picket "Picket cabinet/door sensor module (ESP32-S3, Waveshare ESP32-S3-RS485-CAN). Monitors up to 13 magnetic reed switch inputs to detect open/closed state of cabinet doors and enclosures. Module address (0-7) set at compile time via PICKET_ADDRESS build flag, allowing up to 8 modules on the same bus (CAN IDs 0x0A-0x11). Onboard TJA1051 CAN transceiver. ESP-IDF firmware. Supports OTA firmware updates via CAN.";
 CM_ BU_ Switchback "Switchback relay control module (ESP32-S3, Waveshare ESP32-S3-ETH-8DI-8RO-C). Controls 8 mechanical relays for switching high-current loads. Module address (0-2) set at compile time via SWITCHBACK_ADDRESS build flag, allowing up to 3 modules on the same bus. Receives toggle commands via CAN (ID 0x25-0x27, one per module instance). Sends relay status bitmask via CAN (ID 0x28-0x2A). Relays are binary on/off (not PWM). 8 optocoupler-isolated digital inputs. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
+CM_ BU_ Reservoir "Reservoir water tank level monitor (ESP32-S3, Waveshare ESP32-S3-RS485-CAN). Monitors up to 3 water tanks (fresh, grey, black) using 4 contactless level sensors per tank mounted at 25%, 50%, 75%, and 100% levels. Sensors output HIGH when water is detected. Reports each tank level as a 0-100% value in a single CAN frame (ID 0x3E). Percentage-based reporting allows future migration to analog sensors without CAN protocol changes. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
 
 CM_ BO_ 2 "Module self-discovery trigger. Broadcast by Headwaters with no payload (DLC 0). All unconfigured modules on the bus respond by connecting to WiFi and advertising a _trailcurrent._tcp mDNS service with TXT records: type (module type), addr (instance address), canid (hex CAN ID), fw (firmware version). Headwaters browses mDNS to discover the module, then sends GET /discovery/confirm to acknowledge. The module marks itself configured in NVS and tears down WiFi. Only unconfigured modules respond; configured modules ignore this message silently.";
 CM_ BO_ 3 "Discovery reset. Targeted by MAC address (same format as OTA trigger). Clears the configured flag in NVS on the targeted module so it responds to the next DiscoveryTrigger (0x02) broadcast.";
@@ -313,6 +327,7 @@ CM_ BO_ 45 "Solar MPPT charge controller data part 2, from the Victron MPPT sola
 CM_ BO_ 46 "Solar MPPT load output control command. Sent to Solstice to control the Victron MPPT load output terminal via VE.Direct HEX protocol (register 0xEDAB). Byte 0 is the desired load state: 0 = OFF, 1 = ON, 4 = Default (use MPPT built-in algorithm).";
 CM_ BO_ 43 "Shunt extended live data, retrieved from Victron SmartShunt via VE.Direct HEX GET protocol. Temperature (bytes 0-1) is signed 16-bit big-endian in centidegrees C (multiply by 0.01 for degrees). Midpoint voltage (bytes 2-3) is unsigned 16-bit big-endian in millivolts. Alarm reason (bytes 4-5) is a bitmask of active alarm conditions.";
 CM_ BO_ 47 "Shunt extended history data, retrieved from Victron SmartShunt via VE.Direct HEX GET protocol. Deepest discharge (bytes 0-1) is unsigned 16-bit big-endian in whole Ah. Cumulative Ah drawn (bytes 2-3) is unsigned 16-bit big-endian in whole Ah. Charge cycles (bytes 4-5) is unsigned 16-bit big-endian count.";
+CM_ BO_ 62 "Water tank level data from Reservoir module. Reports the fill level of up to 3 water tanks as percentages (0-100). Byte 0 is fresh water, byte 1 is grey water, byte 2 is black water. Current firmware uses 4 contactless binary sensors per tank (at 25%, 50%, 75%, 100% marks), so values are quantized to 0/25/50/75/100. The percentage-based protocol allows future migration to analog sensors with finer granularity without changing the CAN message format.";
 CM_ SG_ 46 LoadState "Desired MPPT load output state. 0 = Force OFF, 1 = Force ON, 4 = Default (MPPT manages load based on its own voltage thresholds). Solstice forwards this to the Victron via VE.Direct HEX SET command.";
 CM_ SG_ 43 ShuntTemperature "Battery temperature from SmartShunt auxiliary sense input. Signed 16-bit big-endian, scaled by 0.01 to get degrees Celsius. Retrieved via VE.Direct HEX GET register 0xEDEC.";
 CM_ SG_ 43 MidpointVoltage "Midpoint voltage of the battery bank in millivolts. For systems with a midpoint tap, this indicates balance between battery halves. Retrieved via VE.Direct HEX GET register 0x0382.";
@@ -439,6 +454,7 @@ BA_ "CycleTime" BO_ 35 33;
 BA_ "CycleTime" BO_ 36 33;
 BA_ "CycleTime" BO_ 44 33;
 BA_ "CycleTime" BO_ 45 33;
+BA_ "CycleTime" BO_ 62 1000;
 
 VAL_ 9 LatitudeSign 0 "North_Positive" 1 "South_Negative";
 VAL_ 9 LongitudeSign 0 "East_Positive" 1 "West_Negative";

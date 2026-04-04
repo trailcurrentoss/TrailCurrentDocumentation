@@ -20,11 +20,11 @@ Network and communication architecture for the TrailCurrent platform.
 │                                                        │
 │  ┌──────────────────────────────────────────────┐    │
 │  │  In-Vehicle Compute (192.168.x.x)           │    │
-│  │  (Raspberry Pi, Orange Pi, etc.)             │    │
+│  │  (Raspberry Pi CM5 + Waveshare CAN HAT)      │    │
 │  │  ├─ Docker Network                           │    │
 │  │  ├─ MQTT Broker (localhost:1883)             │    │
 │  │  ├─ REST API (localhost:3000)                │    │
-│  │  └─ CAN Transceiver Interface                │    │
+│  │  └─ MCP2515 CAN Interface (SPI)              │    │
 │  └──┬───────────────────────────────────────────┘    │
 │     │                                                 │
 │     └─────────────────────┬──────────────────────────┤

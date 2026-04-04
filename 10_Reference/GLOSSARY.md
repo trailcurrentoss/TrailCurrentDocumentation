@@ -80,7 +80,7 @@ Deployment strategy with two identical production environments. One is "blue" (a
 Gradual rollout of new version to subset of users, then increasing percentage as validation succeeds.
 
 ### In-Vehicle Compute
-Edge computing device (Raspberry Pi, Orange Pi, Jetson Nano, or similar) running services for a vehicle. Acts as gateway between hardware modules and cloud.
+Edge computing device (Raspberry Pi Compute Module 5 on a standard carrier board with Waveshare RS485 CAN HAT (B)) running services for a vehicle. Acts as gateway between hardware modules and cloud.
 
 ### Edge Computing
 Computing at the network edge (on in-vehicle compute device) rather than cloud. Enables local processing and offline operation.

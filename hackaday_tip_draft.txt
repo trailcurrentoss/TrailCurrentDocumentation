@@ -17,7 +17,7 @@ The core of the system is 18 custom ESP32-based hardware modules (all with custo
 - Fireside: 7" capacitive touchscreen dashboard (ESP32-P4, LVGL)
 - Peregrine: Fully offline AI voice assistant running Llama 3.2 1B on a Qualcomm Hexagon NPU (~12 tokens/sec), with custom wake word detection, faster-whisper STT, and Piper TTS
 
-The in-vehicle compute layer (Headwaters) runs on a Raspberry Pi 5 with 7 Docker containers: MQTT broker, CAN-to-MQTT gateway, Node-RED flow engine, offline vector tile map server, and a web dashboard. The vehicle operates completely autonomously - cloud sync is optional and self-hosted.
+The in-vehicle compute layer (Headwaters) runs on a Raspberry Pi Compute Module 5 (CM5) on a standard carrier board with a Waveshare RS485 CAN HAT (B) — fully off-the-shelf, no custom PCBs. It runs 5 Docker containers: MQTT broker (Mosquitto), Node.js backend (CAN-to-MQTT bridge + REST API), MongoDB, an offline vector tile map server, and a local web dashboard. The vehicle operates completely autonomously - cloud sync is optional and self-hosted.
 
 A key design principle is that every critical control (heaters, fans, motors) has a hardwired physical backup. WiFi and software are never the only path to a safety-critical function.
 

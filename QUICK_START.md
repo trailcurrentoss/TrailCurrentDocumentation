@@ -17,7 +17,7 @@ By using TrailCurrent:
 
 ## Prerequisites
 
-- Edge compute device (Raspberry Pi 4/5, Orange Pi, or similar for in-vehicle compute)
+- Edge compute device (Raspberry Pi Compute Module 5 on a standard carrier board with Waveshare RS485 CAN HAT (B))
 - One or more ESP32 development boards (for hardware modules)
 - Docker and Docker Compose installed
 - Node.js 24+ (for backend development)
@@ -29,7 +29,7 @@ TrailCurrent is an **Open Source Software Defined Vehicle (SDV) Platform with Au
 
 **Three Essential Layers:**
 1. **Vehicle Devices** (ESP32 modules) - Sensors, controllers, gateways communicating via hardwired CAN bus
-2. **Vehicle Edge Compute** (Raspberry Pi/Orange Pi/etc.) - Autonomous intelligence system with local AI/ML for real-time decision-making, control, and autonomous operation
+2. **Vehicle Edge Compute** (Raspberry Pi CM5) - Autonomous intelligence system with local AI/ML for real-time decision-making, control, and autonomous operation
 3. **Optional Cloud** (Self-hosted) - Remote monitoring, analytics, and management - completely optional, your private infrastructure
 
 **Key SDV Design Principles:**

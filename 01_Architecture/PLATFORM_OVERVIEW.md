@@ -32,7 +32,7 @@ The TrailCurrent platform is organized into three layers, where the **Device and
 ┌─────────────────────▼───────────────────────┐
 │   EDGE LAYER (In-Vehicle Compute)           │
 │   ⭐ ESSENTIAL - Operates Fully Standalone  │
-│   (Linux SBC - Gateway, Processing)         │
+│   (Raspberry Pi CM5 - Gateway, Processing) │
 │   (Works with or without cloud)             │
 └─────────────────────┬───────────────────────┘
                       │ CAN Bus
@@ -71,11 +71,11 @@ The TrailCurrent platform is organized into three layers, where the **Device and
 - OTA firmware update distribution
 - Local data logging and caching
 
-**Compute Devices**: Raspberry Pi 4/5, Orange Pi, Jetson Nano, or similar Linux-based single-board computer
+**Compute Device**: Raspberry Pi Compute Module 5 (CM5) on a standard carrier board with Waveshare RS485 CAN HAT (B) — fully off-the-shelf, no custom PCBs.
 
 **Communication**: CAN bus (to devices), Ethernet/WiFi (to cloud), MQTT (internal messaging)
 
-**Technology**: Linux, Docker, Node.js, Python
+**Technology**: Linux (Raspberry Pi OS), Docker, Node.js
 
 ### Cloud Layer (Optional)
 
@@ -163,7 +163,7 @@ Hardware Modules
 |-------|-----------|---------|
 | Hardware | ESP32, C/C++ | Embedded firmware |
 | Hardware | CAN Bus | Reliable device communication |
-| Edge | Linux SBC | Edge computing device |
+| Edge | Raspberry Pi CM5 + Waveshare CAN HAT (B) | Edge computing device |
 | Edge | Docker | Container orchestration |
 | Edge | MQTT | Internal messaging |
 | Cloud | Node.js/Express | Backend API |

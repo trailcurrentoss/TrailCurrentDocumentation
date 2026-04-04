@@ -8,7 +8,7 @@ Know exactly how level you are. Our new Plateau module uses a 9-axis IMU to meas
 
 "Hey Peregrine, how's my level?" Our on-vehicle voice assistant now runs a 1B-parameter LLM on a Qualcomm NPU with zero cloud dependency. We swapped runtimes (Ollama to Genie), cut false wake word triggers, and added voice commands for leveling data and GPS. Everything processes locally at ~12 tokens per second.
 
-Full-stack updates, top to bottom. Our edge gateway (Headwaters) got new Node-RED workflows and cloud config sync. Our web dashboard (Farwatch) picked up leveling controls and better device management. Our environmental sensor (Borealis) got a new sensor, a revised PCB, and a redesigned enclosure. We expanded our KiCAD component libraries with 10+ new parts.
+Full-stack updates, top to bottom. Our edge gateway (Headwaters) moved to a Raspberry Pi Compute Module 5 on an off-the-shelf carrier board + Waveshare CAN HAT (no more custom PCBs) and picked up cloud config sync. Our web dashboard (Farwatch) picked up leveling controls and better device management. Our environmental sensor (Borealis) got a new sensor, a revised PCB, and a redesigned enclosure. We expanded our KiCAD component libraries with 10+ new parts.
 
 Every line of code, every schematic, every 3D model is open source. No subscriptions. No vendor lock-in. Your vehicle, your data.
 

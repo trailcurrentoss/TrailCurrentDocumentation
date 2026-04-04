@@ -4,7 +4,7 @@ Complete guide to the edge computing system that serves as the gateway between h
 
 ## Overview
 
-The In-Vehicle Compute system is an edge computing device (Raspberry Pi 4/5, Orange Pi, Jetson Nano, or similar) running containerized services that:
+The In-Vehicle Compute system is an edge computing device (Raspberry Pi Compute Module 5 on a standard carrier board with Waveshare RS485 CAN HAT (B)) running containerized services that:
 - Convert CAN bus messages to MQTT for local wireless communication (when internet unavailable) and cloud sync (when connected)
 - Cache data locally for offline operation and autonomous vehicle control
 - Distribute OTA firmware updates to hardware modules
@@ -16,17 +16,17 @@ The In-Vehicle Compute system is an edge computing device (Raspberry Pi 4/5, Ora
 ```
 ┌─────────────────────────────────────┐
 │    In-Vehicle Compute (Edge)        │
-│  (Raspberry Pi, Orange Pi, etc.)    │
+│  (Raspberry Pi CM5 + CAN HAT)       │
 ├─────────────────────────────────────┤
 │                                     │
 │  ┌────────────────────────────────┐ │
 │  │  Docker Container Services     │ │
 │  ├────────────────────────────────┤ │
-│  │ • CAN-to-MQTT Gateway          │ │
+│  │ • Backend (CAN↔MQTT, REST API) │ │
 │  │ • MQTT Broker (Mosquitto)      │ │
-│  │ • REST API Server              │ │
-│  │ • Local Data Storage           │ │
-│  │ • Configuration Manager        │ │
+│  │ • MongoDB (local data store)   │ │
+│  │ • Frontend (local dashboard)   │ │
+│  │ • Tile Server (offline maps)   │ │
 │  └────────────────────────────────┘ │
 │                 ↑                    │
 │         ┌───────┴────────┐          │
@@ -39,29 +39,29 @@ The In-Vehicle Compute system is an edge computing device (Raspberry Pi 4/5, Ora
 
 ## Key Components
 
-### 1. CAN-to-MQTT Gateway
-Converts CAN messages to MQTT messages for internal routing and cloud sync.
+### 1. Backend (CAN↔MQTT Gateway + REST API)
+Node.js service that converts CAN messages to MQTT messages for internal routing and cloud sync, exposes REST API endpoints for status queries and commands, and manages device configuration and CAN ID mappings.
 
 ### 2. Mosquitto MQTT Broker
 Message broker for internal container communication and cloud connectivity.
 
-### 3. REST API Server
-Provides local API endpoints for status queries and commands.
+### 3. MongoDB
+Local document store for sensor data, command history, device configuration, and system events.
 
-### 4. Data Storage
-SQLite database and file storage for local caching and offline operation.
+### 4. Frontend
+Local web dashboard for vehicle status, diagnostics, and configuration.
 
-### 5. Configuration Manager
-Manages device configuration, CAN ID mappings, and module settings.
+### 5. Tile Server
+Offline vector tile server for maps that work without internet connectivity.
 
 ## Setup & Installation
 
 ### Prerequisites
-- Raspberry Pi 4 or 5 (4GB+ RAM recommended)
-- MicroSD card (32GB+)
-- Power supply (adequate for Pi and CAN transceiver)
+- Raspberry Pi Compute Module 5 (CM5) on a standard carrier board
+- Waveshare RS485 CAN HAT (B)
+- MicroSD card or eMMC (32GB+)
+- Power supply (adequate for CM5 and CAN HAT)
 - Ethernet or WiFi connectivity
-- CAN transceiver connected to GPIO
 
 ### Installation Steps
 
@@ -93,11 +93,11 @@ See [Configuration/CONFIG_FILES.md](Configuration/CONFIG_FILES.md) for details.
 
 ```yaml
 services:
-  can-gateway:      # CAN ↔ MQTT converter
+  backend:          # CAN ↔ MQTT bridge + REST API
+  frontend:         # Local web dashboard
   mosquitto:        # MQTT broker
-  api:              # REST API server
-  data-store:       # Local storage
-  config:           # Configuration service
+  mongodb:          # Local document store
+  tileserver:       # Offline vector map tiles
 ```
 
 Each service runs independently and communicates via the Docker network.
@@ -148,7 +148,7 @@ MQTT Message (from cloud or UI)
 
 ## Data Storage
 
-### Local SQLite Database
+### Local MongoDB
 Stores:
 - Last 24-48 hours of sensor readings
 - Command history
@@ -228,13 +228,14 @@ Persistent logs in `/var/lib/trailcurrent/logs/`
 - MQTT publishing rate: 1-50 messages/second
 
 ### Memory Usage
-- Docker services: ~200MB total
-- SQLite cache: ~50-100MB
-- Free RAM: ~1.5-2GB
+- Docker services: ~300-500MB total (MongoDB is the heaviest)
+- MongoDB working set: ~100-200MB
+- Free RAM: typically 1GB+ on an 8GB CM5
 
 ### Disk Usage
-- System: ~2GB
-- Database: ~1-5GB (with 24-48 hours data)
+- System: ~2-3GB
+- MongoDB database: ~1-5GB (with 24-48 hours data)
+- Tile server map data: size depends on region(s)
 - Log files: ~500MB-1GB (with rotation)
 - Free space: ~15GB+ recommended
 
@@ -274,6 +275,7 @@ docker exec -it [container-name] /bin/bash  # Enter container
 - [DOCKER_CONTAINERS.md](DOCKER_CONTAINERS.md) - Container specifications
 - [Configuration/CONFIG_FILES.md](Configuration/CONFIG_FILES.md) - Configuration options
 - [Deployment/PI_DEPLOYMENT.md](Deployment/PI_DEPLOYMENT.md) - Deployment procedures
+- [SMS_NOTIFICATIONS.md](SMS_NOTIFICATIONS.md) - SMS alarm notifications via GL-iNet router
 
 ## Source Code
 
