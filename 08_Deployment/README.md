@@ -277,22 +277,24 @@ psql [database] < rollback.sql
 - Manually trigger rollback if needed
 ```
 
-## Infrastructure Scaling
+## Infrastructure Scaling (Farwatch, Optional Cloud)
 
-### Add More API Servers
-```bash
-docker-compose up -d api1 api2 api3
-# Configure load balancer
-```
+Farwatch is designed to run on a single VPS for most deployments. If you
+measure real contention, scaling options (in order of how often you will
+actually need them) are:
 
-### Database Replication
-- Set up PostgreSQL streaming replication
-- Configure read replicas
-- Route queries to replicas
+### Vertical Scaling — Default
+Bigger VPS: more RAM for MongoDB working set, faster CPU for WebSocket
+fan-out, faster storage for deployment package downloads.
 
-### Cache Scaling
-- Redis cluster for distributed caching
-- Session sharing across instances
+### MongoDB Replica Set
+Run MongoDB as a 3-node replica set for high availability. No application
+changes required — update `MONGO_URI` to a replica set connection string.
+
+### Multiple Backend Replicas
+Run multiple `backend` containers behind a load balancer. Each replica
+connects to the same MongoDB and Mosquitto. WebSocket sticky sessions keep a
+single browser bound to one replica.
 
 ## Security in Deployment
 

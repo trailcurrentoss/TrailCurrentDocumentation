@@ -1,94 +1,62 @@
 # TrailCurrent Shared Libraries
 
-Documentation for the shared libraries used across TrailCurrent ESP32 modules.
+Documentation for the standalone library repos that ESP32 modules can pull in
+alongside the standard ESP-IDF managed components.
 
 ## Overview
 
-Shared libraries provide common functionality to multiple hardware modules, reducing code duplication and ensuring consistency across the platform.
+Most shared functionality (CAN, OTA, NVS, logging, LED, WiFi provisioning)
+lives directly inside each module as ESP-IDF components. A small number of
+standalone library repos remain for legacy Arduino-framework code and for
+OTA/CAN helpers that predate the ESP-IDF migration. New modules should prefer
+pulling code from ESP-IDF's component manager (`idf_component.yml`) over
+depending on these repos.
 
 ## Available Libraries
 
-### Debug Library
-**Purpose**: Unified debugging and logging across all modules
-
-**Features**:
-- Serial UART logging
-- CAN bus logging
-- Log level filtering
-- Timestamped output
-- Circular buffer for recent logs
+### ESP32ArduinoDebugLibrary
+**Purpose**: Unified debugging and logging helpers for the original Arduino-framework modules.
 
 **Source**: `/Product/ESP32ArduinoDebugLibrary/`
 
-**Used By**: All modules
+**Status**: Legacy. All current modules log via `ESP_LOGx` macros from ESP-IDF directly.
 
-### OTA Library (ESP32-C6)
-**Purpose**: Over-the-air firmware updates for ESP32-C6 modules
-
-**Features**:
-- Firmware binary reception via CAN bus
-- Flash memory management
-- Rollback on failed update
-- Update progress tracking
-- Automatic reboot after update
-
-**Source**: `/Product/Esp32C6OtaUpdateLibrary/`
-
-**Used By**: ESP32-C6-based modules
-
-### OTA Library (WROOM32)
-**Purpose**: OTA updates specifically for WROOM32 variants
+### OtaUpdateLibraryWROOM32
+**Purpose**: OTA update routines for the WROOM32-based modules (Torrent, Tapper).
 
 **Features**:
-- WROOM32-specific memory layout
-- Dual partition support
-- Enhanced stability
-- Factory reset capability
+- Dual-OTA partition support with rollback
+- CAN-triggered update initiation
+- WiFi-based HTTP binary upload
+- NVS-persisted update state
 
 **Source**: `/Product/OtaUpdateLibraryWROOM32/`
 
-**Used By**: WROOM32-based modules
+**Used By**: Torrent, Tapper (the remaining WROOM32-class modules)
 
-### RGB LED Library
-**Purpose**: Unified RGB LED status indication for ESP32-C6 Super Mini
-
-**Features**:
-- Color definitions
-- Blinking patterns
-- Fade effects
-- Status indication modes
-- Low-level GPIO control
-
-**Source**: `/Product/C6SuperMiniRgbLedLibrary/`
-
-**Used By**: Modules with status LEDs
-
-### TWAI CAN Library (ESP32-C6)
-**Purpose**: CAN communication using ESP32-C6 TWAI peripheral
+### TwaiTaskBasedLibraryWROOM32
+**Purpose**: Task-based TWAI (ESP32 built-in CAN) driver used by WROOM32 modules.
 
 **Features**:
-- Hardware CAN interface
-- Message filtering
-- Transmission queuing
-- Interrupt-driven reception
-- Error handling and diagnostics
-
-**Source**: `/Product/Esp32C6TwaiTaskBasedLibrary/`
-
-**Used By**: ESP32-C6-based modules
-
-### TWAI CAN Library (WROOM32)
-**Purpose**: TWAI CAN for WROOM32-specific implementations
-
-**Features**:
-- WROOM32 hardware optimization
-- Task-based architecture
-- Enhanced throughput
-- Memory-efficient buffering
+- Dedicated FreeRTOS task for CAN RX
+- Transmission queue with back-pressure handling
+- Automatic bus-off recovery
+- Hardware interrupt driven RX
 
 **Source**: `/Product/TwaiTaskBasedLibraryWROOM32/`
 
-**Used By**: WROOM32 modules using built-in CAN
+**Used By**: Torrent, Tapper
+
+### Migration Note
+
+Earlier revisions shipped dedicated libraries for the ESP32-C6 SuperMini
+boards (`Esp32C6OtaUpdateLibrary`, `Esp32C6TwaiTaskBasedLibrary`,
+`C6SuperMiniRgbLedLibrary`). Those have been **retired** because the modules
+that used them (initially Aftline and Therma) have moved to the
+Waveshare ESP32-S3-RS485-CAN / ESP32-S3-Relay-1CH boards and now consume
+standard ESP-IDF drivers directly. If you are maintaining an old branch of
+one of those modules, the original libraries remain available in
+git history.
 
 ## Library Structure
 

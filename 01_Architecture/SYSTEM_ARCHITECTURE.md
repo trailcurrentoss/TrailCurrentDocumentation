@@ -17,27 +17,28 @@ TrailCurrent implements a **Software Defined Vehicle (SDV) architecture** where 
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│                     CLOUD TIER                                 │
+│             CLOUD TIER — Farwatch (Optional)                    │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│  │  Web UI      │  │  Mobile App  │  │  Analytics   │         │
-│  │ (Browser)    │  │  (Android)   │  │  (Reports)   │         │
+│  │  Browser PWA │  │  Mobile Apps │  │  API Clients │         │
+│  │ (MapLibre)   │  │(Outbound/RN) │  │ (integrations)│         │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘         │
 │         │                 │                 │                  │
 │         └─────────────────┼─────────────────┘                  │
-│                           │ HTTPS/WebSocket                    │
+│                           │ HTTPS + WebSocket                  │
 │                    ┌──────▼───────┐                            │
-│                    │  REST API    │                            │
-│                    │  (Express)   │                            │
+│                    │  Backend     │                            │
+│                    │ (Node/Express│                            │
+│                    │ + WS bridge) │                            │
 │                    └──────┬───────┘                            │
 │         ┌──────────┬──────┼──────────┬──────────┐             │
 │         │          │      │          │          │             │
-│  ┌──────▼──┐  ┌────▼──┐  │  ┌──────▼──┐  ┌────▼──┐           │
-│  │PostgreSQL│  │Redis │  │  │ MQTT    │  │ File  │           │
-│  │ Database │  │Cache │  │  │ Broker  │  │Store  │           │
-│  └──────────┘  └──────┘  │  └────┬────┘  └───────┘           │
-│                          │       │                            │
+│  ┌──────▼──┐  ┌────▼──┐  │  ┌──────▼──┐  ┌────▼─────┐        │
+│  │ MongoDB │  │tilesvr│  │  │Mosquitto│  │ Package  │        │
+│  │(settings│  │(tiles)│  │  │ (TLS)   │  │ storage  │        │
+│  │ + state)│  └───────┘  │  └────┬────┘  └──────────┘        │
+│  └─────────┘              │       │                            │
 └──────────────────────────┼───────┼────────────────────────────┘
                            │       │
               ═════════════╬═══════╬═════════════
@@ -212,10 +213,10 @@ Internet (Public)
 
 ## Scalability Considerations
 
-- Multiple vehicles: Each Pi is independent
-- Multiple cloud instances: Load-balanced API servers
-- Data storage: Scalable database (PostgreSQL)
-- Real-time updates: Persistent MQTT connections
+- Multiple vehicles: each Headwaters instance is independent, and Farwatch fans them out to registered dashboards
+- Farwatch is vertically scalable on a single VPS for typical fleets; horizontally scalable via multiple backend replicas and a MongoDB replica set if needed
+- Data storage: MongoDB (document store optimized for settings, state snapshots, and deployment metadata)
+- Real-time updates: persistent MQTT (TLS) connections from vehicle Headwaters, fanned out over WebSocket to browsers/apps
 
 ---
 

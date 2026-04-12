@@ -42,45 +42,51 @@ Infrastructure and deployment topology for the TrailCurrent platform.
 └─────────────────────────────────────┘
 ```
 
-### Tier 2: Cloud Deployment
+### Tier 2: Cloud Deployment (Farwatch — Optional)
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│            Cloud Infrastructure                       │
-│         (AWS / Azure / On-Premise)                    │
+│            Cloud Host (any VPS)                       │
+│            (Hetzner / DigitalOcean / AWS / on-prem)   │
 ├──────────────────────────────────────────────────────┤
 │                                                      │
 │  ┌─────────────────────────────────────┐            │
-│  │  Load Balancer / API Gateway        │            │
-│  │  (SSL/TLS Termination)              │            │
+│  │  nginx (TLS termination)            │            │
+│  │  Let's Encrypt via certbot           │            │
 │  └────────────┬────────────────────────┘            │
 │               │                                      │
-│  ┌────────────┼─────────────────────┐               │
-│  │            │                     │               │
-│  ▼            ▼                     ▼               │
-│ ┌──────┐  ┌──────┐  ┌──────────┐                   │
-│ │ API  │  │ API  │  │ API      │  (Replicas)      │
-│ │ #1   │  │ #2   │  │ #n       │                   │
-│ └──┬───┘  └──┬───┘  └──┬───────┘                   │
-│    │         │         │                           │
-│    └────┬────┴────┬────┘                           │
-│         │         │                                │
-│    ┌────▼─────────▼──────┐                        │
-│    │  Shared Services    │                        │
-│    ├─────────────────────┤                        │
-│    │ PostgreSQL (DB)     │                        │
-│    │ Redis (Cache)       │                        │
-│    │ Mosquitto (MQTT)    │                        │
-│    │ File Storage        │                        │
-│    └─────────────────────┘                        │
-│                                                      │
-│  ┌──────────────────────────────────┐              │
-│  │  Web Server (Static)              │              │
-│  │  Serves HTML/CSS/JS               │              │
-│  └──────────────────────────────────┘              │
-│                                                      │
-└──────────────────────────────────────────────────────┘
+│               ▼                                      │
+│  ┌────────────────────────────────────┐              │
+│  │  Frontend (vanilla JS PWA)         │              │
+│  └────────────┬───────────────────────┘              │
+│               │                                      │
+│               ▼                                      │
+│  ┌────────────────────────────────────┐              │
+│  │  Backend (Node.js + Express)       │              │
+│  │    • REST API                      │              │
+│  │    • WebSocket fan-out             │              │
+│  │    • API key auth                  │              │
+│  │    • Deployment package storage    │              │
+│  │    • Proximity automation engine   │              │
+│  └────┬──────────────────────┬────────┘              │
+│       │                      │                       │
+│  ┌────▼────┐          ┌──────▼─────┐                 │
+│  │ MongoDB │          │  Mosquitto │ ← MQTTS 8883    │
+│  │ (state) │          │   broker   │                 │
+│  └─────────┘          └──────┬─────┘                 │
+│                              │                       │
+│  ┌──────────────────┐        │                       │
+│  │  tileserver-gl   │        │                       │
+│  │  (vector tiles)  │        │                       │
+│  └──────────────────┘        │                       │
+└──────────────────────────────┼───────────────────────┘
+                               │ MQTTS over cellular / LTE
+                               ▼
+                     Vehicle Headwaters bridge
 ```
+
+> **Core Principle:** Farwatch is *optional*. A TrailCurrent vehicle is fully
+> functional with no cloud connection. See [CORE_PRINCIPLES.md](../CORE_PRINCIPLES.md).
 
 ## Docker Container Architecture (In-Vehicle Compute)
 
@@ -152,80 +158,44 @@ Host OS (Linux) Controls:
 
 ## Cloud Deployment Options
 
-### Option A: Single Server (Small Deployment)
+### Option A: Single VPS (Default)
 
 ```
 ┌─────────────────────────────┐
-│   Single Cloud Server        │
-│  (t2.medium AWS / similar)   │
+│   Single Cloud VPS           │
+│  (2 vCPU / 4 GB / 40 GB)     │
 ├─────────────────────────────┤
 │                             │
-│  All services in containers:│
-│  ├─ API Server              │
-│  ├─ Web UI                  │
-│  ├─ MQTT Broker             │
-│  ├─ PostgreSQL Database     │
-│  ├─ Redis Cache             │
-│  └─ File Storage            │
-│                             │
-│  Docker Compose manages all │
+│  Docker Compose:            │
+│  ├─ nginx + PWA (frontend)  │
+│  ├─ Node.js backend         │
+│  ├─ MongoDB                 │
+│  ├─ Mosquitto (TLS)         │
+│  ├─ tileserver-gl           │
+│  └─ certbot (Let's Encrypt) │
 │                             │
 └─────────────────────────────┘
      ↑
-     │ Internet
+     │ Internet (HTTPS + MQTTS 8883)
      ↓
-Multiple Vehicles (In-Vehicle Compute Devices)
+One or more vehicles running Headwaters
 ```
 
-### Option B: Multi-Container (Medium Deployment)
+This is the supported production topology for Farwatch. The same `docker-compose.yml`
+runs at scale from a hobby deployment (one vehicle) up through small fleets
+(tens of vehicles) without changes.
 
-```
-┌──────────────────────────────────────┐
-│   Kubernetes or Docker Swarm Cluster │
-├──────────────────────────────────────┤
-│                                      │
-│  ┌─────────────┐  ┌─────────────┐   │
-│  │ Node 1      │  │ Node 2      │   │
-│  ├─────────────┤  ├─────────────┤   │
-│  │ API Pod #1  │  │ API Pod #2  │   │
-│  │ API Pod #3  │  │ API Pod #4  │   │
-│  └─────────────┘  └─────────────┘   │
-│                                      │
-│  ┌────────────────────────────────┐  │
-│  │ Persistent Storage             │  │
-│  ├────────────────────────────────┤  │
-│  │ PostgreSQL (replicated)        │  │
-│  │ Redis (clustered)              │  │
-│  │ MQTT Broker (clustered)        │  │
-│  │ File Storage (S3 / NAS)        │  │
-│  └────────────────────────────────┘  │
-│                                      │
-└──────────────────────────────────────┘
-```
+### Option B: Self-Hosted On-Premises
 
-### Option C: Managed Services (Production)
+Replace the VPS with a local server behind your own firewall. The stack is
+identical. Useful for organizations that cannot or do not want to expose
+vehicle telemetry to a public cloud provider.
 
-```
-┌──────────────────────────────────────┐
-│  AWS / Azure / GCP Services          │
-├──────────────────────────────────────┤
-│                                      │
-│  Container Management:               │
-│  ├─ ECS / EKS / AKS                 │
-│  └─ Managed load balancing          │
-│                                      │
-│  Data Services:                      │
-│  ├─ RDS (PostgreSQL managed)        │
-│  ├─ ElastiCache (Redis managed)     │
-│  └─ S3 / Blob Storage               │
-│                                      │
-│  Networking:                         │
-│  ├─ CloudFront / CDN                │
-│  ├─ VPC / Virtual Network           │
-│  └─ Certificate Management (ACM)    │
-│                                      │
-└──────────────────────────────────────┘
-```
+### Option C: No Cloud (Fully Local)
+
+Skip Farwatch entirely. Headwaters on the vehicle already exposes the same
+dashboard, REST API, WebSocket, and MQTT broker over the local network. Phones
+and browsers on the vehicle WiFi talk directly to Headwaters. See [03_Vehicle_Compute/](../03_Vehicle_Compute/).
 
 ## Deployment Workflow
 
@@ -258,30 +228,27 @@ In-Vehicle Compute Updates (Via Deployment Script)
 
 ## Scaling Considerations
 
-### Horizontal Scaling (Add more instances)
-
-```
-Load Balancer
-├─ API Server #1
-├─ API Server #2
-├─ API Server #3
-└─ ... (add more as needed)
-
-Database:
-├─ PostgreSQL Primary
-└─ PostgreSQL Read Replicas
-    └─ Handles read-heavy loads
-```
-
-### Vertical Scaling (Larger instances)
+### Vertical Scaling (Larger VPS)
 
 ```
 Upgrade server hardware:
-├─ More RAM (for Redis cache)
-├─ Faster CPU (for API processing)
-├─ Faster storage (for database I/O)
-└─ Higher bandwidth
+├─ More RAM (MongoDB working set)
+├─ Faster CPU (backend WebSocket fan-out)
+├─ Faster storage (MongoDB I/O)
+└─ Higher bandwidth (tileserver, deployment packages)
 ```
+
+Because each vehicle owns its own data locally via Headwaters and Farwatch
+only mirrors transient state, the cloud side scales mostly vertically with the
+number of active dashboards and the size of the fleet of registered devices —
+not with historical telemetry volume.
+
+### Horizontal Scaling
+
+Horizontal scaling (multiple backend replicas behind a load balancer, MongoDB
+replica set) is supported but rarely necessary. If you are deploying Farwatch
+to hundreds of vehicles, start with a larger VPS and only split services out
+if you measure real contention.
 
 ### Geographic Distribution
 
@@ -302,16 +269,16 @@ Vehicle Compute Locations:
 
 ```
 Each component logs to:
-├─ Docker logs (stdout/stderr)
-├─ Application logs (files in /app/logs/)
-├─ Database logs (/var/log/postgresql/)
-└─ System logs (journalctl)
+├─ Docker logs (stdout/stderr, preferred)
+├─ MongoDB logs (inside the mongodb container)
+├─ Mosquitto logs (inside the mosquitto container)
+└─ Host system logs (journalctl)
 
 Monitoring stack (optional):
 ├─ Prometheus (metrics collection)
 ├─ Grafana (visualization)
 ├─ AlertManager (alerts)
-└─ ELK Stack (log aggregation)
+└─ Loki (log aggregation)
 ```
 
 ---

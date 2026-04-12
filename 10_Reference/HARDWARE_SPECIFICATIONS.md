@@ -73,27 +73,49 @@ Complete electrical and physical specifications for all TrailCurrent hardware co
 
 ## CAN Transceiver Specifications
 
-### MCP2515
+TrailCurrent hardware modules use the ESP32 family's built-in TWAI (Two-Wire
+Automotive Interface) controller, paired with an external CAN transceiver to
+drive the physical bus. The in-vehicle compute (Headwaters) uses a separate
+MCP2515 SPI CAN controller on a standard Waveshare HAT.
 
-**NEEDS TO BE COMPLETED** - Document:
-- Communication protocol (SPI)
-- Clock speed support
-- Voltage requirements (5V)
-- Current consumption
-- Operating temperature
-- Termination voltage divider requirements
-- Capacitor specifications
-- Crystal frequency
+### SN65HVD230 (Modules)
 
-### TJA1050
+The SN65HVD230 is the primary 3.3 V CAN transceiver used across every hardware
+module — either built into Waveshare RS485-CAN / Relay carrier boards, or
+wired externally on ESP32 dev boards. Key parameters:
 
-**NEEDS TO BE COMPLETED** - Document:
-- Voltage requirements (5V, 3.3V variants)
-- Current consumption
-- Operating temperature
-- Bus voltage requirements
-- Slope control
-- Standby mode
+| Parameter | Value |
+|-----------|-------|
+| Supply voltage | 3.3 V |
+| Signaling | ISO 11898-2 compatible |
+| Data rate | up to 1 Mbps (TrailCurrent uses 500 kbps) |
+| Operating temperature | −40 °C to +85 °C |
+| Modes | Normal, silent (listen-only), low-power standby |
+| Current (normal) | ~17 mA typical |
+| Bus fault protection | ±36 V |
+
+Termination is a 120 Ω resistor at each end of the bus; intermediate modules
+do not terminate. See [CAN_BUS_REFERENCE.md](./CAN_BUS_REFERENCE.md) for the
+physical-layer guidelines.
+
+### MCP2515 (Headwaters Only)
+
+The Raspberry Pi CM5 does not have a built-in CAN controller, so Headwaters
+uses the **Waveshare RS485 CAN HAT (B)** — an off-the-shelf HAT that presents
+an MCP2515 SPI CAN controller plus a standard transceiver to the Pi. No
+custom PCB or soldering is required.
+
+| Parameter | Value |
+|-----------|-------|
+| Interface to host | SPI (`/dev/spidev0.0`) |
+| CAN controller | Microchip MCP2515 |
+| Clock | 8 MHz crystal (configured in the Linux device tree overlay) |
+| Max data rate | 1 Mbps (TrailCurrent uses 500 kbps) |
+| Bus fault protection | Handled by the transceiver chip on the HAT |
+
+Linux exposes the controller as a SocketCAN interface (`/dev/can0` /
+`can0`). The Headwaters backend consumes frames through SocketCAN without
+knowing or caring that it is backed by an MCP2515.
 
 ## Sensor Specifications
 

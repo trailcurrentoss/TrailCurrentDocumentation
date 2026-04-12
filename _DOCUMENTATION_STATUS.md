@@ -8,7 +8,22 @@ This document tracks the status of TrailCurrent documentation creation and compl
 **Total Markdown Files**: 46
 **Status**: Core structure complete. CAN Bus Reference refreshed from DBC (now includes Reservoir, expanded Torrent/Solstice IDs, BorealisCalibration). Hardware module docs reflect the full ESP-IDF migration (all modules except Spotter) and the new Reservoir water-tank module. Cloud Application README rewritten to match Farwatch (MongoDB, API key auth, PWA). Mobile Application README now covers both Outbound (Android native) and the React Native app. Vehicle Compute README updated to CM5 + carrier board hardware. BUILD_SYSTEM.md ESP-IDF section filled in.
 
-### Recent sweep (2026-04-11)
+### Recent sweep (2026-04-11 — second pass)
+
+Second pass across the remaining areas:
+
+- `01_Architecture/DEPLOYMENT_ARCHITECTURE.md` — cloud tier rewritten around Farwatch (single-VPS default; MongoDB instead of PostgreSQL+Redis; Let's Encrypt; proximity automation engine). Scaling guidance is now "vertical by default, horizontal only if measured"
+- `01_Architecture/PLATFORM_OVERVIEW.md` — cloud components updated to Farwatch (MongoDB + tileserver + PWA); hardware module list refreshed to include Reservoir and Switchback; Key Technologies table refreshed with ESP-IDF v5.1+ and MongoDB
+- `01_Architecture/SYSTEM_ARCHITECTURE.md` — cloud tier diagram updated (Farwatch: Backend, MongoDB, Mosquitto TLS, tileserver, package storage); scalability section rewritten around MongoDB replica sets and backend replicas
+- `01_Architecture/DATA_FLOW.md` — added Scenario 3 (Reservoir water tanks) and Scenario 4 (Proximity automation, phone ↔ vehicle via Farwatch); Scenario 3 "Offline Operation" renumbered to Scenario 5
+- `06_Shared_Libraries/README.md` — reflects ESP-IDF migration; C6-specific libraries documented as retired (modules moved to Waveshare S3 boards); remaining WROOM32 libraries scoped to Torrent/Tapper
+- `08_Deployment/README.md` — "Infrastructure Scaling" rewritten around vertical scaling (default) + MongoDB replica set + backend replicas
+- `10_Reference/GLOSSARY.md` — PostgreSQL/Redis/JWT entries replaced with MongoDB and API Key; CAN Transceiver entry corrected (SN65HVD230 on modules, MCP2515 HAT on Headwaters)
+- `10_Reference/README.md` — network ports table updated (MongoDB 27017, tileserver 8080, MQTT TLS 8883 annotation for vehicle↔cloud)
+- `10_Reference/HARDWARE_SPECIFICATIONS.md` — CAN Transceiver section filled in: SN65HVD230 on modules, MCP2515 on the Waveshare RS485 CAN HAT (B) for Headwaters
+- `10_Reference/EXTERNAL_LINKS.md` — Database Tools section populated with MongoDB references (Manual, mongosh, Compass, backup docs)
+
+### Recent sweep (2026-04-11 — first pass)
 
 Documentation drift was audited against the current state of every project under
 `/Product/` and the following files were brought up to date:

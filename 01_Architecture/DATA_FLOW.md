@@ -117,7 +117,112 @@ and the device broadcasts its actual state to all listeners.
            Dashboard updates: light 3 now shows ON
 ```
 
-### Scenario 3: Offline Operation (No Cloud)
+### Scenario 3: Water Tank Level (Reservoir Module)
+
+Reservoir reads up to 4 contactless sensors per tank (fresh, grey, black) and
+reports fill percentages at 2-second cadence. The percentage-based protocol
+means the CAN contract is stable even if the underlying sensors are upgraded
+from contactless to analog.
+
+```
+┌──────────────────────┐   ┌──────────────────────┐   ┌──────────────────────┐
+│ Fresh-water sensors  │   │ Grey-water sensors   │   │ Black-water sensors  │
+│ (4× contactless)     │   │ (4× contactless)     │   │ (4× contactless)     │
+└──────────┬───────────┘   └──────────┬───────────┘   └──────────┬───────────┘
+           │                          │                          │
+           ▼                          ▼                          ▼
+       ┌─────────────────────────────────────────────────────────┐
+       │                Reservoir (ESP32-S3)                     │
+       │          Dedicated FreeRTOS polling task                │
+       └──────────────────────┬──────────────────────────────────┘
+                              │ CAN ID 0x3E  (WaterTankLevels, 3 bytes)
+                              │ Payload: [fresh_pct, grey_pct, black_pct]
+                              │ Cycle: 2000 ms
+                              ▼
+                  ┌──────────────────────────────┐
+                  │ Headwaters CAN-to-MQTT bridge│
+                  └──────────────────┬───────────┘
+                                     │ Publishes:
+                                     │   local/tanks/fresh   {"pct": 82}
+                                     │   local/tanks/grey    {"pct": 34}
+                                     │   local/tanks/black   {"pct": 11}
+                                     ▼
+                    ┌──────────────────────────────┐
+                    │ Local Headwaters dashboard   │
+                    │ Fireside/Milepost displays   │
+                    └──────────────┬───────────────┘
+                                   │
+                                   │ (only on change, with 15 s debounce)
+                                   ▼
+                       Cloud bridge → Farwatch
+                        rv/tanks/{fresh,grey,black}
+```
+
+Farwatch thresholds map percentages to user-visible warnings (e.g. fresh < 20 %
+turns the widget amber; black > 80 % turns it red). The warning logic lives
+entirely in the frontends (PWA, Outbound, React Native app) — Reservoir only
+reports raw percentages.
+
+### Scenario 4: Proximity Automation (Phone ↔ Vehicle)
+
+Farwatch's **proximity automation engine** lets a phone trigger vehicle actions
+when it arrives at or leaves a configured geofence around the vehicle. This is
+the one scenario where the cloud is the authoritative source of user intent —
+it cannot be expressed with local-only MQTT because the phone is not on the
+local network yet.
+
+```
+┌──────────────────────────┐
+│ Phone (Outbound / RN)    │
+│ GPS lock + registered    │
+│ device (API key + name)  │
+└──────────┬───────────────┘
+           │ POST /api/proximity/ping {lat, lon, accuracy}
+           │ (HTTPS — regular intervals when app is in foreground,
+           │  background location updates when backgrounded)
+           ▼
+┌───────────────────────────────────────────────────────────┐
+│ Farwatch Backend                                          │
+│  1. Look up vehicle's last known position (from Bearing)  │
+│  2. Compute distance from phone to vehicle                │
+│  3. Compare against the phone's zone radius setting       │
+│  4. If a zone transition occurred (entered or left):      │
+│       • Evaluate automation rules registered for          │
+│         (device_id, transition_type)                      │
+│       • For each matching rule, build the action payload  │
+│         (light toggle, brightness, relay, scene, etc.)    │
+└──────────┬────────────────────────────────────────────────┘
+           │ Publishes MQTT commands on the cloud broker:
+           │   rv/lights/3/command {"state": 1}
+           │   rv/relays/2/command {"state": 1}
+           ▼
+           Cloud Mosquitto  ──MQTTS──▶  Vehicle Headwaters
+                                              │
+                                              ▼
+                                     Headwaters → CAN
+                                       0x18 TorrentToggle0
+                                       0x25 SwitchbackToggle0
+                                              │
+                                              ▼
+                              Torrent / Switchback execute command
+                              and broadcast new status (normal path)
+```
+
+Key properties of this flow:
+
+- **Rules live in MongoDB on Farwatch**, not on the phone or the vehicle. A new
+  phone can inherit existing rules the moment its API key is registered.
+- **The vehicle never talks outbound to evaluate rules.** Headwaters only
+  receives the resulting `rv/…/command` MQTT messages, so the offline fallback
+  (Scenario 5 below) still works — the phone just can't trigger an automation
+  when the vehicle is offline.
+- **Rate limiting and debounce** are enforced in the backend so that a phone
+  jittering across a zone edge doesn't toggle lights repeatedly.
+- **Privacy**: the phone's raw coordinates are not persisted. Only the
+  transition events (entered / left a zone) are logged, and even those are
+  rotated aggressively. See [CORE_PRINCIPLES.md](../CORE_PRINCIPLES.md).
+
+### Scenario 5: Offline Operation (No Cloud)
 
 The system is fully autonomous without cloud connectivity. All local control,
 sensor reading, and UI functions continue normally. The cloud bridge simply

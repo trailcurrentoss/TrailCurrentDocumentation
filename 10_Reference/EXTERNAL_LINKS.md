@@ -78,11 +78,10 @@ Reference to external documentation and resources used in TrailCurrent.
 
 ### Database Tools
 
-**NEEDS TO BE COMPLETED** - Links to:
-- PostgreSQL Documentation
-- SQLite Documentation
-- Database Administration Tools
-- Backup and Recovery
+- [MongoDB Manual](https://www.mongodb.com/docs/manual/) — Document database used by Headwaters and Farwatch
+- [mongosh](https://www.mongodb.com/docs/mongodb-shell/) — Official MongoDB shell
+- [Compass](https://www.mongodb.com/products/compass) — MongoDB GUI client
+- [MongoDB backup & restore](https://www.mongodb.com/docs/manual/core/backups/) — Operational reference
 
 ### Docker
 

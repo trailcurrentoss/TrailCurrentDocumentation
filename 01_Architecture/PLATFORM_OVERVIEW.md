@@ -89,12 +89,12 @@ The TrailCurrent platform is organized into three layers, where the **Device and
 - **No External Dependencies** - No Big Tech APIs, no vendor lock-in, no tracking
 - **Fully Self-Hosted** - You run and control your own cloud infrastructure
 
-**Components** (if deployed):
-- REST API backend (Node.js/Express)
-- PostgreSQL/SQLite database
-- Web frontend (HTML/CSS/JavaScript)
-- MQTT message broker
-- Map and analytics engine
+**Components** (if deployed — the cloud application is **TrailCurrent Farwatch**):
+- Frontend PWA (nginx + vanilla JS)
+- REST API + WebSocket backend (Node.js / Express)
+- MongoDB for settings, state, and deployment metadata
+- Mosquitto MQTT broker bridging to the vehicle
+- tileserver-gl for offline-capable MapLibre vector tiles
 
 **Communication**: HTTPS (to users), MQTT (to in-vehicle compute), WebSocket (real-time updates)
 
@@ -124,28 +124,30 @@ Hardware Modules
 
 ### Sensors
 - Bearing - GNSS location, heading, altitude, and precise timing
-- Borealis - Temperature, humidity, CO2, indoor air quality
-- Picket - Cabinet and door open/closed status monitoring
-- Ampline - Power consumption and state-of-charge via Victron Shunt
-- Plateau - Tilt/level measurement on both axes
+- Borealis - Temperature, humidity, TVOC, eCO2 (SHT31-D + SGP30)
+- Picket - Cabinet and door open/closed status monitoring (up to 8 modules per bus)
+- Ampline - Power consumption and state-of-charge via Victron BMV SmartShunt
+- Plateau - Tilt / level measurement with per-corner heights (BNO055 IMU)
+- Reservoir - Water tank levels for up to 3 tanks (fresh, grey, black)
 
 ### Control Systems
-- Torrent - 8-channel smart power delivery with switching and PWM dimming
+- Torrent - 8-channel smart power delivery with switching and PWM dimming (up to 3 modules per bus)
+- Switchback - 8-channel dry-contact relay module (up to 3 modules per bus)
 - Therma - Closed-loop thermostat (3 boards: controller + heater relay + cooler relay) with mutually-exclusive heat/cool outputs and configurable hysteresis
-- Solstice - Victron MPPT solar charge controller interface
+- Solstice - Victron MPPT solar charge controller + SmartShunt interface
 
 ### Communication & External Systems
 - Aftline - Trailer wiring harness monitor (all 7 pins)
 - RV-C Gateway *(Coming Soon)* - RV-C protocol gateway
 
 ### User Interfaces
-- Tapper - Physical 8-button interface for Torrent commands
-- Fireside - Wireless battery-powered touchscreen display with wall cradle
-- Milepost - Hardwired CAN bus touchscreen (always-on)
-- Spotter - In-vehicle display for monitoring trailer while towing
+- Tapper - Physical 8-button interface for Torrent or Switchback commands
+- Fireside - Wireless touchscreen display (ESP32-P4 with LVGL)
+- Milepost - Hardwired wall-mounted 7" touchscreen (ESP32-S3)
+- Spotter - Compact in-vehicle display for monitoring the trailer while towing
 
 ### Voice & AI
-- Peregrine - AI voice assistant with hands-free system control
+- Peregrine - Fully-local AI voice assistant (Radxa Dragon Q6A)
 
 ## Data Flow
 
@@ -161,15 +163,17 @@ Hardware Modules
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| Hardware | ESP32, C/C++ | Embedded firmware |
-| Hardware | CAN Bus | Reliable device communication |
-| Edge | Raspberry Pi CM5 + Waveshare CAN HAT (B) | Edge computing device |
-| Edge | Docker | Container orchestration |
-| Edge | MQTT | Internal messaging |
-| Cloud | Node.js/Express | Backend API |
-| Cloud | PostgreSQL | Data storage |
-| Cloud | HTML/CSS/JS | Frontend UI |
-| Cloud | WebSocket | Real-time updates |
+| Hardware | ESP32 / ESP32-S3 / ESP32-P4, C/C++ | Embedded firmware |
+| Hardware | ESP-IDF (v5.1+) | Embedded build system (all modules) |
+| Hardware | CAN Bus (500 kbps) | Reliable device communication |
+| Edge | Raspberry Pi CM5 + Waveshare RS485 CAN HAT (B) | Edge computing device (Headwaters) |
+| Edge | Docker Compose | Container orchestration |
+| Edge | Mosquitto MQTT | Internal messaging and cloud bridging |
+| Edge | MongoDB | Local settings and state storage |
+| Cloud | Node.js / Express | Farwatch backend API and WebSocket |
+| Cloud | MongoDB | Farwatch settings, deployment packages, automation rules |
+| Cloud | nginx + vanilla JS PWA | Farwatch frontend |
+| Cloud | tileserver-gl + MapLibre | Offline-capable vector tiles |
 
 ## Fundamental Principles
 

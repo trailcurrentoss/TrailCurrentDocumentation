@@ -207,12 +207,12 @@ See [HARDWARE_SPECIFICATIONS.md](HARDWARE_SPECIFICATIONS.md) for complete specs.
 |---------|------|----------|
 | REST API | 3000 | HTTP (dev) |
 | REST API | 443 | HTTPS (prod) |
-| MQTT | 1883 | TCP |
-| MQTT TLS | 8883 | TCP+TLS |
+| MQTT | 1883 | TCP (local only) |
+| MQTT TLS | 8883 | TCP+TLS (vehicle ↔ cloud) |
 | WebSocket | 8080 | WS (dev) |
-| WebSocket | 443 | WSS (prod) |
-| PostgreSQL | 5432 | TCP (internal) |
-| Redis | 6379 | TCP (internal) |
+| WebSocket | 443 | WSS (prod, same port as REST) |
+| MongoDB | 27017 | TCP (internal to Docker network) |
+| tileserver-gl | 8080 | HTTP (internal) |
 
 ### Data Sizes
 

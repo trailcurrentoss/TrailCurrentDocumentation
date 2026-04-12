@@ -8,7 +8,7 @@ Complete glossary of terms, acronyms, and definitions used in TrailCurrent docum
 Controller Area Network - A robust serial communication protocol used for real-time communication between hardware modules in TrailCurrent. All ESP32 modules communicate via CAN bus at 500 kbps or 1 Mbps.
 
 ### CAN Transceiver
-Hardware component that connects an ESP32 module to the CAN bus physical layer. Common types: MCP2515 (SPI interface) or TJA1050 (direct transceiver).
+Hardware component that connects an ESP32 module to the CAN bus physical layer. TrailCurrent modules predominantly use the **SN65HVD230** transceiver — either built into Waveshare RS485-CAN / Relay carrier boards, or wired externally to ESP32 dev boards. The in-vehicle compute (Headwaters) uses the Waveshare RS485 CAN HAT (B), which presents an MCP2515 SPI CAN controller to the Raspberry Pi CM5 (no custom PCB required).
 
 ### CAN ID
 Unique identifier for each CAN message (11-bit standard or 29-bit extended). Used to route and filter messages on the bus.
@@ -61,14 +61,11 @@ Software code running on embedded devices (ESP32 modules). Typically written in 
 ### Docker Container
 Lightweight virtualization technology bundling application, dependencies, and configuration. Used for cloud services and vehicle Pi applications.
 
-### PostgreSQL
-Open-source relational database used for storing long-term data in cloud application (users, devices, sensor history).
+### MongoDB
+Document database used by both Headwaters (in-vehicle compute) and Farwatch (cloud) for settings, state snapshots, deployment package metadata, and proximity automation rules. Chosen for its flexible schema and low operational overhead.
 
-### Redis
-In-memory data store used for caching frequently accessed data and managing user sessions in cloud.
-
-### JWT (JSON Web Token)
-Authentication token format used for API requests. Contains encoded user information and signature.
+### API Key
+Authentication token used by TrailCurrent Farwatch for all REST and WebSocket access. Each phone, browser, or integration carries its own key in the `Authorization: Bearer` header. Keys can be rotated and revoked from the dashboard without affecting the vehicle itself. TrailCurrent does **not** use JWT or username/password auth.
 
 ### CORS (Cross-Origin Resource Sharing)
 Security mechanism allowing web browsers to access APIs from different domains.
