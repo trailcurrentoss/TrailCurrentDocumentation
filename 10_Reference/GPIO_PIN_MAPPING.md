@@ -66,10 +66,36 @@ Complete reference for GPIO pin assignments, connections, and configurations acr
 
 **NEEDS TO BE COMPLETED** - Reference diagram and pin list
 
+### Therma (Closed-Loop Thermostat — 3 boards)
+
+Therma is a 3-board system. Only the controller is on the CAN bus; the two relay boards are driven over direct GPIO pin-to-pin lines.
+
+**Therma Controller — Waveshare ESP32-S3-RS485-CAN**
+
+| Function | GPIO | Direction | Notes |
+|---|---|---|---|
+| CAN TX | 15 | out | Onboard SN65HVD230 |
+| CAN RX | 16 | in | Onboard SN65HVD230 |
+| `HEAT_CMD_OUT` | 4 | out | Drives heater relay's `CMD_IN` |
+| `HEAT_STATUS_IN` | 5 | in (pulldown) | Reads heater relay's `STATUS_OUT` |
+| `COOL_CMD_OUT` | 6 | out | Drives cooler relay's `CMD_IN` |
+| `COOL_STATUS_IN` | 7 | in (pulldown) | Reads cooler relay's `STATUS_OUT` |
+
+**Therma Heater Relay & Therma Cooler Relay — Waveshare ESP32-S3-Relay-1CH**
+
+Identical pinout on both boards (same firmware sources, only the role flag differs).
+
+| Function | GPIO | Direction | Notes |
+|---|---|---|---|
+| `RELAY_DRIVE` | 47 | out | Board-fixed; drives the onboard relay coil |
+| `CMD_IN` | 3 | in (pulldown) | From controller's `HEAT_CMD_OUT` / `COOL_CMD_OUT` |
+| `STATUS_OUT` | 4 | out | Mirrors commanded relay state back to controller |
+
+All three boards share a **common ground**. 3.3V logic on both ends — no level shifting needed. The Waveshare ESP32-S3-Relay-1CH also exposes RS485 on GPIO17/18/21, which is unused in the current firmware but available for a future RS485 OTA proxy.
+
 ### Other Modules
 
 **NEEDS TO BE COMPLETED** - Pin assignments for:
-- Therma (climate relay controller)
 - Plateau (vehicle level sensor)
 - Picket (cabinet & door sensors)
 - Ampline (shunt interface)

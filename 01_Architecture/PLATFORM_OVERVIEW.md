@@ -131,7 +131,7 @@ Hardware Modules
 
 ### Control Systems
 - Torrent - 8-channel smart power delivery with switching and PWM dimming
-- Therma - Dual-relay automatic heating/cooling
+- Therma - Closed-loop thermostat (3 boards: controller + heater relay + cooler relay) with mutually-exclusive heat/cool outputs and configurable hysteresis
 - Solstice - Victron MPPT solar charge controller interface
 
 ### Communication & External Systems

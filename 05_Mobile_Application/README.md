@@ -1,373 +1,106 @@
-# TrailCurrent Outbound (Mobile App)
+# TrailCurrent Mobile Applications
 
-Documentation for TrailCurrent Outbound, the native Android mobile application.
+TrailCurrent has two first-party mobile clients. Both talk to the same Farwatch
+REST + WebSocket API — pick whichever you prefer or whichever you want to
+contribute to.
 
-## Overview
+| App | Source | Platform | Framework | Language |
+|-----|--------|----------|-----------|----------|
+| **TrailCurrent Outbound** | `/Product/TrailCurrentOutbound/` | Android native | Jetpack Compose + Material 3 | Kotlin |
+| **TrailCurrent App** (React Native) | `/Product/TrailCurrentReactNativeApp/` | iOS + Android | Expo SDK 54 + React Native 0.81 | TypeScript |
 
-The TrailCurrent Android app provides mobile access to the vehicle monitoring and control system:
-- Real-time device status and telemetry
-- Remote device control
-- Notifications and alerts
-- Offline support (cached data)
-- Vehicle location tracking
-- System settings and configuration
+Both apps authenticate against Farwatch using an **API key** carried in the
+`Authorization: Bearer` header, and subscribe to live state over WebSocket.
 
-## Architecture
+---
 
-```
-┌─────────────────────────────┐
-│   Android Application       │
-├─────────────────────────────┤
-│                             │
-│ ┌──────────────────────────┐│
-│ │  UI Layer                ││
-│ │ ├─ Dashboard            ││
-│ │ ├─ Device List          ││
-│ │ ├─ Control Panel        ││
-│ │ └─ Settings             ││
-│ └──────────────┬───────────┘│
-│                │            │
-│ ┌──────────────▼───────────┐│
-│ │  Business Logic          ││
-│ │ ├─ Device Management    ││
-│ │ ├─ Data Caching         ││
-│ │ ├─ Offline Support      ││
-│ │ └─ Notifications        ││
-│ └──────────────┬───────────┘│
-│                │            │
-│ ┌──────────────▼───────────┐│
-│ │  Network Layer           ││
-│ │ ├─ REST API Client      ││
-│ │ ├─ WebSocket Client     ││
-│ │ └─ Authentication       ││
-│ └─────────────────────────┘│
-│         ↓                  │
-│      Network (HTTPS/WSS)   │
-│         ↓                  │
-└─────────────────────────────┘
-```
+## TrailCurrent Outbound (Android Native)
 
-## Features
+Native Android app for the TrailCurrent monitoring and control system.
 
-### Device Monitoring
-- Real-time status display
-- Sensor data visualization
-- Temperature graphs
-- Power consumption tracking
-- Location on map (GPS data)
+### Features
+- **Home Dashboard** — Nest-style thermostat dial + light grid with brightness adjust
+- **Trailer Monitoring** — bubble level indicators, GNSS details (satellites, heading)
+- **Energy Monitoring** — Solar input, battery SoC, charge status
+- **Water Tanks** — fresh / grey / black tank levels (from Reservoir)
+- **Air Quality** — temperature, humidity, IAQ, CO2 (from Borealis)
+- **Map View** — real-time vehicle location on MapLibre GL vector tiles with 2D/3D modes and compass
+- **Settings** — server config, dark/light theme, timezone, clock format
 
-### Device Control
-- Power on/off
-- Heater control
-- Leveler control
-- Command queueing
-- Favorites for quick access
+### Tech Stack
+- **Language:** Kotlin
+- **UI:** Jetpack Compose + Material 3
+- **Architecture:** MVVM + Repository pattern
+- **DI:** Hilt
+- **Networking:** Retrofit + OkHttp (REST), OkHttp WebSocket (real-time)
+- **Local Storage:** DataStore Preferences
+- **Maps:** MapLibre GL (vector tiles from Farwatch's tileserver-gl)
+- **Auth:** API key via `Authorization` header
+- **Minimum SDK:** 26 (Android 8.0)
+- **Target SDK:** 34 (Android 14)
 
-### Notifications
-- Device status alerts
-- Command completion notifications
-- System warnings
-- Customizable notification settings
+### Build
 
-### Offline Support
-- Cached device status
-- Offline device list
-- Command queuing for when online
-- Last known data timestamps
-
-### User Management
-- Multi-account support
-- Role-based features
-- Device sharing (if configured)
-- Profile settings
-
-## Setup & Development
-
-### Prerequisites
-- Android Studio (latest)
-- Android SDK 21+ (but target 33+)
-- Gradle
-- Java/Kotlin development knowledge
-- API endpoint and credentials
-
-### Development Setup
-
-1. Clone the repository from `/Product/TrailCurrentOutbound/`
-2. Open in Android Studio
-3. Configure API endpoints in config files
-4. Build and run on emulator or device
-
-See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed instructions.
-
-## Technology Stack
-
-| Component | Technology |
-|-----------|-----------|
-| Language | Kotlin / Java |
-| UI Framework | Android Jetpack |
-| Navigation | Android Navigation |
-| HTTP Client | Retrofit |
-| WebSocket | OkHttp/WebSocket |
-| Database | SQLite / Room |
-| Cache | Shared Preferences |
-| Async | Coroutines |
-
-## Project Structure
-
-```
-TrailCurrentOutbound/
-├── app/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/trailcurrent/
-│   │   │   │   ├── ui/              # UI components
-│   │   │   │   ├── viewmodel/       # Business logic
-│   │   │   │   ├── data/            # Data layer
-│   │   │   │   ├── network/         # API clients
-│   │   │   │   └── utils/           # Utilities
-│   │   │   ├── res/
-│   │   │   │   ├── layout/          # Activity/Fragment layouts
-│   │   │   │   ├── drawable/        # Icons/images
-│   │   │   │   ├── values/          # Strings, colors, styles
-│   │   │   │   └── menu/            # Menu resources
-│   │   │   └── AndroidManifest.xml
-│   │   └── test/                    # Unit tests
-│   └── build.gradle
-└── README.md
-```
-
-## API Integration
-
-### REST API Endpoints Used
-
-```
-Authentication:
-POST /api/auth/login
-POST /api/auth/logout
-POST /api/auth/refresh
-
-Device Data:
-GET /api/devices
-GET /api/devices/:id
-GET /api/data/:deviceId
-GET /api/data/:deviceId/history
-
-Control:
-POST /api/commands
-GET /api/commands/:id
-```
-
-### WebSocket Connection
-Real-time updates via WebSocket:
-```
-wss://[cloud-host]/api/ws
-- Device status updates
-- New sensor readings
-- Command completions
-- Notifications
-```
-
-## Configuration
-
-### API Configuration
-Set in `build.gradle` or local properties:
-```gradle
-API_BASE_URL=https://api.trailcurrent.cloud
-API_WS_URL=wss://api.trailcurrent.cloud
-```
-
-### Firebase (Optional)
-For push notifications:
-- Add Firebase credentials
-- Configure notification handling
-
-## Key Activities & Fragments
-
-### Dashboard
-Main screen showing:
-- Quick status overview
-- Favorite devices
-- Recent commands
-- System alerts
-
-### Device List
-Browse all registered devices with:
-- Device status
-- Last update time
-- Quick actions
-
-### Device Detail
-View full device information:
-- Complete sensor data
-- Control commands
-- Command history
-- Device settings
-
-### Map View
-Display vehicle location:
-- Real-time position
-- Historical track (if available)
-- Multiple vehicles
-- Route planning
-
-## Data Flow
-
-```
-Network Request
-  ↓
-REST API / WebSocket
-  ↓
-Response Handler
-  ├─ Parse JSON
-  ├─ Validate data
-  └─ Store in cache
-       ↓
-ViewModel Update
-  └─ Notify UI
-       ↓
-UI Refresh
-  ├─ Update Views
-  ├─ Animate changes
-  └─ Show notifications
-```
-
-## Testing
-
-### Unit Tests
-Test business logic:
 ```bash
-./gradlew test
+cd /Product/TrailCurrentOutbound
+./gradlew assembleDebug        # debug APK
+./gradlew bundleRelease        # release AAB for Play Store
 ```
 
-### Instrumented Tests
-Test on device:
+Configure the Farwatch host and API key in the in-app Settings screen.
+
+---
+
+## TrailCurrent App (React Native / Expo)
+
+Cross-platform mobile app for monitoring and controlling TrailCurrent vehicle
+systems. Builds for iOS and Android from a single codebase.
+
+### Features
+- **Home** — thermostat dial (drag to adjust) + light grid (tap toggle, long-press brightness)
+- **Trailer** — bubble level indicators + GNSS details (satellites, speed, course)
+- **Energy** — solar input, battery level/voltage, charge status, time remaining
+- **Water** — fresh / grey / black tank levels with color-coded thresholds
+- **Map** — real-time vehicle position
+
+### Tech Stack
+| Layer | Technology |
+|-------|------------|
+| Framework | Expo SDK 54, React Native 0.81, TypeScript |
+| Routing | Expo Router (file-based) |
+| State | React Context + `useReducer` |
+| HTTP | built-in `fetch` |
+| WebSocket | built-in WebSocket with auto-reconnect |
+| Storage | AsyncStorage (prefs), SecureStore (API key) |
+| Maps | `react-native-maps` |
+| Icons | `@expo/vector-icons` (Ionicons) |
+
+### Build
+
 ```bash
-./gradlew connectedAndroidTest
+cd /Product/TrailCurrentReactNativeApp
+npm install
+npx expo start                   # development server
+eas build --platform ios         # Expo Application Services cloud build
+eas build --platform android
 ```
 
-### Manual Testing Checklist
-- [ ] Login/logout
-- [ ] View device list
-- [ ] View device details
-- [ ] Send commands
-- [ ] Receive WebSocket updates
-- [ ] Offline mode functionality
-- [ ] Push notifications
-- [ ] Settings changes
+Configure the Farwatch host and API key through the in-app Settings tab. The
+API key is persisted to SecureStore (Keychain on iOS, EncryptedSharedPreferences
+on Android).
 
-## Security
+---
 
-### API Security
-- HTTPS only
-- Certificate pinning recommended
-- Token-based authentication
-- Encrypted SharedPreferences for credentials
+## Security Notes (both apps)
 
-### Data Storage
-- Sensitive data encrypted
-- Session token expiration
-- Clear credentials on logout
-
-### Permissions
-- Request required permissions at runtime
-- Location (GPS viewing)
-- Network (API calls)
-- Notifications
-
-## Building & Distribution
-
-### Debug Build
-```bash
-./gradlew assembleDebug
-```
-
-### Release Build
-```bash
-./gradlew bundleRelease
-```
-
-### App Signing
-Configure keystore in `gradle.properties`:
-```properties
-RELEASE_STORE_FILE=path/to/keystore.jks
-RELEASE_STORE_PASSWORD=password
-RELEASE_KEY_ALIAS=alias_name
-RELEASE_KEY_PASSWORD=key_password
-```
-
-## Distribution
-
-### Google Play Store
-1. Create developer account
-2. Prepare app listing
-3. Build release APK/AAB
-4. Submit for review
-5. Publish
-
-### Direct APK Distribution
-Distribute APK file directly to users.
-
-## Performance Optimization
-
-### Network
-- Request batching
-- Connection pooling
-- Caching strategies
-- Compression
-
-### UI
-- Lazy loading
-- Image optimization
-- View recycling
-- Efficient layouts
-
-### Storage
-- Database indexing
-- Cache cleanup
-- Efficient queries
-
-## Debugging
-
-### Logs
-View application logs:
-```bash
-adb logcat | grep trailcurrent
-```
-
-### Network Inspection
-Use Android Studio Network Profiler to inspect:
-- HTTP requests/responses
-- WebSocket messages
-- Data transmission rates
-
-### Device Inspector
-Inspect app data:
-```bash
-adb shell
-cd /data/data/com.trailcurrent
-ls -la
-```
-
-## Troubleshooting
-
-Common issues:
-- Connection timeout → Check API endpoint
-- Authentication failure → Verify credentials
-- WebSocket disconnect → Check network connectivity
-- Crash on startup → Check API response format
-
-## Documentation
-
-- [SETUP_GUIDE.md](SETUP_GUIDE.md) - Development setup
-- [FEATURES.md](FEATURES.md) - Complete feature list
-
-## Source Code
-
-Android application source: `/Product/TrailCurrentOutbound/`
+- **HTTPS only** — certificate pinning recommended for production builds
+- **API key storage** — Android DataStore + SecureStore / Keychain, never plaintext
+- **Token revocation** — Farwatch API keys can be revoked at any time without
+  affecting the vehicle itself (the vehicle continues to run locally)
 
 ---
 
 See also:
-- [04_Cloud_Application/](../04_Cloud_Application/) - Cloud backend
-- [07_Development/](../07_Development/) - Development guidelines
-- [09_Troubleshooting/](../09_Troubleshooting/) - Common issues
+- [04_Cloud_Application/](../04_Cloud_Application/) — Farwatch cloud backend
+- [03_Vehicle_Compute/](../03_Vehicle_Compute/) — Headwaters (vehicle compute)
+- [07_Development/](../07_Development/) — Development guidelines

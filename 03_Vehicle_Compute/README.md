@@ -4,12 +4,16 @@ Complete guide to the edge computing system that serves as the gateway between h
 
 ## Overview
 
-The In-Vehicle Compute system is an edge computing device (Raspberry Pi Compute Module 5 on a standard carrier board with Waveshare RS485 CAN HAT (B)) running containerized services that:
-- Convert CAN bus messages to MQTT for local wireless communication (when internet unavailable) and cloud sync (when connected)
+The In-Vehicle Compute system — branded **TrailCurrent Headwaters** — is an edge computing device running on a Raspberry Pi Compute Module 5 (CM5) on a standard carrier board with a Waveshare RS485 CAN HAT (B). The CM5 + carrier board replaces the earlier Pi 5 + NVME Base + custom CAN HAT stack: it is more compact, more readily available, cheaper, and can be fully assembled from off-the-shelf parts with no soldering.
+
+It runs containerized services that:
+- Convert CAN bus messages to MQTT for local wireless communication (when internet unavailable) and cloud sync (when connected to the cloud application, Farwatch)
 - Cache data locally for offline operation and autonomous vehicle control
 - Distribute OTA firmware updates to hardware modules
-- Provide local API for vehicle status queries
+- Provide a local REST + WebSocket API for vehicle status queries
 - Route commands from users/cloud to hardware modules via CAN
+
+> **Lite variant:** [TrailCurrent Baseflow](../README.md#baseflow-lite-edge-gateway) is a scaled-down variant of Headwaters that runs on the Arduino Uno Q (4GB) and provides the same core frontend/backend/MQTT/CAN stack without tile server, cloud sync, OTA distribution, or Node-RED. Use it when all you need is a self-contained edge gateway.
 
 ## Architecture
 

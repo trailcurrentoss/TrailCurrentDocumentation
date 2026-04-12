@@ -165,7 +165,7 @@ BO_ 32 LevelingConfig: 7 Headwaters
  SG_ SaveToNvs : 55|8@0+ (1,0) [0|1] "" Plateau
 
 BO_ 31 EnvironmentSensorData: 8 Borealis
- SG_ TemperatureCelsius : 7|8@0+ (1,0) [-40|125] "degC" Headwaters
+ SG_ TemperatureCelsius : 7|8@0+ (1,0) [-40|125] "degC" Headwaters,Therma
  SG_ TemperatureFahrenheit : 15|8@0+ (1,0) [-40|257] "degF" Headwaters
  SG_ HumidityScaled : 23|16@0+ (0.01,0) [0|100] "%" Headwaters
  SG_ TVOC : 39|16@0+ (1,0) [0|60000] "ppb" Headwaters
@@ -267,6 +267,23 @@ BO_ 62 WaterTankLevels: 3 Reservoir
  SG_ GreyWaterLevel : 15|8@0+ (1,0) [0|100] "%" Headwaters
  SG_ BlackWaterLevel : 23|8@0+ (1,0) [0|100] "%" Headwaters
 
+BO_ 63 ThermaDesiredTemperature: 3 Therma
+ SG_ SetpointDeciC : 7|16@0- (0.1,0) [-40|125] "degC" Headwaters,Tapper,Torrent,Switchback,Borealis,Picket,Reservoir
+ SG_ ThresholdDeciC : 23|8@0+ (0.1,0) [0.1|5] "degC" Headwaters,Tapper,Torrent,Switchback,Borealis,Picket,Reservoir
+
+BO_ 64 ThermaStatus: 6 Therma
+ SG_ ThermaMode : 7|8@0+ (1,0) [0|2] "" Headwaters,Tapper,Torrent,Switchback,Borealis,Picket,Reservoir
+ SG_ CurrentDeciC : 15|16@0- (0.1,0) [-40|125] "degC" Headwaters,Tapper,Torrent,Switchback,Borealis,Picket,Reservoir
+ SG_ HeatRelayFb : 31|8@0+ (1,0) [0|1] "" Headwaters
+ SG_ CoolRelayFb : 39|8@0+ (1,0) [0|1] "" Headwaters
+ SG_ FaultBitmask : 47|8@0+ (1,0) [0|255] "" Headwaters
+
+BO_ 65 ThermaSetDesiredRequest: 2 Vector__XXX
+ SG_ RequestedSetpointDeciC : 7|16@0- (0.1,0) [-40|125] "degC" Therma
+
+BO_ 66 ThermaSetThresholdRequest: 1 Vector__XXX
+ SG_ RequestedThresholdDeciC : 7|8@0+ (0.1,0) [0.1|5] "degC" Therma
+
 CM_ BU_ Bearing "Bearing (GNSS) module (ESP32). Reads GNSS data from a connected GPS receiver and broadcasts position, altitude, speed, course, and date/time onto the CAN bus. Transmit-only device.";
 CM_ BU_ Torrent "Torrent power distribution module (ESP32). 8-channel PWM module controlling MOSFET outputs for lights and accessories. Module address (0-2) set at compile time via TORRENT_ADDRESS build flag, allowing up to 3 modules on the same bus. Receives brightness commands (ID 0x15-0x17), toggle commands (ID 0x18-0x1A), and sequence commands (ID 0x33-0x35), one per module instance. Sends status reports (ID 0x1B-0x1D) showing current state of all 8 outputs. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
 CM_ BU_ Tapper "Tapper button panel (ESP32). Physical 8-button interface. Each button sends a toggle command to Torrent to turn a corresponding output channel on or off. Has 8 status LEDs that reflect current output states by listening to DeviceStatusReport messages.";
@@ -275,7 +292,7 @@ CM_ BU_ Solstice "Solstice solar charge controller gateway (ESP32-S3, Waveshare 
 CM_ BU_ Borealis "Borealis environment and air quality sensor module (ESP32-S3-Zero). Reads DHT22 for temperature/humidity and SGP30 for TVOC/eCO2. Sends all data in a single 8-byte CAN frame at ID 0x1F. Bytes 0-3 are backwards-compatible with the predecessor AirQualityModule format. Bytes 4-7 add TVOC and eCO2 readings. Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
 CM_ BU_ Headwaters "Headwaters in-vehicle compute (Raspberry Pi). CAN-to-MQTT bridge running a Python script that reads all CAN bus messages and publishes them as JSON over MQTT (with TLS). Also subscribes to MQTT and writes received commands back onto the CAN bus. Enables cloud connectivity and remote monitoring.";
 CM_ BU_ Aftline "Aftline trailer connector monitor (ESP32-C6). Monitors the standard 7-pin trailer connection for voltage, turn signals, brake signals, and running lights. Reports trailer connection state. Uses TwaiTaskBased library. Under active development.";
-CM_ BU_ Therma "Therma heater control module (ESP32-C6). Controls an electric heater via dual relay. Uses TwaiTaskBased library. Listens for OTA update notifications on CAN. Under active development.";
+CM_ BU_ Therma "Therma closed-loop thermostat (3 boards). Controller: Waveshare ESP32-S3-RS485-CAN — only board on the CAN bus. Owns the authoritative desired temperature and hysteresis threshold (persisted to NVS), runs the control loop, and broadcasts ThermaDesiredTemperature (0x3F) and ThermaStatus (0x40) at 1 Hz. Consumes current temperature from Borealis EnvironmentSensorData (0x1F). Any device on the bus can request a setpoint or threshold change via ThermaSetDesiredRequest (0x41) or ThermaSetThresholdRequest (0x42); Therma validates, clamps to safe range, persists, and immediately re-broadcasts the new authoritative value. Drives two Waveshare ESP32-S3-Relay-1CH relay boards (heater + cooler) over direct GPIO pin-to-pin signalling — the relay boards are not on the CAN bus. Heating and cooling outputs are mutually exclusive and enforced by the controller. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN (controller only).";
 CM_ BU_ Plateau "Plateau vehicle leveling module (ESP32-S3-Zero with Adafruit BNO055 IMU). Reads pitch and roll from the BNO055 9-DOF IMU and computes per-corner height adjustments based on configurable vehicle dimensions. Supports three mounting orientations (floor, left wall, right wall) with automatic axis remapping. BNO055 calibration offsets are auto-saved to NVS when fully calibrated. Receives leveling configuration commands via CAN (ID 0x20). Transmits tilt data at 2Hz (ID 0x30), corner height data (ID 0x31), and calibration status every 2s (ID 0x32). Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
 CM_ BU_ Picket "Picket cabinet/door sensor module (ESP32-S3, Waveshare ESP32-S3-RS485-CAN). Monitors up to 13 magnetic reed switch inputs to detect open/closed state of cabinet doors and enclosures. Module address (0-7) set at compile time via PICKET_ADDRESS build flag, allowing up to 8 modules on the same bus (CAN IDs 0x0A-0x11). Onboard TJA1051 CAN transceiver. ESP-IDF firmware. Supports OTA firmware updates via CAN.";
 CM_ BU_ Switchback "Switchback relay control module (ESP32-S3, Waveshare ESP32-S3-ETH-8DI-8RO-C). Controls 8 mechanical relays for switching high-current loads. Module address (0-2) set at compile time via SWITCHBACK_ADDRESS build flag, allowing up to 3 modules on the same bus. Receives toggle commands via CAN (ID 0x25-0x27, one per module instance). Sends relay status bitmask via CAN (ID 0x28-0x2A). Relays are binary on/off (not PWM). 8 optocoupler-isolated digital inputs. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
@@ -414,6 +431,19 @@ CM_ SG_ 44 SolarChargeStatus "Victron MPPT charge status enum (CS field). 0 = Of
 CM_ SG_ 45 IsPanelCurrentNegative "Indicates if panel current is negative. 0 = positive (normal solar generation). 1 = negative (unusual, may indicate reverse current).";
 CM_ SG_ 45 PanelCurrentWhole "Solar panel current whole number part in amps. Combine with PanelCurrentDecimal as: current = PanelCurrentWhole + PanelCurrentDecimal / 100.0, then apply sign from IsPanelCurrentNegative.";
 CM_ SG_ 45 PanelCurrentDecimal "Solar panel current decimal part (hundredths of an amp, 0-99).";
+CM_ BO_ 63 "Therma authoritative desired temperature. Broadcast by Therma at 1 Hz and immediately on change. This is the source of truth — all displays (PWA, wall panels, Farwatch) should show this value and not a locally-held copy. To change it, send a ThermaSetDesiredRequest (0x41) or ThermaSetThresholdRequest (0x42); the next broadcast from Therma will carry the new value if the request was accepted.";
+CM_ SG_ 63 SetpointDeciC "Desired room/ambient temperature in tenths of a degree Celsius. Signed 16-bit big-endian. Therma clamps incoming requests to [5.0, 35.0] degC before accepting.";
+CM_ SG_ 63 ThresholdDeciC "Hysteresis deadband width around the setpoint in tenths of a degree Celsius, unsigned 8-bit. Heating engages when current < setpoint - threshold; cooling engages when current > setpoint + threshold. Therma clamps incoming requests to [0.1, 5.0] degC.";
+CM_ BO_ 64 "Therma authoritative status. Broadcast by Therma at 1 Hz. Contains the current thermostat mode (idle/heating/cooling) as the single source of truth for the bus, the current temperature value Therma is controlling on (received via Borealis EnvironmentSensorData), the live feedback from the two relay boards' STATUS_OUT pins, and a fault bitmask. Heating and cooling are mutually exclusive.";
+CM_ SG_ 64 ThermaMode "Current thermostat mode. 0 = Idle (both outputs off). 1 = Heating (heater relay on, cooler off). 2 = Cooling (cooler relay on, heater off). Therma enforces mutual exclusion: values other than 0/1/2 are never broadcast.";
+CM_ SG_ 64 CurrentDeciC "Current measured temperature driving the control loop, in tenths of a degree Celsius. Signed 16-bit big-endian. Sourced from Borealis EnvironmentSensorData (0x1F) by the Therma controller and normalized to 0.1 degC internally. Reads 0 if no sensor sample has arrived yet.";
+CM_ SG_ 64 HeatRelayFb "Feedback from the heater relay board's STATUS_OUT pin. 1 = heater relay reports itself energized. Should match (ThermaMode == 1); a mismatch sets bit 1 of FaultBitmask.";
+CM_ SG_ 64 CoolRelayFb "Feedback from the cooler relay board's STATUS_OUT pin. 1 = cooler relay reports itself energized. Should match (ThermaMode == 2); a mismatch sets bit 2 of FaultBitmask.";
+CM_ SG_ 64 FaultBitmask "Fault conditions detected by the Therma controller. Bit 0 (0x01): sensor stale — no EnvironmentSensorData (0x1F) frames received for more than 10 seconds. Controller drops to Idle. Bit 1 (0x02): heater relay feedback mismatch. Bit 2 (0x04): cooler relay feedback mismatch. Any fault other than zero indicates attention is required.";
+CM_ BO_ 65 "Request to change the Therma desired temperature. Can be sent by any device on the bus (PWA, wall panels, Farwatch cloud, Headwaters). Therma validates the requested value, clamps it to the safe range, persists it to NVS, and broadcasts the new authoritative value on ThermaDesiredTemperature (0x3F) on the next tick. Rejected requests are silently ignored. Senders must not display the requested value locally — they must wait for and display the next broadcast from Therma.";
+CM_ SG_ 65 RequestedSetpointDeciC "Requested desired temperature in tenths of a degree Celsius. Signed 16-bit big-endian. Values outside [5.0, 35.0] degC are rejected.";
+CM_ BO_ 66 "Request to change the Therma hysteresis threshold (deadband). Same request/response pattern as ThermaSetDesiredRequest (0x41). Therma validates, clamps, persists to NVS, and re-broadcasts the new authoritative threshold on ThermaDesiredTemperature (0x3F) on the next tick.";
+CM_ SG_ 66 RequestedThresholdDeciC "Requested hysteresis threshold width around the setpoint in tenths of a degree Celsius, unsigned 8-bit. Values outside [0.1, 5.0] degC are rejected.";
 
 BA_DEF_ BO_ "CycleTime" INT 0 10000;
 BA_DEF_ BU_ "NodeLayerModules" STRING;
@@ -455,6 +485,8 @@ BA_ "CycleTime" BO_ 36 33;
 BA_ "CycleTime" BO_ 44 33;
 BA_ "CycleTime" BO_ 45 33;
 BA_ "CycleTime" BO_ 62 1000;
+BA_ "CycleTime" BO_ 63 1000;
+BA_ "CycleTime" BO_ 64 1000;
 
 VAL_ 9 LatitudeSign 0 "North_Positive" 1 "South_Negative";
 VAL_ 9 LongitudeSign 0 "East_Positive" 1 "West_Negative";
@@ -472,4 +504,5 @@ VAL_ 32 MountingSurface 0 "Floor" 1 "Left_Wall" 2 "Right_Wall";
 VAL_ 50 MountingOrientation 0 "Floor" 1 "Left_Wall" 2 "Right_Wall";
 VAL_ 37 RelayOrCommand 0 "Toggle_Relay1" 1 "Toggle_Relay2" 2 "Toggle_Relay3" 3 "Toggle_Relay4" 4 "Toggle_Relay5" 5 "Toggle_Relay6" 6 "Toggle_Relay7" 7 "Toggle_Relay8" 8 "All_Relays_Command";
 VAL_ 7 GnssMode 0 "No_Constellation" 1 "GPS" 2 "BeiDou" 3 "GPS_BeiDou" 4 "GLONASS" 5 "GPS_GLONASS" 6 "BeiDou_GLONASS" 7 "GPS_BeiDou_GLONASS";
+VAL_ 64 ThermaMode 0 "Idle" 1 "Heating" 2 "Cooling";
 

@@ -4,64 +4,116 @@ Guide to building all TrailCurrent components.
 
 ## Overview
 
-**NEEDS TO BE COMPLETED** - Building overview:
-- Build system architecture
-- Available build targets
-- Build configurations
-- Build optimization options
-- Incremental builds
-- Parallel builds
+TrailCurrent has three distinct build domains:
+
+| Domain | Framework | Output | Where it runs |
+|--------|-----------|--------|---------------|
+| **Hardware modules** | ESP-IDF (native CMake) | `.bin` + merged flash image | Flashed to ESP32 family MCUs |
+| **Vehicle compute (Headwaters)** and **cloud (Farwatch)** | Docker Compose (multi-arch) | Container images | Raspberry Pi CM5 (vehicle) / VPS (cloud) |
+| **Mobile apps** | Gradle (Outbound) / Expo EAS (React Native app) | APK/AAB or iOS/Android bundles | User's phone |
+
+Spotter is the only hardware module that uses PlatformIO, and even it wraps
+ESP-IDF underneath. All other ESP32 modules build directly with `idf.py`.
 
 ## Hardware Module Builds
 
 ### ESP-IDF Build System
 
-**NEEDS TO BE COMPLETED** - Document:
-- idf.py build
-- Configuration targets
-- Configuration optimization
-- Build output files
-- Build artifacts
-- Build caching
+All hardware modules are built with **ESP-IDF v5.1+** (most track v5.5).
+
+```bash
+# One-time: source the ESP-IDF environment
+. $HOME/esp/esp-idf/export.sh
+
+# Clean build
+idf.py fullclean
+
+# Compile
+idf.py build
+
+# Flash + monitor
+idf.py -p /dev/ttyUSB0 flash monitor
+```
+
+Each module has a `sdkconfig.defaults` that the build expands into `sdkconfig`
+on first build. Changes to `sdkconfig` are local; changes that should be
+tracked go in `sdkconfig.defaults`. Modules also carry
+`dependencies.lock` — a lockfile for the ESP-IDF component manager. Do not
+edit it by hand; regenerate with `idf.py reconfigure`.
 
 ### Building Individual Modules
 
-**NEEDS TO BE COMPLETED** - Steps for:
-- Each hardware module type
-- Configuration per module
-- Module-specific options
-- Build variants
-- Size optimization
+Each hardware project is a self-contained ESP-IDF repo:
+
+```
+TrailCurrent<Module>/
+├── CMakeLists.txt           # top-level project
+├── main/                    # application component
+│   ├── CMakeLists.txt
+│   └── *.c / *.h
+├── managed_components/      # auto-populated by component manager
+├── sdkconfig.defaults       # tracked Kconfig defaults
+├── partitions.csv           # custom partition layout (dual OTA + factory)
+└── build/                   # build output (gitignored)
+```
+
+### Multi-Instance Builds
+
+Modules that need multiple instances on the same CAN bus ship a
+`build-all.sh` script that produces one binary per address / target. See
+[MULTI_INSTANCE_MODULES.md](./MULTI_INSTANCE_MODULES.md) for the full pattern.
+
+| Module | `build-all.sh` outputs |
+|--------|-----------------------|
+| Torrent | `torrent_addr0.bin` .. `torrent_addr2.bin` |
+| Switchback | `switchback_addr0.bin` .. `switchback_addr2.bin` |
+| Picket | `picket_addr0.bin` .. `picket_addr7.bin` |
+| Tapper | `tapper_torrent_addr0.bin` .. `tapper_switchback_addr2.bin` |
+| Therma | `therma_controller.bin`, `therma_heater_relay.bin`, `therma_cooler_relay.bin` |
+
+Several modules (Bearing, Torrent, Switchback, Tapper, Therma, Reservoir) also
+publish a `*_merged.bin` — bootloader + partition table + OTA data + app
+stitched into a single image suitable for the web flasher.
 
 ### Binary Output
 
-**NEEDS TO BE COMPLETED** - Document:
-- Output locations
-- File types (.bin, .elf, .map)
-- Binary signing
-- Binary versioning
-- Partition information
+After `idf.py build` the binaries are written to `build/`:
 
-## Backend Build
+| File | Purpose |
+|------|---------|
+| `<project>.bin` | Application image (what OTA uploads) |
+| `<project>.elf` | Unstripped ELF with symbols (used by `idf.py monitor` for stack traces) |
+| `<project>.map` | Linker map for size analysis |
+| `bootloader/bootloader.bin` | Second-stage bootloader |
+| `partition_table/partition-table.bin` | Partition layout |
+| `ota_data_initial.bin` | Blank OTA data partition |
 
-### Node.js Build
+Version reporting on the CAN bus uses the `FirmwareVersionReport` message
+(`0x04`) emitted at boot. Version strings come from `git describe` at build
+time.
 
-**NEEDS TO BE COMPLETED** - Document:
-- npm install
-- npm run build
-- Build scripts
-- Configuration
-- Optimization
-- Output structure
+## Backend Build (Headwaters / Farwatch / Baseflow)
 
-### Database Migrations
+All three backends are Node.js + Express services packaged as Docker
+containers via `docker compose build`. They share most of the same Dockerfile
+layout:
 
-**NEEDS TO BE COMPLETED** - Document:
-- Migration tools
-- Running migrations
-- Rollback procedures
-- Schema generation
-- Seed data
+```bash
+cd /Product/TrailCurrentHeadwaters   # or TrailCurrentFarwatch / TrailCurrentBaseflow
+docker compose build                 # build all services for the host arch
+docker compose build --no-cache backend
+docker buildx bake --set *.platform=linux/arm64    # cross-build for CM5
+```
+
+The vehicle compute (Headwaters) uses **multi-arch** buildx bakes because
+images are cross-built for `linux/arm64` (CM5) on an `x86_64` workstation.
+
+### Database (MongoDB)
+
+Both Headwaters and Farwatch use MongoDB. There is no traditional schema
+migration step — the backend validates documents at write time. Seed data
+(default settings, example automation rules) is loaded on first boot when
+collections are empty.
 
 ## Frontend Build
 

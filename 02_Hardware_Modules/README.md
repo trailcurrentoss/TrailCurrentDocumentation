@@ -14,16 +14,17 @@ Hardware modules are organized into four functional categories:
 Modules that read environmental and operational data
 
 - [Bearing](./Bearing.md) - GNSS location, heading, altitude, and precise timing
-- [Borealis](./Borealis.md) - Temperature, humidity, CO2, and indoor air quality monitoring
-- [Picket](./Picket.md) - Cabinet and door open/closed status monitoring
-- [Ampline](./Ampline.md) - Power consumption tracking and state-of-charge via Victron Shunt
-- [Plateau](./Plateau.md) - Tilt/level measurement on both axes
+- [Borealis](./Borealis.md) - Temperature, humidity, TVOC, and eCO2 air quality monitoring (SHT31-D + SGP30)
+- [Picket](./Picket.md) - Cabinet and door open/closed status monitoring (up to 8 modules per bus, up to 13 reed switch inputs each)
+- [Ampline](./Ampline.md) - Power consumption tracking and state-of-charge via Victron BMV SmartShunt
+- [Plateau](./Plateau.md) - Tilt/level measurement on both axes (BNO055 IMU)
+- [Reservoir](./Reservoir.md) - Water tank level monitoring for up to 3 tanks (fresh, grey, black) via contactless sensors
 
 ### 2. **Control Modules** - Action Execution
 Modules that control equipment and systems
 
-- [Torrent](./Torrent.md) - 8-channel smart power delivery module with on/off switching and PWM dimming
-- [Therma](./Therma.md) - Dual-relay automatic heating/cooling to maintain set temperature
+- [Torrent](./Torrent.md) - 8-channel smart power delivery module with on/off switching and PWM dimming (up to 3 modules per bus)
+- [Therma](./Therma.md) - Closed-loop thermostat: 3-board system (controller + heater relay + cooler relay) with mutually-exclusive heat/cool outputs and configurable hysteresis
 - [Solstice](./Solstice.md) - Victron MPPT solar charge controller interface
 - [Switchback](./Switchback.md) - 6-channel relay module for switching high-current loads (up to 3 modules per bus)
 
@@ -36,7 +37,7 @@ Modules that connect external devices or provide communication bridges
 ### 4. **User Interface Modules** - Interaction
 Modules that allow user control and status display
 
-- [Tapper](./Tapper.md) - Physical 8-button interface for Torrent commands
+- [Tapper](./Tapper.md) - Physical 8-button interface for Torrent or Switchback commands
 - [Fireside](./Fireside.md) - Wireless battery-powered touchscreen display with wall cradle
 - [Milepost](./Milepost.md) - Hardwired CAN bus touchscreen (always-on, multiple locations)
 - [Spotter](./Spotter.md) - In-vehicle display that monitors trailer status while towing
@@ -49,12 +50,12 @@ Modules that allow user control and status display
 
 | Category | Modules | Primary Function |
 |----------|---------|------------------|
-| Sensors | 5 | Data collection |
+| Sensors | 6 | Data collection |
 | Control | 4 | System control |
 | Gateway | 2 | Device integration (1 coming soon) |
 | Interface | 4 | User interaction |
 | Voice & AI | 1 | Intelligent assistance |
-| **Total** | **16** | - |
+| **Total** | **17** | - |
 
 ## Communication Protocol
 
@@ -69,52 +70,77 @@ All hardware modules communicate using **CAN Bus (Controller Area Network)**:
 ### CAN IDs by Module
 
 ```
-0x00:       OTA Update Notification (PiCanToMqtt)
-0x06-0x09:  Bearing (GNSS) - DateTime, Speed/Course, Altitude, Lat/Lon
+0x00:       OTA Update Notification (Headwaters)
+0x01:       WiFi Config Provisioning (Headwaters)
+0x02:       Discovery Trigger (Headwaters)
+0x03:       Discovery Reset (Headwaters)
+0x04:       Firmware Version Report (any module, event-driven at boot)
+0x06-0x09:  Bearing (GNSS) - DateTime, Sat/Speed/Course, Altitude, Lat/Lon
 0x0A-0x11:  Picket - Door/cabinet sensor status (8 addressable modules)
-0x15:       Brightness Control (BtGateway → Torrent)
-0x18:       Toggle On/Off Command (Tapper/BtGateway → Torrent)
-0x1B:       Device Status Report (Torrent → all)
-0x1E:       Light Sequence Command (BtGateway → Torrent)
+0x15-0x17:  Torrent Brightness Control (per-address, events from any sender)
+0x18-0x1A:  Torrent Toggle On/Off Commands (per-address)
+0x1B-0x1D:  Torrent Device Status Reports (per-address)
 0x1F:       Environment Sensor Data (Borealis)
-0x20:       Leveling Config (PiCanToMqtt → Plateau)
+0x20:       Leveling Config (Headwaters → Plateau)
+0x21:       Borealis Calibration (Headwaters → Borealis)
 0x23-0x24:  Battery Shunt Data (Ampline)
 0x25-0x27:  Switchback Toggle Commands (3 module instances)
 0x28-0x2A:  Switchback Status Reports (3 module instances)
+0x2B:       Shunt External Live (Solstice / SmartShunt)
 0x2C-0x2D:  Solar MPPT Data (Solstice)
+0x2E:       Solar Load Control (any sender → Solstice)
+0x2F:       Shunt External History (Solstice)
 0x30-0x32:  Vehicle Leveler Data (Plateau) - Tilt, Corners, Status
+0x33-0x35:  Torrent Light Sequence Commands (per-address)
+0x3E:       Water Tank Levels (Reservoir)
+0x3F:       Therma Desired Temperature
+0x40:       Therma Status
+0x41:       Therma Set Desired Temperature Request (any sender → Therma)
+0x42:       Therma Set Threshold Request (any sender → Therma)
 ```
 
-(See [10_Reference/CAN_BUS_REFERENCE.md](../10_Reference/CAN_BUS_REFERENCE.md) for full details)
+(See [10_Reference/CAN_BUS_REFERENCE.md](../10_Reference/CAN_BUS_REFERENCE.md) for full details — the authoritative source is [TrailCurrent.dbc](../TrailCurrent.dbc))
 
 ## Development & Firmware
 
 ### Firmware Development
-- **Primary Framework**: PlatformIO with Arduino framework (most modules)
-- **Alternative Framework**: ESP-IDF (Fireside wireless display)
+- **Primary Framework**: ESP-IDF (all ESP32 hardware modules)
+- **Version**: ESP-IDF v5.1+ — most modules track v5.5
 - **Language**: C/C++
-- **IDE**: VS Code + PlatformIO extension (recommended)
-- **Build System**: PlatformIO CLI (`pio run`, `pio run -t upload`, `pio device monitor`)
+- **IDE**: VS Code + ESP-IDF extension (recommended)
+- **Build System**: ESP-IDF CLI (`idf.py build`, `idf.py flash`, `idf.py monitor`)
 - **Version Control**: Git (one repo per module)
+
+All hardware modules in this directory are built with ESP-IDF. Earlier revisions of
+several modules used PlatformIO with the Arduino framework; those have all been
+migrated. The only remaining PlatformIO consumer in the platform is the
+[Spotter](./Spotter.md) in-vehicle display, which wraps ESP-IDF through PlatformIO's
+`espidf` framework for LVGL tooling convenience.
 
 ### Setup for Hardware Development
 
-**PlatformIO modules (most modules):**
-1. Install PlatformIO (VS Code extension or CLI)
+1. Install ESP-IDF (v5.1 or later — most modules track v5.5)
 2. Clone the module repository
-3. PlatformIO auto-resolves dependencies from `platformio.ini`
-4. Build with `pio run`
-5. Flash with `pio run -t upload`
-6. Monitor with `pio device monitor`
+3. Source the environment: `. $HOME/esp/esp-idf/export.sh`
+4. Build with `idf.py build`
+5. Flash with `idf.py flash`
+6. Monitor with `idf.py monitor`
 
-**ESP-IDF modules (Fireside):**
-1. Install ESP-IDF
-2. Clone the module repository
-3. Build with `idf.py build`
-4. Flash with `idf.py flash`
-5. Monitor with `idf.py monitor`
+See [Firmware/ESP_IDF_Setup.md](./Firmware/ESP_IDF_Setup.md) for detailed setup.
 
-See [Firmware/PlatformIO_Setup.md](./Firmware/PlatformIO_Setup.md) for PlatformIO setup or [Firmware/ESP_IDF_Setup.md](./Firmware/ESP_IDF_Setup.md) for ESP-IDF setup.
+### Multi-Instance Modules
+
+Some modules support multiple physical units on the same CAN bus. Each instance is built with a unique address at compile time, producing a separate firmware binary per address. These modules include a `build-all.sh` script to build all variants at once.
+
+| Module | Instances | Binaries per Release |
+|--------|-----------|---------------------|
+| Torrent | 3 (addr 0-2) | `torrent_addr0.bin` .. `torrent_addr2.bin` |
+| Switchback | 3 (addr 0-2) | `switchback_addr0.bin` .. `switchback_addr2.bin` |
+| Picket | 8 (addr 0-7) | `picket_addr0.bin` .. `picket_addr7.bin` |
+| Tapper | 6 (2 targets × 3 addr) | `tapper_torrent_addr0.bin` .. `tapper_switchback_addr2.bin` |
+| Therma | 3 (controller + heater relay + cooler relay) | `therma_controller.bin`, `therma_heater_relay.bin`, `therma_cooler_relay.bin` (each also published as `*_merged.bin` for the web flasher) |
+
+See [07_Development/MULTI_INSTANCE_MODULES.md](../07_Development/MULTI_INSTANCE_MODULES.md) for the full pattern and implementation details.
 
 ## Key Features Across Modules
 
@@ -155,9 +181,9 @@ Torrent (Power Delivery)
 └─ Outputs: Power state commands to 8 channels
 
 Therma (Climate Control)
-├─ Requires: CAN bus, dual relay output
-├─ Depends on: Borealis temperature feedback
-└─ Outputs: Heating/cooling relay control
+├─ Requires: CAN bus (controller only), 2× ESP32-S3-Relay-1CH boards driven over GPIO
+├─ Depends on: Borealis temperature feedback (CAN 0x1F)
+└─ Outputs: ThermaDesiredTemperature (0x3F), ThermaStatus (0x40); accepts setpoint/threshold change requests (0x41/0x42) from any device
 
 Switchback (Relay Control)
 ├─ Requires: CAN bus, 6 relay outputs
@@ -174,14 +200,17 @@ User Interface (Tapper, Fireside, Milepost, Spotter)
 
 ### Common Hardware
 
-Three ESP32 variants are used across the platform:
+Several ESP32 variants are used across the platform:
 
 | Variant | Board | Used By |
 |---------|-------|---------|
-| ESP32 (WROOM) | Various dev boards | Ampline, Torrent, Tapper, Solstice, BtGateway, CanEspNowGateway |
-| ESP32-C6 | Waveshare ESP32-C6-Zero | Aftline, Therma |
-| ESP32-S3 | Waveshare ESP32-S3-RS485-CAN | Picket, Solstice |
-| ESP32-S3 | S3-Zero / Waveshare S3-Relay-6CH | Plateau, Switchback, Borealis |
+| ESP32 (WROOM) | Various dev boards | Torrent, Tapper |
+| ESP32-S3 | Waveshare ESP32-S3-RS485-CAN | Bearing, Ampline, Solstice, Picket, Aftline, Therma controller, Reservoir, Milepost (custom LCD variant) |
+| ESP32-S3 | Waveshare ESP32-S3-Relay-1CH | Therma heater/cooler relay boards |
+| ESP32-S3 | Waveshare ESP32-S3-ETH-8DI-8RO-C | Switchback |
+| ESP32-S3 | S3-Zero | Plateau, Borealis |
+| ESP32-S3 | Waveshare ESP32-S3-Touch-LCD-7 | Milepost (7" display) |
+| ESP32-P4 | Waveshare ESP32-P4-WiFi6-Touch-LCD-7B | Fireside |
 
 - **Operating Voltage**: 3.3V (internal), 5-24V (input with regulator)
 - **Power Consumption**: 80mA typical, 10µA deep sleep
@@ -256,21 +285,22 @@ See [07_Development/CONTRIBUTING.md](../07_Development/CONTRIBUTING.md) for cont
 
 All module source code is in `/Product/`:
 
-- `TrailCurrentGnssModule/` - Bearing (GNSS)
-- `TrailCurrentBorealis/` - Borealis (air quality, temp, humidity, CO2)
+- `TrailCurrentBearing/` - Bearing (GNSS)
+- `TrailCurrentBorealis/` - Borealis (air quality, temp, humidity, TVOC, eCO2)
 - `TrailCurrentPicket/` - Picket (cabinet & door sensors)
-- `TrailCurrentAmpline/` - Ampline (shunt interface)
+- `TrailCurrentAmpline/` - Ampline (Victron BMV shunt interface)
 - `TrailCurrentPlateau/` - Plateau (vehicle level sensor)
 - `TrailCurrentTorrent/` - Torrent (power delivery module)
-- `TrailCurrentTherma/` - Therma (climate relay controller)
-- `TrailCurrentSolstice/` - Solstice (MPPT solar controller interface)
+- `TrailCurrentTherma/` - Therma (closed-loop thermostat: controller + heater/cooler relay boards)
+- `TrailCurrentSolstice/` - Solstice (MPPT solar controller + SmartShunt interface)
 - `TrailCurrentAftline/` - Aftline (trailer wiring harness monitor)
+- `TrailCurrentReservoir/` - Reservoir (water tank level monitor)
 - `TrailCurrentTapper/` - Tapper (8-button panel)
-- `TrailCurrentFireside/` - Fireside (wireless touchscreen display)
+- `TrailCurrentFireside/` - Fireside (ESP32-P4 touchscreen display, wireless)
 - `TrailCurrentMilepost/` - Milepost (hardwired CAN bus touchscreen)
 - `TrailCurrentSpotter/` - Spotter (in-vehicle trailer monitor display)
-- `TrailCurrentPeregrine/` - Peregrine (AI voice assistant)
-- `TrailCurrentSwitchback/` - Switchback (6-channel relay module)
+- `TrailCurrentPeregrine/` - Peregrine (AI voice assistant, Radxa Dragon Q6A)
+- `TrailCurrentSwitchback/` - Switchback (8-channel relay module)
 
 ---
 

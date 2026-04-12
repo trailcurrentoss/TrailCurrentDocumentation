@@ -25,7 +25,7 @@ Complete reference for CAN message formats, IDs, and protocols used in TrailCurr
 
 ## CAN ID Allocation
 
-All TrailCurrent messages currently use IDs in the range 0x00-0x32 (decimal 0-50).
+All TrailCurrent messages currently use IDs in the range 0x00-0x42 (decimal 0-66). Next available: 0x43.
 
 | CAN ID (hex) | CAN ID (dec) | Message Name | DLC | Sender | Cycle Time |
 |--------------|-------------|--------------|-----|--------|------------|
@@ -46,42 +46,60 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x32 (decimal 0-50
 | 0x0F | 15 | PicketStatus5 | 2 | Picket | 200 ms |
 | 0x10 | 16 | PicketStatus6 | 2 | Picket | 200 ms |
 | 0x11 | 17 | PicketStatus7 | 2 | Picket | 200 ms |
-| 0x15 | 21 | BrightnessControl | 2 | Multiple senders | Event-driven |
-| 0x18 | 24 | ToggleOnOffCommand | 2 | Multiple senders | Event-driven |
-| 0x1B | 27 | DeviceStatusReport | 8 | Torrent | 33 ms |
-| 0x1E | 30 | LightSequenceCommand | 1 | Multiple senders | Event-driven |
+| 0x15 | 21 | TorrentBrightness0 | 2 | Any sender | Event-driven |
+| 0x16 | 22 | TorrentBrightness1 | 2 | Any sender | Event-driven |
+| 0x17 | 23 | TorrentBrightness2 | 2 | Any sender | Event-driven |
+| 0x18 | 24 | TorrentToggle0 | 2 | Any sender | Event-driven |
+| 0x19 | 25 | TorrentToggle1 | 2 | Any sender | Event-driven |
+| 0x1A | 26 | TorrentToggle2 | 2 | Any sender | Event-driven |
+| 0x1B | 27 | TorrentStatus0 | 8 | Torrent addr 0 | 33 ms |
+| 0x1C | 28 | TorrentStatus1 | 8 | Torrent addr 1 | 33 ms |
+| 0x1D | 29 | TorrentStatus2 | 8 | Torrent addr 2 | 33 ms |
 | 0x1F | 31 | EnvironmentSensorData | 8 | Borealis | 2000 ms |
 | 0x20 | 32 | LevelingConfig | 7 | Headwaters | Event-driven |
+| 0x21 | 33 | BorealisCalibration | 2 | Headwaters | Event-driven |
 | 0x23 | 35 | BatteryShuntData1 | 7 | Ampline | 33 ms |
 | 0x24 | 36 | BatteryShuntData2 | 5 | Ampline | 33 ms |
-| 0x25 | 37 | SwitchbackToggle0 | 2 | Multiple senders | Event-driven |
-| 0x26 | 38 | SwitchbackToggle1 | 2 | Multiple senders | Event-driven |
-| 0x27 | 39 | SwitchbackToggle2 | 2 | Multiple senders | Event-driven |
-| 0x28 | 40 | SwitchbackStatus0 | 1 | Switchback | Event-driven |
-| 0x29 | 41 | SwitchbackStatus1 | 1 | Switchback | Event-driven |
-| 0x2A | 42 | SwitchbackStatus2 | 1 | Switchback | Event-driven |
+| 0x25 | 37 | SwitchbackToggle0 | 2 | Any sender | Event-driven |
+| 0x26 | 38 | SwitchbackToggle1 | 2 | Any sender | Event-driven |
+| 0x27 | 39 | SwitchbackToggle2 | 2 | Any sender | Event-driven |
+| 0x28 | 40 | SwitchbackStatus0 | 1 | Switchback addr 0 | Event-driven |
+| 0x29 | 41 | SwitchbackStatus1 | 1 | Switchback addr 1 | Event-driven |
+| 0x2A | 42 | SwitchbackStatus2 | 1 | Switchback addr 2 | Event-driven |
+| 0x2B | 43 | ShuntExtLive | 6 | Solstice | 1000 ms |
 | 0x2C | 44 | SolarMpptData1 | 7 | Solstice | 33 ms |
 | 0x2D | 45 | SolarMpptData2 | 3 | Solstice | 33 ms |
+| 0x2E | 46 | SolarLoadControl | 1 | Any sender | Event-driven |
+| 0x2F | 47 | ShuntExtHistory | 6 | Solstice | 60 s |
 | 0x30 | 48 | TiltData | 8 | Plateau | 500 ms |
 | 0x31 | 49 | CornerData | 8 | Plateau | 500 ms |
 | 0x32 | 50 | StatusData | 4 | Plateau | 2000 ms |
+| 0x33 | 51 | TorrentSequence0 | 1 | Any sender | Event-driven |
+| 0x34 | 52 | TorrentSequence1 | 1 | Any sender | Event-driven |
+| 0x35 | 53 | TorrentSequence2 | 1 | Any sender | Event-driven |
+| 0x3E | 62 | WaterTankLevels | 3 | Reservoir | 2000 ms |
+| 0x3F | 63 | ThermaDesiredTemperature | 3 | Therma | 1000 ms |
+| 0x40 | 64 | ThermaStatus | 6 | Therma | 1000 ms |
+| 0x41 | 65 | ThermaSetDesiredRequest | 2 | Any sender | Event-driven |
+| 0x42 | 66 | ThermaSetThresholdRequest | 1 | Any sender | Event-driven |
 
 ### Bus Nodes
 
 | Node | Platform | Description |
 |------|----------|-------------|
-| Bearing | ESP32 | GPS receiver. Broadcasts GNSS position, altitude, speed, course, and date/time |
-| Torrent | ESP32 | 8-channel PWM power distribution module |
-| Tapper | ESP32 | Physical 8-button control panel |
-| Ampline | ESP32 | Battery shunt monitor. Reads Victron BMV via VE.Direct serial (19200 baud) |
-| Solstice | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Solar charge controller gateway. Reads Victron MPPT via VE.Direct serial (19200 baud). ESP-IDF firmware |
-| Borealis | ESP32-S3-Zero | Environment/air quality sensor. DHT22 + SGP30 |
+| Bearing | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | GPS receiver (DFRobot GNSS). Broadcasts GNSS position, altitude, speed, course, and date/time. ESP-IDF firmware |
+| Torrent | ESP32 (WROOM) | 8-channel PWM power distribution module. Compile-time address 0-2, up to 3 on same bus. ESP-IDF firmware |
+| Tapper | ESP32 (WROOM) | Physical 8-button control panel. Target-selectable at build time (Torrent or Switchback) with instance addressing. ESP-IDF firmware |
+| Ampline | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Battery shunt monitor. Reads Victron BMV SmartShunt via VE.Direct serial (19200 baud). ESP-IDF firmware |
+| Solstice | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Solar charge controller + SmartShunt gateway. Reads Victron MPPT via VE.Direct TEXT+HEX; optional SmartShunt polling. ESP-IDF firmware |
+| Borealis | ESP32-S3-Zero | Environment/air quality sensor. SHT31-D (temp/humidity) + SGP30 (TVOC/eCO2) over I²C. ESP-IDF firmware |
 | Picket | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Cabinet/door sensor. Up to 13 reed switch inputs, NVS-addressed (8 modules max). ESP-IDF firmware |
-| Switchback | ESP32-S3 | 6-channel relay module (Waveshare S3-Relay-6CH). Up to 3 on same bus |
-| Plateau | ESP32-S3-Zero | Vehicle leveling with Adafruit BNO055 IMU |
-| Aftline | ESP32-C6 | Trailer connector monitor. Under active development |
-| Therma | ESP32-C6 | Heater control. Under active development |
-| Headwaters | Raspberry Pi | CAN-to-MQTT bridge. Python script bridging CAN and MQTT (with TLS) |
+| Switchback | ESP32-S3 (Waveshare ESP32-S3-ETH-8DI-8RO-C) | 8-channel dry-contact relay module. Up to 3 on same bus (compile-time address 0-2). ESP-IDF firmware |
+| Plateau | ESP32-S3-Zero | Vehicle leveling with Adafruit BNO055 IMU; per-corner height calculation. ESP-IDF firmware |
+| Aftline | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Trailer 7-pin connector monitor (ADC voltage + digital turn/brake/light sensing). ESP-IDF firmware |
+| Therma | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) controller + 2× ESP32-S3 (Waveshare ESP32-S3-Relay-1CH) relay boards | Closed-loop thermostat. Controller owns authoritative desired temperature, mode, and threshold. Drives heater/cooler relay boards over direct GPIO (relay boards are not on the CAN bus). ESP-IDF firmware |
+| Reservoir | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Water tank level monitor. Reads contactless sensors on up to 3 tanks (fresh/grey/black) and reports fill percentages. ESP-IDF firmware |
+| Headwaters | Raspberry Pi Compute Module 5 (CM5) on standard carrier with Waveshare RS485 CAN HAT (B) | Dockerized edge gateway: CAN ↔ MQTT bridge, MQTT broker (Mosquitto), backend REST/WebSocket API, MongoDB, local tile server, and touchscreen dashboard. Host for OTA distribution and cloud sync |
 
 ---
 
@@ -493,6 +511,70 @@ System status and BNO055 calibration levels.
 
 ---
 
+### Therma - Closed-Loop Thermostat (0x3F-0x42)
+
+Three-board thermostat. Only the **controller** (Waveshare ESP32-S3-RS485-CAN) is on the CAN bus; it owns the authoritative desired temperature, hysteresis threshold, and heat/cool mode for the bus, and drives two **Waveshare ESP32-S3-Relay-1CH** relay boards (heater and cooler) over direct GPIO pin-to-pin lines. Heating and cooling outputs are mutually exclusive and enforced in the controller.
+
+**N-way setpoint pattern.** Any device on the bus (PWA, wall panels, Farwatch cloud, Headwaters) can request a change via `ThermaSetDesiredRequest` (0x41) or `ThermaSetThresholdRequest` (0x42). Therma validates, clamps to safe range, persists to NVS, and broadcasts the new authoritative value on `ThermaDesiredTemperature` (0x3F) on the next tick. **Displays must always show the value from Therma's broadcast, never a locally-held copy** — this is the same pattern used by Torrent/Switchback for their authoritative state.
+
+**Current temperature source.** The controller consumes `EnvironmentSensorData` (0x1F) from Borealis and uses `TemperatureCelsius` (byte 0) as the control-loop input, normalized to 0.1 °C units internally.
+
+#### ThermaDesiredTemperature (0x3F, 3 bytes) — 1000 ms cycle (1 Hz)
+
+Broadcast by Therma at 1 Hz and immediately on change.
+
+| Byte | Signal | Bits | Type | Scale | Range | Unit | Description |
+|------|--------|------|------|-------|-------|------|-------------|
+| 0-1 | SetpointDeciC | 7:0, 15:8 | int16 BE | 0.1 | -40 to 125 (accepted: 5.0 to 35.0) | degC | Desired temperature in tenths of a degree |
+| 2 | ThresholdDeciC | 23:16 | uint8 | 0.1 | 0.1 to 5.0 | degC | Hysteresis deadband width around setpoint |
+
+#### ThermaStatus (0x40, 6 bytes) — 1000 ms cycle (1 Hz)
+
+Broadcast by Therma at 1 Hz. Single source of truth for the current thermostat mode on the bus.
+
+| Byte | Signal | Bits | Type | Scale | Range | Unit | Description |
+|------|--------|------|------|-------|-------|------|-------------|
+| 0 | ThermaMode | 7:0 | uint8 | 1 | 0-2 | - | 0 = Idle, 1 = Heating, 2 = Cooling (mutually exclusive) |
+| 1-2 | CurrentDeciC | 15:8, 23:16 | int16 BE | 0.1 | -40 to 125 | degC | Current control-loop temperature from Borealis |
+| 3 | HeatRelayFb | 31:24 | uint8 | 1 | 0-1 | - | Heater relay feedback pin state |
+| 4 | CoolRelayFb | 39:32 | uint8 | 1 | 0-1 | - | Cooler relay feedback pin state |
+| 5 | FaultBitmask | 47:40 | uint8 bitmask | 1 | 0-255 | - | See fault bits below |
+
+**ThermaMode values:**
+
+| Value | Mode | Description |
+|-------|------|-------------|
+| 0 | Idle | Both outputs off (default at boot, during faults, and when in the deadband) |
+| 1 | Heating | Heater relay commanded on, cooler off |
+| 2 | Cooling | Cooler relay commanded on, heater off |
+
+**FaultBitmask bits:**
+
+| Bit | Mask | Name | Description |
+|-----|------|------|-------------|
+| 0 | 0x01 | SensorStale | No `EnvironmentSensorData` (0x1F) received for more than 10 seconds. Controller drops to Idle as a fail-safe |
+| 1 | 0x02 | HeatFbMismatch | Heater relay feedback pin does not match commanded heating state |
+| 2 | 0x04 | CoolFbMismatch | Cooler relay feedback pin does not match commanded cooling state |
+| 3-7 | - | Reserved | Always 0 |
+
+#### ThermaSetDesiredRequest (0x41, 2 bytes) — Event-driven
+
+Request to change the desired temperature. Sent by any device on the bus. Therma validates (clamps to [5.0, 35.0] °C), persists to NVS, and re-broadcasts the new authoritative value on `ThermaDesiredTemperature` (0x3F) on the next tick. Rejected requests are silently ignored. Senders must **not** display the requested value locally.
+
+| Byte | Signal | Bits | Type | Scale | Range | Unit | Description |
+|------|--------|------|------|-------|-------|------|-------------|
+| 0-1 | RequestedSetpointDeciC | 7:0, 15:8 | int16 BE | 0.1 | -40 to 125 (accepted: 5.0 to 35.0) | degC | Requested new desired temperature |
+
+#### ThermaSetThresholdRequest (0x42, 1 byte) — Event-driven
+
+Request to change the hysteresis threshold (deadband). Same pattern as `ThermaSetDesiredRequest`.
+
+| Byte | Signal | Bits | Type | Scale | Range | Unit | Description |
+|------|--------|------|------|-------|-------|------|-------------|
+| 0 | RequestedThresholdDeciC | 7:0 | uint8 | 0.1 | 0.1 to 5.0 | degC | Requested new deadband width |
+
+---
+
 ## Bit Encoding Conventions
 
 All TrailCurrent CAN messages use the following encoding conventions:
@@ -552,7 +634,9 @@ Some signals use a scale factor to provide fractional precision in an integer fi
 | 0x2C-0x2D | Solar MPPT data (Solstice) | 33 ms | ~30 Hz |
 | 0x30-0x31 | Tilt/corner data (Plateau) | 500 ms | 2 Hz |
 | 0x32 | Status data (Plateau) | 2000 ms | 0.5 Hz |
-| 0x00, 0x15, 0x18, 0x1E, 0x20, 0x25-0x27 | Commands | Event-driven | On demand |
+| 0x3F | ThermaDesiredTemperature | 1000 ms | 1 Hz |
+| 0x40 | ThermaStatus | 1000 ms | 1 Hz |
+| 0x00, 0x15, 0x18, 0x1E, 0x20, 0x25-0x27, 0x41, 0x42 | Commands | Event-driven | On demand |
 | 0x28-0x2A | Switchback status | Event-driven | On state change |
 
 ---

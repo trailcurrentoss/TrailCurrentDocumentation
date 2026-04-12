@@ -6,10 +6,10 @@ Some TrailCurrent modules support multiple physical units on the same CAN bus. E
 
 | Module | Max Instances | Toggle CAN IDs | Status CAN IDs | Build Flag |
 |--------|--------------|-----------------|-----------------|------------|
-| Switchback | 3 | 0x25, 0x26, 0x27 | 0x28, 0x29, 0x2A | `DEVICE_INSTANCE` |
+| Switchback | 3 | 0x25, 0x26, 0x27 | 0x28, 0x29, 0x2A | `SWITCHBACK_ADDRESS` |
 | Torrent | 3 | 0x18, 0x19, 0x1A (toggle) / 0x15, 0x16, 0x17 (brightness) | 0x1B, 0x1C, 0x1D | `TORRENT_ADDRESS` |
 | Picket | 8 | N/A (input only) | 0x0A-0x11 | `PICKET_ADDRESS` |
-| Tapper | 3 | Uses target device's toggle IDs | N/A (no status) | `DEVICE_INSTANCE` |
+| Tapper | 6 (2 targets x 3 addr) | Uses target device's toggle IDs | Uses target device's status IDs | `TARGET_DEVICE` + `DEVICE_INSTANCE` |
 
 ## How It Works
 
@@ -17,12 +17,15 @@ Some TrailCurrent modules support multiple physical units on the same CAN bus. E
 
 Each instance is compiled with a unique address via CMake build flag:
 
-```cmake
-# Switchback instance 1 (default is 0)
-add_compile_definitions(DEVICE_INSTANCE=1)
+```bash
+# Switchback address 1 (default is 0)
+idf.py build -DSWITCHBACK_ADDRESS=1
+
+# Torrent address 2
+idf.py build -DTORRENT_ADDRESS=2
 ```
 
-This shifts the CAN IDs: instance 0 uses base IDs, instance 1 uses base+1, etc.
+This shifts the CAN IDs: address 0 uses base IDs, address 1 uses base+1, etc. Each module repo includes a `build-all.sh` that builds all variants and produces `{type}_addr{N}.bin` files (see [Firmware Build, Release, and Deployment](#firmware-build-release-and-deployment) below).
 
 ### 2. Discovery — `canid` TXT Record
 
@@ -87,9 +90,83 @@ for (const instance of instances) {
 
 Each instance receives `CAN 0x025+N [0x08, state]`.
 
+## Firmware Build, Release, and Deployment
+
+Multi-address modules must produce one firmware binary per variant. Each repo includes a `build-all.sh` script.
+
+**Single-dimension modules** (address only) use the naming convention `{type}_addr{N}.bin`:
+
+```bash
+cd TrailCurrentTorrent
+./build-all.sh
+# Produces: build/torrent_addr0.bin, torrent_addr1.bin, torrent_addr2.bin
+```
+
+**Two-dimension modules** (target device + address) like Tapper use `{type}_{target}_addr{N}.bin`:
+
+```bash
+cd TrailCurrentTapper
+./build-all.sh
+# Produces 6 binaries:
+#   build/tapper_torrent_addr0.bin .. tapper_torrent_addr2.bin
+#   build/tapper_switchback_addr0.bin .. tapper_switchback_addr2.bin
+```
+
+### Creating a GitHub Release
+
+All address variants must be uploaded as release assets:
+
+```bash
+gh release create v1.0.0 \
+  build/torrent_addr0.bin \
+  build/torrent_addr1.bin \
+  build/torrent_addr2.bin \
+  --repo trailcurrentoss/TrailCurrentTorrent \
+  --title "v1.0.0" \
+  --notes "Firmware release v1.0.0"
+```
+
+### How the Deployment System Uses These
+
+| System | Behavior |
+|--------|----------|
+| `fetch-firmware.sh` | `MULTI_ADDR`: downloads `{type}_addr{N}.bin`. `MULTI_TARGET_ADDR`: downloads `{type}_{target}_addr{N}.bin` for each target+address |
+| `deploy.sh` | Reads `type`, `addr`, and `target` from MongoDB. Tries `{type}_{target}_addr{addr}.bin` first, then `{type}_addr{addr}.bin`, then `{type}.bin` |
+| Headwaters UI (OTA) | Same resolution order as deploy.sh, using the module's `target` field from discovery |
+| Web installer (flash.html) | Modules with `addresses` show an address dropdown; modules with `variants` show a target+address dropdown (e.g. Tapper) |
+| Deployment ZIP | Includes all variants automatically (the `firmware/` directory is copied as-is) |
+
+### Directory Structure on Headwaters
+
+```
+firmware/wired/torrent/
+├── torrent_addr0.bin
+├── torrent_addr1.bin
+└── torrent_addr2.bin
+firmware/wired/tapper/
+├── tapper_torrent_addr0.bin
+├── tapper_torrent_addr1.bin
+├── tapper_torrent_addr2.bin
+├── tapper_switchback_addr0.bin
+├── tapper_switchback_addr1.bin
+└── tapper_switchback_addr2.bin
+```
+
+After `deploy.sh` copies firmware to `data/firmware/` for the UI, the backend OTA route resolves firmware via `resolveFirmwareFile(type, addr, target)` which tries `{type}_{target}_addr{addr}.bin`, then `{type}_addr{addr}.bin`, then `{type}.bin`.
+
+### Discovery and the `target` Field
+
+Tapper advertises a `target` mDNS TXT record (e.g. `target=torrent`) during discovery. The host-side `discovery-mdns.py` captures this and stores it in the module record in MongoDB. The `target` field is used during OTA to resolve the correct firmware binary. Modules without a `target` field (all non-Tapper modules) are unaffected.
+
 ## Adding Multi-Instance Support for a New Module Type
 
 Follow this checklist (using Torrent as a future example):
+
+### Firmware Build and Release
+- [ ] Add `build-all.sh` to the firmware repo (iterate addresses 0..max, build each, copy to `{type}_addr{N}.bin`)
+- [ ] Add the module to `MULTI_ADDR` in Headwaters `fetch-firmware.sh` (e.g., `"torrent|2"`)
+- [ ] Add `addresses: N` to the module entry in `flash.html` (web installer)
+- [ ] Create a GitHub release with all address-specific binaries as assets
 
 ### CAN Bridge (`can-bridge.js`)
 - [ ] Add offset mapping for status CAN IDs (e.g., `TORRENT_STATUS_OFFSET = { '0x01b': 0, '0x01c': 8, '0x01d': 16 }`)

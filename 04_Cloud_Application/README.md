@@ -1,302 +1,194 @@
 # TrailCurrent Farwatch (Cloud Platform)
 
-Complete guide to TrailCurrent Farwatch, the cloud platform for remote monitoring, control, and analytics.
+Complete guide to **TrailCurrent Farwatch**, the optional cloud platform for remote monitoring and control of a vehicle running TrailCurrent Headwaters.
+
+> **Reminder — [Cloud Optional Core Principle](../CORE_PRINCIPLES.md):** Farwatch is
+> always optional. A TrailCurrent vehicle is fully functional without it. Farwatch
+> never becomes a single point of failure, never holds a user's vehicle hostage,
+> and stores as little data as possible.
 
 ## Overview
 
-The Cloud Application provides:
-- REST API for data access and device control
-- Web dashboard for real-time monitoring
-- Mobile app backend support
-- Historical data storage and analytics
-- Real-time WebSocket updates
-- User authentication and permissions
+Farwatch is a cloud-hosted **Progressive Web App (PWA)** that mirrors the local
+Headwaters dashboard over the public internet. It provides:
+
+- A responsive web UI accessible from any modern browser
+- Remote thermostat, lighting, relay, leveler, and sensor monitoring
+- GPS / map view with offline-capable vector tiles (MapLibre GL)
+- Deployment package hosting for module firmware (resumable downloads)
+- Proximity-based automation (phone-to-vehicle arrival / departure triggers)
+- API key management for programmatic access
+- Real-time updates over WebSocket bridged from the vehicle's MQTT broker
+
+Farwatch is the cloud endpoint that the [mobile applications](../05_Mobile_Application/README.md)
+and the browser-based PWA talk to. The vehicle connects outward over MQTTS — the
+cloud never initiates a connection inward.
 
 ## Architecture
 
+Dockerized microservices stack — the same topology as Headwaters, extended with
+public HTTPS and cross-vehicle routing:
+
 ```
-┌─────────────────────────────────────────────┐
-│         Cloud Infrastructure                │
-├─────────────────────────────────────────────┤
-│                                             │
-│  Frontend Layer:                            │
-│  ├─ Web UI (HTML/CSS/JavaScript)           │
-│  ├─ Mobile App (REST API)                  │
-│  └─ WebSocket (Real-time updates)          │
-│         ↓ HTTPS/WebSocket                  │
-│  ┌─────────────────────────────────────┐   │
-│  │  REST API Server (Node.js/Express) │   │
-│  ├─────────────────────────────────────┤   │
-│  │ • Authentication                   │   │
-│  │ • Device management                │   │
-│  │ • Data queries                     │   │
-│  │ • Command routing                  │   │
-│  └────────┬────────────────────────────┘   │
-│           │                                 │
-│  ┌────────┴──────────────────────────────┐ │
-│  │  Data Services                       │ │
-│  ├──────────────────────────────────────┤ │
-│  │ • PostgreSQL (persistent data)      │ │
-│  │ • Redis (cache & sessions)          │ │
-│  │ • MQTT Broker (messaging)           │ │
-│  │ • File Storage (firmware, logs)     │ │
-│  └──────────────────────────────────────┘ │
-│           ↑                                │
-│  ┌────────────────────────────────────────┐│
-│  │  MQTT Gateway to Vehicle              ││
-│  │  (Connects to vehicle Pi)              ││
-│  └────────────────────────────────────────┘│
-│                                             │
-└─────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                    Cloud Host (any VPS)                      │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Public HTTPS (Let's Encrypt)                                │
+│         ↓                                                    │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  Frontend (nginx)                                      │  │
+│  │    • Vanilla JS PWA                                    │  │
+│  │    • WebSocket bridge for live updates                 │  │
+│  └────────┬───────────────────────────────────────────────┘  │
+│           │                                                  │
+│  ┌────────┴───────────────────────────────────────────────┐  │
+│  │  Backend (Node.js / Express)                           │  │
+│  │    • REST API                                          │  │
+│  │    • WebSocket fan-out from MQTT                       │  │
+│  │    • API key authentication                            │  │
+│  │    • Deployment package storage                        │  │
+│  │    • Proximity automation engine                       │  │
+│  └────┬───────────────────────┬───────────────────────────┘  │
+│       │                       │                              │
+│  ┌────┴────┐           ┌──────┴─────┐                        │
+│  │ MongoDB │           │  Mosquitto │ ← MQTTS 8883           │
+│  │ (state) │           │   broker   │                        │
+│  └─────────┘           └──────┬─────┘                        │
+│                               │                              │
+│  ┌─────────────────────────────┴─────┐                       │
+│  │  Tileserver (vector tiles)        │                       │
+│  └───────────────────────────────────┘                       │
+└──────────────────────────────────────┬───────────────────────┘
+                                       │ MQTTS over cellular
+                                       ▼
+                           ┌────────────────────────┐
+                           │ Headwaters (in vehicle)│
+                           │   bridged topics       │
+                           └────────────────────────┘
 ```
 
 ## Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Frontend | HTML/CSS/JavaScript + Bootstrap | Web UI |
-| Backend | Node.js + Express | REST API |
-| Database | PostgreSQL | Persistent storage |
-| Cache | Redis | Session & data cache |
-| Messaging | Mosquitto MQTT | Cloud-to-vehicle communication |
-| Hosting | Docker | Containerization |
+| Layer     | Technology                                 | Purpose                                              |
+|-----------|--------------------------------------------|------------------------------------------------------|
+| Frontend  | nginx + vanilla JS PWA                     | Responsive dashboard, offline support                |
+| Backend   | Node.js + Express                          | REST API + WebSocket bridge + automation engine      |
+| Database  | MongoDB                                    | Settings, state snapshots, deployment metadata       |
+| Messaging | Mosquitto MQTT (TLS)                       | Bridge between cloud and vehicle Headwaters          |
+| Tiles     | tileserver-gl                              | Offline-capable MapLibre vector tiles                |
+| Hosting   | Docker Compose                             | Containerized deployment on any VPS                  |
+| TLS       | Let's Encrypt (via certbot container)      | Public HTTPS                                         |
 
-## Key Components
+## Key Features
 
-### 1. REST API Server
-- User authentication & authorization
-- Device CRUD operations
-- Data queries and filtering
-- Command routing to vehicles
-- WebSocket upgrade handling
+### Dashboard
 
-### 2. Web Frontend
-- Dashboard with real-time updates
-- Device management UI
-- Settings and configuration
-- User profile management
+- **Thermostat Control** — read live temperature / humidity from Borealis, adjust
+  Therma setpoint and thresholds
+- **Lighting** — toggle and dim the 8 Torrent PDM channels; drive light sequences
+- **Energy Dashboard** — battery voltage, SoC %, solar harvest, charge status,
+  time-remaining from Ampline + Solstice
+- **Water Tanks** — fresh / grey / black levels from Reservoir
+- **Air Quality** — temperature, humidity, IAQ index, CO2 from Borealis
+- **Trailer Level** — pitch / roll from Plateau
+- **GPS / Map** — real-time location on MapLibre vector map tiles
+- **Trailer Monitor** — Aftline 7-pin connector status
 
-### 3. Backend Database
-- User accounts and permissions
-- Device registry and metadata
-- Historical sensor data
-- Command history
-- System events and logs
+### Proximity Automation
 
-### 4. MQTT Integration
-- Real-time messaging
-- Device status updates
-- Command queuing
-- Bi-directional vehicle communication
+Phone-to-vehicle proximity detection with configurable zone radii, device
+registration, and automation rules that can trigger Torrent or Switchback actions
+on arrival or departure. Useful for "turn on the awning lights when I get within
+50 m of the trailer" style workflows.
+
+### Deployment Packages
+
+Farwatch acts as the OTA distribution origin for module firmware. Operators
+upload firmware packages, track versions per module, and deliver them to
+Headwaters devices over resumable downloads. Headwaters then distributes the
+new binaries to the appropriate modules over CAN (OTA trigger) and WiFi
+(HTTP binary upload) — see [08_Deployment/FIRMWARE_UPDATES.md](../08_Deployment/FIRMWARE_UPDATES.md).
+
+### API Keys
+
+Instead of user accounts, Farwatch uses API keys for authentication. Each phone,
+browser, or integration carries its own key in an `Authorization` header. Keys
+are created, rotated, and revoked through the dashboard.
 
 ## Setup & Installation
 
 ### Prerequisites
-- Node.js 24+
-- PostgreSQL 12+
-- Redis (optional but recommended)
-- Docker and Docker Compose
-- Internet connectivity
+
+- A VPS with Docker and Docker Compose
+- A public DNS name pointed at the host (required for Let's Encrypt)
+- Outbound MQTTS access from the in-vehicle Headwaters
 
 ### Quick Start
 
-1. [Clone Repository](SETUP_GUIDE.md#step-1-clone-repository)
-2. [Install Dependencies](SETUP_GUIDE.md#step-2-install-dependencies)
-3. [Configure Environment](SETUP_GUIDE.md#step-3-configure-environment)
-4. [Initialize Database](SETUP_GUIDE.md#step-4-initialize-database)
-5. [Run Application](SETUP_GUIDE.md#step-5-run-application)
-
-See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed instructions.
-
-## Backend
-
-### REST API Endpoints
-
-**Authentication**
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `POST /api/auth/refresh` - Refresh token
-
-**Devices**
-- `GET /api/devices` - List devices
-- `GET /api/devices/:id` - Get device details
-- `POST /api/devices` - Register new device
-- `PUT /api/devices/:id` - Update device
-- `DELETE /api/devices/:id` - Remove device
-
-**Sensor Data**
-- `GET /api/data/:deviceId` - Get latest readings
-- `GET /api/data/:deviceId/history` - Get historical data
-- `GET /api/data/:deviceId/stats` - Get statistics
-
-**Commands**
-- `POST /api/commands` - Issue command to device
-- `GET /api/commands/:id` - Get command status
-- `DELETE /api/commands/:id` - Cancel command
-
-See [Backend/API_REFERENCE.md](Backend/API_REFERENCE.md) for complete API documentation.
-
-### Database Schema
-
-Tables include:
-- `users` - User accounts
-- `devices` - Registered devices
-- `sensor_readings` - Historical data
-- `commands` - Command history
-- `events` - System events
-- `permissions` - Access control
-
-See [Backend/DATABASE_SCHEMA.md](Backend/DATABASE_SCHEMA.md) for full schema.
-
-### Authentication
-
-Uses JWT (JSON Web Tokens) for stateless authentication:
-- Login generates access token (short-lived)
-- Refresh token for obtaining new access tokens
-- Role-based access control (RBAC)
-
-See [Backend/AUTHENTICATION.md](Backend/AUTHENTICATION.md) for details.
-
-## Frontend
-
-### Dashboard Features
-- Real-time device status
-- Sensor data visualization
-- Map display (for GPS data)
-- Command history
-- Alerts and notifications
-
-### Device Control
-- Power controls
-- Heater control
-- Leveler control
-- Command queueing
-
-### Administration
-- User management
-- Device registry
-- Firmware management
-- System settings
-
-See [Frontend/FEATURES.md](Frontend/FEATURES.md) for full feature list.
-
-## Deployment
-
-### Development
 ```bash
-docker-compose -f docker-compose.dev.yml up
+git clone https://github.com/trailcurrent/TrailCurrentFarwatch.git
+cd TrailCurrentFarwatch
+cp .env.example .env       # set TC_DOMAIN, MQTT credentials, etc.
+docker compose up -d
 ```
-See [Deployment/DOCKER_COMPOSE.md](Deployment/DOCKER_COMPOSE.md)
 
-### Production
-```bash
-docker-compose up -d
-```
-See [Deployment/CLOUD_DEPLOYMENT.md](Deployment/CLOUD_DEPLOYMENT.md)
+See [Deployment/CLOUD_DEPLOYMENT.md](Deployment/CLOUD_DEPLOYMENT.md) for the
+production deployment checklist and TLS certificate setup.
 
-## Configuration
+## REST API (Selected Endpoints)
 
-### Environment Variables
-- `NODE_ENV` - Development/production
-- `DATABASE_URL` - PostgreSQL connection
-- `REDIS_URL` - Redis connection
-- `JWT_SECRET` - Token signing key
-- `MQTT_URL` - Vehicle MQTT broker
+All endpoints require an `Authorization: Bearer <api_key>` header.
 
-See [SETUP_GUIDE.md](SETUP_GUIDE.md) for configuration details.
+**Lights / Relays**
+- `PUT /api/lights/:id` — toggle / set brightness on a Torrent channel
+- `PUT /api/relays/:id` — toggle a Switchback channel
+- `GET /api/lights` — current state snapshot
+
+**Thermostat**
+- `GET /api/thermostat` — current Therma status (from `0x40 ThermaStatus`)
+- `PUT /api/thermostat/setpoint` — sends `0x41 ThermaSetDesiredRequest`
+- `PUT /api/thermostat/threshold` — sends `0x42 ThermaSetThresholdRequest`
+
+**Energy / Water / Sensors**
+- `GET /api/energy` — latest Ampline + Solstice snapshot
+- `GET /api/water` — latest Reservoir tank levels
+- `GET /api/airquality` — latest Borealis reading
+- `GET /api/level` — latest Plateau tilt and corner data
+- `GET /api/gps` — latest Bearing position
+
+**Automation**
+- `GET/POST/DELETE /api/proximity/devices` — manage registered phones
+- `GET/POST/DELETE /api/automations` — manage automation rules
+
+**Deployment**
+- `GET /api/deployment/packages` — list firmware packages
+- `POST /api/deployment/packages` — upload a firmware package
+- `GET /api/deployment/download/:id` — resumable download (Range header supported)
+
+## WebSocket
+
+`wss://<host>/api/ws` streams change-only updates that originated on the vehicle
+MQTT broker. Each message carries the MQTT topic and payload that triggered it.
 
 ## Security
 
-### API Security
-- HTTPS only (TLS/SSL)
-- CORS configured for authorized origins
-- Rate limiting on endpoints
-- Input validation and sanitization
-- SQL injection prevention
+- **HTTPS only**, Let's Encrypt via a certbot container
+- **API key** auth with rotation and revocation (no passwords / JWT)
+- **MQTT over TLS** (port 8883) between cloud and vehicle
+- **No user PII** stored by default — Farwatch only holds settings, deployment
+  metadata, and transient state required for the dashboard
+- **No long-term telemetry retention** — Farwatch forwards WebSocket updates
+  without persisting sensor history (see `DATA_FLOW.md` scenario 1)
 
-### Database Security
-- Encrypted connections
-- Regular backups
-- Access controls
-- Audit logging
+## Data Residency
 
-### Credential Management
-- Secrets in environment variables
-- Never committed to repository
-- Rotation policies
+Farwatch intentionally stores as little vehicle data as possible:
+- **Stored:** user settings, automation rules, API keys, firmware deployment metadata
+- **Not stored (by default):** sensor history, GPS tracks, camera streams
 
-## Real-Time Updates
-
-WebSocket connection provides:
-- Device status changes
-- New sensor readings
-- Command completions
-- Alert notifications
-
-## Monitoring & Logging
-
-### Application Logs
-- Request logging (Express)
-- Error tracking
-- Performance metrics
-
-### Database Monitoring
-- Query performance
-- Connection pooling
-- Backup verification
-
-### System Health
-- CPU and memory usage
-- Disk space
-- Network connectivity
-- Service availability
-
-## Performance
-
-### Optimization Strategies
-- Redis caching for frequent queries
-- Database indexing
-- Connection pooling
-- Static asset compression
-
-### Typical Performance
-- API response time: <100ms
-- Database query time: <50ms
-- WebSocket update latency: <200ms
-
-## Scaling
-
-### Horizontal Scaling
-- Load balancer with multiple API instances
-- Database read replicas for queries
-- Redis cluster for caching
-
-### Vertical Scaling
-- Larger servers with more resources
-- Faster storage (SSD)
-- Dedicated database server
-
-## Backup & Recovery
-
-### Backup Strategy
-- Daily database backups
-- Configuration backups
-- Retention: 30 days minimum
-
-### Recovery Procedures
-- Restore from backup
-- Data integrity validation
-- Fallback procedures
-
-## Documentation
-
-- [SETUP_GUIDE.md](SETUP_GUIDE.md) - Installation instructions
-- [Backend/API_REFERENCE.md](Backend/API_REFERENCE.md) - API endpoints
-- [Backend/DATABASE_SCHEMA.md](Backend/DATABASE_SCHEMA.md) - Database structure
-- [Backend/AUTHENTICATION.md](Backend/AUTHENTICATION.md) - Auth system
-- [Frontend/FEATURES.md](Frontend/FEATURES.md) - Frontend features
-- [Deployment/DOCKER_COMPOSE.md](Deployment/DOCKER_COMPOSE.md) - Docker setup
-- [Deployment/CLOUD_DEPLOYMENT.md](Deployment/CLOUD_DEPLOYMENT.md) - Production deployment
+See [CORE_PRINCIPLES.md](../CORE_PRINCIPLES.md) for the Data Privacy First
+rationale.
 
 ## Source Code
 
@@ -305,6 +197,7 @@ Farwatch source: `/Product/TrailCurrentFarwatch/`
 ---
 
 See also:
-- [03_Vehicle_Compute/](../03_Vehicle_Compute/) - Vehicle compute system
-- [08_Deployment/](../08_Deployment/) - Deployment procedures
-- [09_Troubleshooting/](../09_Troubleshooting/) - Common issues
+- [03_Vehicle_Compute/](../03_Vehicle_Compute/) — Headwaters (in-vehicle compute)
+- [05_Mobile_Application/](../05_Mobile_Application/) — Outbound (Android) and the React Native app
+- [08_Deployment/CLOUD_DEPLOYMENT.md](../08_Deployment/) — Deployment procedures
+- [09_Troubleshooting/](../09_Troubleshooting/) — Common issues

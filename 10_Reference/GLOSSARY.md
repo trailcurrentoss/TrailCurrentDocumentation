@@ -164,7 +164,7 @@ Speed of serial communication. CAN bus typically runs at 500 kbps or 1 Mbps.
 | AMPLINE | Ampline | Power consumption & state-of-charge | Sensor |
 | PLATEAU | Plateau | Tilt/level measurement | Sensor |
 | TORRENT | Torrent | 8-channel smart power delivery | Control |
-| THERMA | Therma | Dual-relay climate control | Control |
+| THERMA | Therma | Closed-loop thermostat (3-board: controller + heater relay + cooler relay) | Control |
 | SOLSTICE | Solstice | MPPT solar controller interface | Control |
 | AFTLINE | Aftline | Trailer wiring harness monitor | Gateway |
 | RVC | RV-C Gateway | RV-C protocol gateway (coming soon) | Gateway |

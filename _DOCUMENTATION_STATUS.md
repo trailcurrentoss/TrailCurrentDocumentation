@@ -4,9 +4,23 @@
 
 This document tracks the status of TrailCurrent documentation creation and completion.
 
-**Last Updated**: 2026-03-14
+**Last Updated**: 2026-04-11
 **Total Markdown Files**: 46
-**Status**: Core structure complete. CAN Bus Reference fully populated from DBC. PlatformIO setup guide added.
+**Status**: Core structure complete. CAN Bus Reference refreshed from DBC (now includes Reservoir, expanded Torrent/Solstice IDs, BorealisCalibration). Hardware module docs reflect the full ESP-IDF migration (all modules except Spotter) and the new Reservoir water-tank module. Cloud Application README rewritten to match Farwatch (MongoDB, API key auth, PWA). Mobile Application README now covers both Outbound (Android native) and the React Native app. Vehicle Compute README updated to CM5 + carrier board hardware. BUILD_SYSTEM.md ESP-IDF section filled in.
+
+### Recent sweep (2026-04-11)
+
+Documentation drift was audited against the current state of every project under
+`/Product/` and the following files were brought up to date:
+
+- `02_Hardware_Modules/README.md` — framework claims corrected (all ESP-IDF except Spotter); Reservoir added; CAN ID map expanded; hardware variant table rewritten; source paths fixed (Bearing was referencing the old `TrailCurrentGnssModule/` path)
+- `02_Hardware_Modules/MODULE_CATEGORIES.md` — all CAN ID ranges corrected to the real DBC values; Reservoir + Switchback added as full entries; Peregrine updated to reflect the Radxa Dragon Q6A + offline pipeline
+- `02_Hardware_Modules/Firmware/PlatformIO_Setup.md` — marked legacy / Spotter-only
+- `10_Reference/CAN_BUS_REFERENCE.md` — message table updated (added BorealisCalibration, ShuntExt, SolarLoadControl, TorrentSequence, WaterTankLevels, per-address Torrent and Switchback rows); Bus Nodes table now includes Reservoir and fixes Headwaters, Aftline, Switchback, Borealis hardware
+- `03_Vehicle_Compute/README.md` — overview rewritten to explicitly reference CM5 + Waveshare RS485 CAN HAT (B) and to point at Baseflow as the lite variant
+- `04_Cloud_Application/README.md` — fully rewritten to match Farwatch reality (MongoDB not PostgreSQL, API key auth not JWT, PWA + WebSocket architecture, proximity automation, deployment packages, data minimization stance)
+- `05_Mobile_Application/README.md` — fully rewritten to cover both TrailCurrent Outbound (Android native, Kotlin + Jetpack Compose + MapLibre) and the React Native / Expo app
+- `07_Development/BUILD_SYSTEM.md` — ESP-IDF section and backend build section filled in (replacing NEEDS TO BE COMPLETED stubs)
 
 ---
 
@@ -36,22 +50,23 @@ System design and architecture:
 
 Hardware module documentation:
 
-- [x] **02_Hardware_Modules/README.md** - Hardware overview and module list (16 modules)
+- [x] **02_Hardware_Modules/README.md** - Hardware overview and module list (17 modules, now includes Reservoir)
 - [x] **02_Hardware_Modules/MODULE_CATEGORIES.md** - Module classification and organization
-- [x] **02_Hardware_Modules/Firmware/ESP_IDF_Setup.md** - ESP-IDF firmware setup (used by Fireside)
-- [x] **02_Hardware_Modules/Firmware/PlatformIO_Setup.md** - PlatformIO firmware setup (used by most modules)
+- [x] **02_Hardware_Modules/Firmware/ESP_IDF_Setup.md** - ESP-IDF firmware setup (primary setup for all modules)
+- [x] **02_Hardware_Modules/Firmware/PlatformIO_Setup.md** - PlatformIO setup (legacy; Spotter-only)
 
-**📋 Placeholder/Stub Files Needed** (15 module-specific files):
+**📋 Placeholder/Stub Files Needed** (16 module-specific files):
 - Bearing (GNSS) documentation
 - Borealis (environment) documentation
 - Torrent (power delivery) documentation
-- Therma (climate control) documentation
+- Therma (closed-loop thermostat) documentation
 - Solstice (solar controller) documentation
 - Ampline (shunt interface) documentation
 - Plateau (vehicle level) documentation
 - Picket (cabinet & door sensors) documentation
-- Switchback (6-channel relay) documentation
+- Switchback (relay module) documentation
 - Aftline (trailer wiring) documentation
+- Reservoir (water tank levels) documentation
 - Tapper (8-button panel) documentation
 - Fireside (wireless display) documentation
 - Milepost (hardwired display) documentation

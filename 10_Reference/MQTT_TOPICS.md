@@ -117,20 +117,24 @@ tc/                              # Root namespace
 
 ## QoS Levels
 
-**NEEDS TO BE COMPLETED** - Define QoS for:
-- Critical system messages (QoS 2)
-- Important data (QoS 1)
-- Telemetry (QoS 0)
-- Command messages
-- Response messages
+| QoS | Used For | Topics |
+|---|---|---|
+| 0 (fire-and-forget) | Non-critical telemetry | `local/system/stats` |
+| 1 (at-least-once) | All status updates, commands, config | All `local/*` and `rv/*` status and command topics |
+| 2 (exactly-once) | Raw CAN frames | `can/inbound` only |
+
+QoS 1 is the default for cloud bridge traffic. Combined with the 20-second heartbeat, this provides reliable delivery with automatic recovery from connection drops.
 
 ## Retained Messages
 
-**NEEDS TO BE COMPLETED** - Document which topics should retain values:
-- Device status
-- Configuration
-- Last known values
-- Retention policies
+Only configuration topics use MQTT retain. Sensor data and status updates are transient.
+
+| Topic | Retained | Reason |
+|---|---|---|
+| `local/config/pdm_channels` | Yes | New subscribers get channel config immediately |
+| `local/config/system_sync` / `rv/config/system` | Yes | Full system snapshot for new connections |
+| All status topics (`local/lights/*`, etc.) | No | Heartbeat provides state recovery |
+| All command topics | No | Commands are one-shot actions |
 
 ## Subscription Patterns
 
@@ -142,11 +146,59 @@ tc/                              # Root namespace
 
 ## Local MQTT vs Cloud MQTT
 
-**NEEDS TO BE COMPLETED** - Document:
-- Topic differences between local and cloud
-- Synchronization strategy
-- Conflict resolution
-- Bridge configuration
+The system uses two separate MQTT brokers — a local broker on the vehicle and a cloud broker on Farwatch. The cloud bridge (`cloud-bridge.js`) selectively forwards data between them.
+
+### Topic Namespaces
+
+| Namespace | Broker | Purpose |
+|---|---|---|
+| `local/*` | Vehicle (Mosquitto, port 8883) | Real-time CAN bus data, internal messaging |
+| `rv/*` | Farwatch cloud (Mosquitto, port 8883) | Remote monitoring and control |
+| `can/inbound` | Vehicle | Raw CAN frames from hardware (QoS 2) |
+| `can/outbound` | Vehicle | CAN commands to hardware |
+
+### Local → Cloud Bridging (Status)
+
+The cloud bridge forwards local status topics to the cloud with **change detection**, **tiered intervals**, and a **20-second heartbeat** to minimize cellular data usage. See [DATA_FLOW.md](../01_Architecture/DATA_FLOW.md) for full details.
+
+| Local Topic | Cloud Topic | Tier | Interval |
+|---|---|---|---|
+| `local/lights/+/status` | `rv/lights/N/status` | Immediate | On change only |
+| `local/relays/+/status` | `rv/relays/N/status` | Immediate | On change only |
+| `local/thermostat/status` | `rv/thermostat/status` | Immediate | On change only |
+| `local/energy/status` | `rv/energy/status` | Standard | 5s (threshold bypass) |
+| `local/gps/latlon` | `rv/gps/latlon` | Standard | 5s (threshold bypass) |
+| `local/gps/alt` | `rv/gps/alt` | Slow | 15s |
+| `local/gps/details` | `rv/gps/details` | Slow | 15s |
+| `local/airquality/status` | `rv/airquality/status` | Slow | 15s |
+| `local/airquality/temphumid` | `rv/airquality/temphumid` | Slow | 15s |
+| `local/level/tilt` | `rv/level/tilt` | Slow | 15s |
+| `local/level/status` | `rv/level/status` | Slow | 15s |
+| `local/system/stats` | `rv/system/stats` | Background | 30s |
+| `local/config/pdm_channels` | `rv/config/pdm_channels` | Config | 5s, change-only |
+| `local/config/system_sync` | `rv/config/system` | Config | 5s, retained |
+| `local/gps/time` | *(not forwarded)* | Eliminated | — |
+
+### Cloud → Local Bridging (Commands)
+
+Commands from Farwatch flow to the vehicle with no rate limiting or filtering:
+
+| Cloud Topic | Action |
+|---|---|
+| `rv/lights/N/command` | Toggle light N (CAN 0x018) |
+| `rv/lights/N/brightness` | Set brightness for light N (CAN 0x015) |
+| `rv/lights/all/command` | All lights on/off (CAN 0x018 broadcast) |
+| `rv/relays/N/command` | Toggle relay N (CAN 0x025+) |
+| `rv/relays/all/command` | All relays on/off |
+| `rv/thermostat/command` | Pass through to `local/thermostat/command` |
+| `rv/proximity/event` | Proximity zone transition → `local/proximity/event` |
+| `rv/proximity/status` | Proximity status → `local/proximity/status` |
+
+### Heartbeat & Desync Recovery
+
+Every 20 seconds, the cloud bridge republishes all last-known state to the cloud broker. This is a safety net for connection-level failures — in normal operation, state changes are forwarded immediately via MQTT QoS 1 (at-least-once delivery).
+
+On cloud broker reconnect, the bridge immediately publishes a forced heartbeat (all cached state) and triggers a full system config re-sync.
 
 ## Security
 

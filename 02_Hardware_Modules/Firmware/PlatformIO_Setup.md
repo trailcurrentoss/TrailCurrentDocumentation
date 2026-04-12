@@ -1,10 +1,19 @@
-# PlatformIO Setup and Configuration
+# PlatformIO Setup (Legacy / Spotter-only)
 
-Guide to setting up PlatformIO for TrailCurrent hardware module development. Some TrailCurrent modules use PlatformIO with the Arduino framework. For modules using ESP-IDF natively (Fireside, Solstice, Picket), see [ESP_IDF_Setup.md](./ESP_IDF_Setup.md).
+> **Status (2026-04):** All TrailCurrent hardware modules have been migrated to
+> **ESP-IDF native**. The only remaining PlatformIO consumer in the platform is
+> the [Spotter](../Spotter.md) in-vehicle trailer monitor display, which wraps
+> ESP-IDF through PlatformIO's `espidf` framework for LVGL tooling convenience.
+>
+> For all other modules, follow [ESP_IDF_Setup.md](./ESP_IDF_Setup.md) instead.
+> This document is retained because setting up PlatformIO for Spotter is still
+> the supported path for that one project, and because earlier revisions of
+> several modules used PlatformIO + Arduino — if you find an old branch, these
+> instructions still apply.
 
 ## Overview
 
-PlatformIO is a cross-platform build system and library manager for embedded development. TrailCurrent uses it with the Arduino framework on ESP32, ESP32-C6, and ESP32-S3 targets.
+PlatformIO is a cross-platform build system and library manager for embedded development. Historically TrailCurrent used it with the Arduino framework on ESP32 / ESP32-S3 targets; today only Spotter uses it, and it wraps ESP-IDF underneath rather than Arduino.
 
 ## Installation
 
@@ -69,7 +78,7 @@ lib_deps =
 | Board ID | ESP32 Variant | Used By |
 |----------|--------------|---------|
 | `esp32dev` | ESP32 (WROOM) | Ampline, Torrent, Tapper, Solstice |
-| `esp32-c6-devkitm-1` | ESP32-C6 (Waveshare C6-Zero) | Aftline, Therma |
+| `esp32-c6-devkitm-1` | ESP32-C6 (Waveshare C6-Zero) | Aftline |
 | `esp32s3zero` | ESP32-S3 (S3-Zero) | Plateau, Borealis |
 | `esp32-s3-devkitm-1` | ESP32-S3 (Waveshare Relay-6CH) | Switchback |
 
