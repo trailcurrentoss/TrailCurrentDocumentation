@@ -33,7 +33,6 @@ Every project is under `/media/dave/extstorage/TrailCurrent/Product/` and follow
 | Project | CAN ID defined in | CAN dispatch in | Credential API |
 |---------|-------------------|-----------------|----------------|
 | TrailCurrentAftline | `ota.h` | `main.c` (if/else) | `ota_has_credentials()` / `ota_get_hostname()` |
-| TrailCurrentAmpline | `main.c` (local #define) | `main.c` (if/else) | `wifi_config_has_credentials()` / `wifi_config_get_hostname()` |
 | TrailCurrentBearing | `main.c` (local #define) | `main.c` (if/else) | `wifi_config_has_credentials()` / `wifi_config_get_hostname()` |
 | TrailCurrentBorealis | `ota.h` | `main.c` (if/else) | `ota_has_credentials()` / `ota_get_hostname()` |
 | TrailCurrentMilepost | `ota.h` | `main.c` (if/else) | `ota_has_credentials()` / `ota_get_hostname()` |
@@ -166,7 +165,7 @@ Add `#define CAN_ID_DISCOVERY_RESET 0x03` in the same location where `CAN_ID_DIS
 
 - **Aftline, Borealis, Milepost, Solstice**: add to `ota.h`
 - **Switchback**: add to `board.h`
-- **Ampline, Bearing, Picket, Plateau, Tapper, Torrent**: add to `main.c` next to the existing local `#define`
+- **Bearing, Picket, Plateau, Tapper, Torrent**: add to `main.c` next to the existing local `#define`
 - **Bearing special case**: its existing define is `CAN_ID_DISCOVERY` not `CAN_ID_DISCOVERY_TRIGGER` — name the new one `CAN_ID_DISCOVERY_RESET` to stay consistent with all other projects
 
 ### D. CAN dispatch (varies by project)

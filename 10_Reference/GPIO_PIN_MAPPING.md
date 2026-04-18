@@ -98,8 +98,7 @@ All three boards share a **common ground**. 3.3V logic on both ends — no level
 **NEEDS TO BE COMPLETED** - Pin assignments for:
 - Plateau (vehicle level sensor)
 - Picket (cabinet & door sensors)
-- Ampline (shunt interface)
-- Solstice (MPPT solar controller)
+- Solstice (MPPT solar + SmartShunt battery gateway)
 - Switchback (6-channel relay module)
 - Aftline (trailer wiring monitor)
 - Tapper (8-button panel)

@@ -88,7 +88,7 @@ public HTTPS and cross-vehicle routing:
   Therma setpoint and thresholds
 - **Lighting** — toggle and dim the 8 Torrent PDM channels; drive light sequences
 - **Energy Dashboard** — battery voltage, SoC %, solar harvest, charge status,
-  time-remaining from Ampline + Solstice
+  time-remaining from Solstice (MPPT + SmartShunt)
 - **Water Tanks** — fresh / grey / black levels from Reservoir
 - **Air Quality** — temperature, humidity, IAQ index, CO2 from Borealis
 - **Trailer Level** — pitch / roll from Plateau
@@ -151,7 +151,7 @@ All endpoints require an `Authorization: Bearer <api_key>` header.
 - `PUT /api/thermostat/threshold` — sends `0x42 ThermaSetThresholdRequest`
 
 **Energy / Water / Sensors**
-- `GET /api/energy` — latest Ampline + Solstice snapshot
+- `GET /api/energy` — latest Solstice (MPPT + SmartShunt) snapshot
 - `GET /api/water` — latest Reservoir tank levels
 - `GET /api/airquality` — latest Borealis reading
 - `GET /api/level` — latest Plateau tilt and corner data

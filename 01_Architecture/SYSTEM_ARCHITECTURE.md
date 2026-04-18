@@ -88,8 +88,8 @@ TrailCurrent implements a **Software Defined Vehicle (SDV) architecture** where 
 │  │ Bearing      │  │ Torrent      │  │ Tapper       │        │
 │  │ Borealis     │  │ Therma       │  │ Fireside     │        │
 │  │ Picket       │  │ Solstice     │  │ Milepost     │        │
-│  │ Ampline      │  │              │  │ Spotter      │        │
-│  │ Plateau      │  └──────────────┘  │              │        │
+│  │ Plateau      │  │ Switchback   │  │ Spotter      │        │
+│  │ Reservoir    │  └──────────────┘  │              │        │
 │  └──────┬───────┘                     │              │        │
 │         │                              └──────┬───────┘        │
 │         └──────────┬────────────────────────┬─┘               │

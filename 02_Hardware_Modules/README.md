@@ -16,7 +16,6 @@ Modules that read environmental and operational data
 - [Bearing](./Bearing.md) - GNSS location, heading, altitude, and precise timing
 - [Borealis](./Borealis.md) - Temperature, humidity, TVOC, and eCO2 air quality monitoring (SHT31-D + SGP30)
 - [Picket](./Picket.md) - Cabinet and door open/closed status monitoring (up to 8 modules per bus, up to 13 reed switch inputs each)
-- [Ampline](./Ampline.md) - Power consumption tracking and state-of-charge via Victron BMV SmartShunt
 - [Plateau](./Plateau.md) - Tilt/level measurement on both axes (BNO055 IMU)
 - [Reservoir](./Reservoir.md) - Water tank level monitoring for up to 3 tanks (fresh, grey, black) via contactless sensors
 
@@ -25,7 +24,7 @@ Modules that control equipment and systems
 
 - [Torrent](./Torrent.md) - 8-channel smart power delivery module with on/off switching and PWM dimming (up to 3 modules per bus)
 - [Therma](./Therma.md) - Closed-loop thermostat: 3-board system (controller + heater relay + cooler relay) with mutually-exclusive heat/cool outputs and configurable hysteresis
-- [Solstice](./Solstice.md) - Victron MPPT solar charge controller interface
+- [Solstice](./Solstice.md) - Victron MPPT solar + SmartShunt battery gateway (state-of-charge, power consumption, solar generation)
 - [Switchback](./Switchback.md) - 6-channel relay module for switching high-current loads (up to 3 modules per bus)
 
 ### 3. **Communication/Gateway Modules** - Integration
@@ -50,12 +49,12 @@ Modules that allow user control and status display
 
 | Category | Modules | Primary Function |
 |----------|---------|------------------|
-| Sensors | 6 | Data collection |
+| Sensors | 5 | Data collection |
 | Control | 4 | System control |
 | Gateway | 2 | Device integration (1 coming soon) |
 | Interface | 4 | User interaction |
 | Voice & AI | 1 | Intelligent assistance |
-| **Total** | **17** | - |
+| **Total** | **16** | - |
 
 ## Communication Protocol
 
@@ -83,13 +82,13 @@ All hardware modules communicate using **CAN Bus (Controller Area Network)**:
 0x1F:       Environment Sensor Data (Borealis)
 0x20:       Leveling Config (Headwaters → Plateau)
 0x21:       Borealis Calibration (Headwaters → Borealis)
-0x23-0x24:  Battery Shunt Data (Ampline)
+0x23-0x24:  SmartShunt Basic Data (Solstice — battery V/A/SOC/W/TTG from VE.Direct TEXT)
 0x25-0x27:  Switchback Toggle Commands (3 module instances)
 0x28-0x2A:  Switchback Status Reports (3 module instances)
-0x2B:       Shunt External Live (Solstice / SmartShunt)
+0x2B:       Shunt Extended Live (Solstice — reserved, transmits zeros until HEX GET TX wire)
 0x2C-0x2D:  Solar MPPT Data (Solstice)
 0x2E:       Solar Load Control (any sender → Solstice)
-0x2F:       Shunt External History (Solstice)
+0x2F:       Shunt Extended History (Solstice — reserved, transmits zeros until HEX GET TX wire)
 0x30-0x32:  Vehicle Leveler Data (Plateau) - Tilt, Corners, Status
 0x33-0x35:  Torrent Light Sequence Commands (per-address)
 0x3E:       Water Tank Levels (Reservoir)
@@ -205,7 +204,7 @@ Several ESP32 variants are used across the platform:
 | Variant | Board | Used By |
 |---------|-------|---------|
 | ESP32 (WROOM) | Various dev boards | Torrent, Tapper |
-| ESP32-S3 | Waveshare ESP32-S3-RS485-CAN | Bearing, Ampline, Solstice, Picket, Aftline, Therma controller, Reservoir, Milepost (custom LCD variant) |
+| ESP32-S3 | Waveshare ESP32-S3-RS485-CAN | Bearing, Solstice, Picket, Aftline, Therma controller, Reservoir, Milepost (custom LCD variant) |
 | ESP32-S3 | Waveshare ESP32-S3-Relay-1CH | Therma heater/cooler relay boards |
 | ESP32-S3 | Waveshare ESP32-S3-ETH-8DI-8RO-C | Switchback |
 | ESP32-S3 | S3-Zero | Plateau, Borealis |
@@ -288,11 +287,10 @@ All module source code is in `/Product/`:
 - `TrailCurrentBearing/` - Bearing (GNSS)
 - `TrailCurrentBorealis/` - Borealis (air quality, temp, humidity, TVOC, eCO2)
 - `TrailCurrentPicket/` - Picket (cabinet & door sensors)
-- `TrailCurrentAmpline/` - Ampline (Victron BMV shunt interface)
 - `TrailCurrentPlateau/` - Plateau (vehicle level sensor)
 - `TrailCurrentTorrent/` - Torrent (power delivery module)
 - `TrailCurrentTherma/` - Therma (closed-loop thermostat: controller + heater/cooler relay boards)
-- `TrailCurrentSolstice/` - Solstice (MPPT solar controller + SmartShunt interface)
+- `TrailCurrentSolstice/` - Solstice (MPPT solar controller + SmartShunt battery gateway)
 - `TrailCurrentAftline/` - Aftline (trailer wiring harness monitor)
 - `TrailCurrentReservoir/` - Reservoir (water tank level monitor)
 - `TrailCurrentTapper/` - Tapper (8-button panel)

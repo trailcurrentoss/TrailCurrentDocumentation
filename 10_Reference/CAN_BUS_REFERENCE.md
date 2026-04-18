@@ -58,19 +58,19 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x42 (decimal 0-66
 | 0x1F | 31 | EnvironmentSensorData | 8 | Borealis | 2000 ms |
 | 0x20 | 32 | LevelingConfig | 7 | Headwaters | Event-driven |
 | 0x21 | 33 | BorealisCalibration | 2 | Headwaters | Event-driven |
-| 0x23 | 35 | BatteryShuntData1 | 7 | Ampline | 33 ms |
-| 0x24 | 36 | BatteryShuntData2 | 5 | Ampline | 33 ms |
+| 0x23 | 35 | ShuntBasicData1 | 7 | Solstice | 33 ms |
+| 0x24 | 36 | ShuntBasicData2 | 5 | Solstice | 33 ms |
 | 0x25 | 37 | SwitchbackToggle0 | 2 | Any sender | Event-driven |
 | 0x26 | 38 | SwitchbackToggle1 | 2 | Any sender | Event-driven |
 | 0x27 | 39 | SwitchbackToggle2 | 2 | Any sender | Event-driven |
 | 0x28 | 40 | SwitchbackStatus0 | 1 | Switchback addr 0 | Event-driven |
 | 0x29 | 41 | SwitchbackStatus1 | 1 | Switchback addr 1 | Event-driven |
 | 0x2A | 42 | SwitchbackStatus2 | 1 | Switchback addr 2 | Event-driven |
-| 0x2B | 43 | ShuntExtLive | 6 | Solstice | 1000 ms |
+| 0x2B | 43 | ShuntExtLive | 6 | Solstice | 33 ms (reserved — zeros) |
 | 0x2C | 44 | SolarMpptData1 | 7 | Solstice | 33 ms |
 | 0x2D | 45 | SolarMpptData2 | 3 | Solstice | 33 ms |
 | 0x2E | 46 | SolarLoadControl | 1 | Any sender | Event-driven |
-| 0x2F | 47 | ShuntExtHistory | 6 | Solstice | 60 s |
+| 0x2F | 47 | ShuntExtHistory | 6 | Solstice | 33 ms (reserved — zeros) |
 | 0x30 | 48 | TiltData | 8 | Plateau | 500 ms |
 | 0x31 | 49 | CornerData | 8 | Plateau | 500 ms |
 | 0x32 | 50 | StatusData | 4 | Plateau | 2000 ms |
@@ -90,8 +90,7 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x42 (decimal 0-66
 | Bearing | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | GPS receiver (DFRobot GNSS). Broadcasts GNSS position, altitude, speed, course, and date/time. ESP-IDF firmware |
 | Torrent | ESP32 (WROOM) | 8-channel PWM power distribution module. Compile-time address 0-2, up to 3 on same bus. ESP-IDF firmware |
 | Tapper | ESP32 (WROOM) | Physical 8-button control panel. Target-selectable at build time (Torrent or Switchback) with instance addressing. ESP-IDF firmware |
-| Ampline | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Battery shunt monitor. Reads Victron BMV SmartShunt via VE.Direct serial (19200 baud). ESP-IDF firmware |
-| Solstice | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Solar charge controller + SmartShunt gateway. Reads Victron MPPT via VE.Direct TEXT+HEX; optional SmartShunt polling. ESP-IDF firmware |
+| Solstice | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Solar + battery gateway. Reads Victron MPPT via VE.Direct TEXT+HEX SET on UART1 and Victron SmartShunt via VE.Direct TEXT on UART2 (RX-only on current hardware). Transmits basic battery data (0x23/0x24), MPPT solar data (0x2C/0x2D). 0x2B/0x2F reserved (zeros). Accepts MPPT load control (0x2E). ESP-IDF firmware |
 | Borealis | ESP32-S3-Zero | Environment/air quality sensor. SHT31-D (temp/humidity) + SGP30 (TVOC/eCO2) over I²C. ESP-IDF firmware |
 | Picket | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Cabinet/door sensor. Up to 13 reed switch inputs, NVS-addressed (8 modules max). ESP-IDF firmware |
 | Switchback | ESP32-S3 (Waveshare ESP32-S3-ETH-8DI-8RO-C) | 8-channel dry-contact relay module. Up to 3 on same bus (compile-time address 0-2). ESP-IDF firmware |
@@ -333,11 +332,11 @@ Environment and air quality sensor module (ESP32-S3-Zero). Reads DHT22 for tempe
 
 ---
 
-### Ampline - Battery Shunt Monitor (0x23-0x24)
+### Solstice - SmartShunt Basic Battery Data (0x23-0x24)
 
-Reads Victron BMV battery monitor data via VE.Direct serial protocol (UART at 19200 baud) and converts to CAN messages. Transmit-only on CAN. Both messages sent at ~30 Hz (33 ms cycle).
+Transmitted by Solstice. Reads Victron SmartShunt VE.Direct TEXT fields over UART2 (19200 baud, RX-only on current hardware) and converts to CAN messages. Both messages sent at ~30 Hz (33 ms cycle).
 
-#### BatteryShuntData1 (0x23, 7 bytes)
+#### ShuntBasicData1 (0x23, 7 bytes)
 
 Core battery metrics: voltage, current, and state of charge. Values use a whole+decimal split encoding.
 
@@ -353,7 +352,7 @@ Core battery metrics: voltage, current, and state of charge. Values use a whole+
 
 **Example:** Bytes `13, 45, 1, 5, 30, 85, 50` = 13.45V, -5.30A discharge, 85.50% SOC.
 
-#### BatteryShuntData2 (0x24, 5 bytes)
+#### ShuntBasicData2 (0x24, 5 bytes)
 
 Power consumption and time remaining.
 
@@ -407,7 +406,7 @@ Relay status bitmask. Sent immediately when any relay state changes.
 
 ### Solstice - Solar MPPT Charge Controller (0x2C-0x2D)
 
-Reads Victron MPPT solar charge controller data via VE.Direct serial protocol (UART at 19200 baud). Transmit-only on CAN. Both messages sent at ~30 Hz (33 ms cycle).
+Reads Victron MPPT solar charge controller data via VE.Direct TEXT on UART1 (19200 baud, bidirectional — TEXT parsing + HEX SET for load control). Both messages sent at ~30 Hz (33 ms cycle). Solstice also transmits SmartShunt basic battery data on 0x23/0x24 (see earlier section).
 
 #### SolarMpptData1 (0x2C, 7 bytes)
 
@@ -590,7 +589,7 @@ All multi-byte values use **big-endian** (Motorola) byte order. The most signifi
 
 ### Whole + Decimal Split Pattern
 
-Several modules (Ampline, Solstice) encode decimal values by splitting them into two separate bytes:
+Solstice encodes decimal values (for both SmartShunt basic data on 0x23/0x24 and MPPT solar data on 0x2C/0x2D) by splitting them into two separate bytes:
 - Byte N: whole number part
 - Byte N+1: decimal part (hundredths, range 0-99)
 - **Reconstruction:** `value = whole + decimal / 100.0`
@@ -601,7 +600,7 @@ This pattern is used for: battery voltage, battery current, SOC percentage, pane
 
 Negative values are indicated by a separate sign byte:
 - **Standard:** 0 = positive, 1 = negative (used for current, panel current, latitude/longitude)
-- **Wattage exception:** 0x00 = positive, 0xFF = negative (BatteryShuntData2 only)
+- **Wattage exception:** 0x00 = positive, 0xFF = negative (ShuntBasicData2 only)
 
 ### Bitmask Encoding
 
@@ -630,8 +629,10 @@ Some signals use a scale factor to provide fractional precision in an integer fi
 | 0x0A-0x11 | Picket door status (per module) | 200 ms | 5 Hz |
 | 0x1B | DeviceStatusReport (Torrent) | 33 ms | ~30 Hz |
 | 0x1F | EnvironmentSensorData (Borealis) | 2000 ms | 0.5 Hz |
-| 0x23-0x24 | Battery shunt data (Ampline) | 33 ms | ~30 Hz |
+| 0x23-0x24 | SmartShunt basic data (Solstice) | 33 ms | ~30 Hz |
+| 0x2B | ShuntExtLive (Solstice, reserved — transmits zeros) | 33 ms | ~30 Hz |
 | 0x2C-0x2D | Solar MPPT data (Solstice) | 33 ms | ~30 Hz |
+| 0x2F | ShuntExtHistory (Solstice, reserved — transmits zeros) | 33 ms | ~30 Hz |
 | 0x30-0x31 | Tilt/corner data (Plateau) | 500 ms | 2 Hz |
 | 0x32 | Status data (Plateau) | 2000 ms | 0.5 Hz |
 | 0x3F | ThermaDesiredTemperature | 1000 ms | 1 Hz |

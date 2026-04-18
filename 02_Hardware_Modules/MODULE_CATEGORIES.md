@@ -37,16 +37,6 @@ These modules collect data from the environment and vehicle systems.
 - **Documentation**: [Picket.md](Picket.md)
 - **Source**: `/Product/TrailCurrentPicket/`
 
-### TrailCurrent Ampline (Shunt Interface)
-- **Purpose**: Track power consumption and state-of-charge via Victron BMV SmartShunt
-- **Hardware**: Waveshare ESP32-S3-RS485-CAN
-- **Framework**: ESP-IDF
-- **Inputs**: Victron BMV SmartShunt via VE.Direct (19200 baud)
-- **Outputs**: CAN messages with voltage, current, power, state-of-charge, consumed Ah
-- **CAN IDs**: 0x23-0x24 (BatteryShuntData1, BatteryShuntData2)
-- **Documentation**: [Ampline.md](Ampline.md)
-- **Source**: `/Product/TrailCurrentAmpline/`
-
 ### TrailCurrent Plateau (Vehicle Level Sensor)
 - **Purpose**: Tilt/level measurement on both axes with per-corner height calculation
 - **Hardware**: ESP32-S3-Zero with Adafruit BNO055 IMU
@@ -97,16 +87,16 @@ These modules execute commands and control physical systems.
 - **Source**: `/Product/TrailCurrentTherma/`
 - **Key Feature**: Authoritative state owner pattern (same as Torrent / Switchback) — every other device displays the value Therma broadcasts and sends change requests rather than holding a local copy
 
-### TrailCurrent Solstice (MPPT Solar Controller Interface)
-- **Purpose**: Connect Victron MPPT solar charge controller and SmartShunt; stream solar and battery data
+### TrailCurrent Solstice (MPPT Solar + SmartShunt Battery Gateway)
+- **Purpose**: Bridge Victron MPPT (solar) and Victron SmartShunt (battery) onto CAN. Also handles MPPT load-output control
 - **Hardware**: Waveshare ESP32-S3-RS485-CAN
 - **Framework**: ESP-IDF
-- **Inputs**: Victron MPPT via VE.Direct (TEXT + HEX); optional SmartShunt polling
-- **Outputs**: Solar charging data and external shunt data on CAN
-- **CAN IDs**: 0x2B (ShuntExtLive), 0x2C-0x2D (SolarMpptData1/2), 0x2F (ShuntExtHistory); accepts 0x2E (SolarLoadControl)
+- **Inputs**: Victron MPPT via VE.Direct TEXT on UART1 (19200 baud, RX+TX); Victron SmartShunt via VE.Direct TEXT on UART2 (RX-only on current hardware)
+- **Outputs**: SmartShunt basic battery data (voltage, current, SOC, wattage, time-to-go) on 0x23/0x24; MPPT solar data (panel V, wattage, battery V, charge state, panel current) on 0x2C/0x2D
+- **CAN IDs**: 0x23 (ShuntBasicData1), 0x24 (ShuntBasicData2), 0x2C-0x2D (SolarMpptData1/2); accepts 0x2E (SolarLoadControl) and drives MPPT via VE.Direct HEX SET register 0xEDAB. Reserved: 0x2B (ShuntExtLive), 0x2F (ShuntExtHistory) — transmitted as zeros pending a TX wire to the SmartShunt for HEX GET
 - **Documentation**: [Solstice.md](Solstice.md)
 - **Source**: `/Product/TrailCurrentSolstice/`
-- **Key Feature**: Bridges Victron MPPT and SmartShunt to TrailCurrent; supports load-output control
+- **Key Feature**: Single gateway for solar generation AND battery state-of-charge; supports MPPT load-output ON/OFF/Default control from the CAN bus
 
 ### TrailCurrent Switchback (Relay Module)
 - **Purpose**: High-current relay switching for loads that don't fit the Torrent PWM profile
@@ -224,7 +214,7 @@ Minimum modules needed:
 ### Full Environmental Control
 Add to above:
 - Therma (climate control)
-- Ampline (power monitoring)
+- Solstice (solar + battery monitoring — state-of-charge and consumption)
 - Milepost (always-on display)
 
 ### Towing Setup
@@ -234,7 +224,6 @@ Add to above:
 
 ### Complete System
 Add to above:
-- Solstice (solar monitoring)
 - Picket (cabinet & door sensors)
 - Plateau (vehicle leveling)
 - Peregrine (voice assistant)
@@ -253,17 +242,17 @@ Add to above:
      ┌───────┼──────────┐
      │       │          │
      ▼       ▼          ▼
-┌────────┐ ┌────────┐ ┌──────────────┐
-│Therma  │ │Solstice│ │Aftline       │
-│Climate │ │Solar   │ │Trailer       │
-└────────┘ └────────┘ └──────────────┘
+┌────────┐ ┌───────────┐ ┌──────────────┐
+│Therma  │ │Solstice   │ │Aftline       │
+│Climate │ │Solar+Batt │ │Trailer       │
+└────────┘ └───────────┘ └──────────────┘
      ▲       ▲          ▲
      │       │          │
      └───────┼──────────┘
              │
      Feedback Sensors:
      ├─ Borealis (environment)
-     ├─ Ampline (power/SoC)
+     ├─ Solstice (solar + battery state-of-charge)
      ├─ Bearing (GNSS)
      ├─ Plateau (level)
      └─ Picket (doors/cabinets)

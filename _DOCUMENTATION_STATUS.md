@@ -4,9 +4,18 @@
 
 This document tracks the status of TrailCurrent documentation creation and completion.
 
-**Last Updated**: 2026-04-11
+**Last Updated**: 2026-04-18
 **Total Markdown Files**: 46
 **Status**: Core structure complete. CAN Bus Reference refreshed from DBC (now includes Reservoir, expanded Torrent/Solstice IDs, BorealisCalibration). Hardware module docs reflect the full ESP-IDF migration (all modules except Spotter) and the new Reservoir water-tank module. Cloud Application README rewritten to match Farwatch (MongoDB, API key auth, PWA). Mobile Application README now covers both Outbound (Android native) and the React Native app. Vehicle Compute README updated to CM5 + carrier board hardware. BUILD_SYSTEM.md ESP-IDF section filled in.
+
+### Ampline consolidation (2026-04-18)
+
+Ampline (formerly a standalone Victron SmartShunt bridge) has been absorbed into Solstice. Solstice now drives both the MPPT (UART1 bidirectional, VE.Direct TEXT + HEX SET for load control) and the SmartShunt (UART2 RX-only for VE.Direct TEXT). Documentation and the DBC were swept to match:
+
+- DBC: `Ampline` removed from `BU_:` node list; `BO_ 35` and `BO_ 36` transmitter changed to `Solstice` and renamed from `BatteryShuntData1/2` to `ShuntBasicData1/2` to match Solstice firmware. `CM_ BU_ Ampline` deleted; `CM_ BU_ Solstice` rewritten to describe the unified role. `CM_ BO_ 43` / `CM_ BO_ 47` flagged as reserved — Solstice transmits these frames with all-zero payload because the SmartShunt UART is RX-only on the current hardware (HEX GET needs a TX wire).
+- Hardware module docs, architecture docs, reference docs, cloud README, marketing draft, and the discovery-NVS working prompt all had `Ampline` references removed or re-pointed at Solstice.
+- `DATA_FLOW.md` had a secondary drift fixed in the same sweep: "Ampline PDM" was incorrectly labelling the power-distribution-module role, which actually belongs to Torrent. Those references now correctly say `Torrent`.
+- Module count dropped from 17 to 16.
 
 ### Recent sweep (2026-04-11 — second pass)
 
@@ -75,8 +84,7 @@ Hardware module documentation:
 - Borealis (environment) documentation
 - Torrent (power delivery) documentation
 - Therma (closed-loop thermostat) documentation
-- Solstice (solar controller) documentation
-- Ampline (shunt interface) documentation
+- Solstice (solar + battery gateway) documentation
 - Plateau (vehicle level) documentation
 - Picket (cabinet & door sensors) documentation
 - Switchback (relay module) documentation

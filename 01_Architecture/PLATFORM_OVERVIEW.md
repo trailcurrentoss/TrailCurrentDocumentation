@@ -50,8 +50,8 @@ The TrailCurrent platform is organized into three layers, where the **Device and
 **Role**: Sensing, control, and communication
 
 **Components**:
-- **Sensor Modules**: Bearing (GNSS), Borealis (environment), Picket (doors), Ampline (power), Plateau (level)
-- **Control Modules**: Torrent (power delivery), Therma (climate), Solstice (solar)
+- **Sensor Modules**: Bearing (GNSS), Borealis (environment), Picket (doors), Plateau (level)
+- **Control Modules**: Torrent (power delivery), Therma (climate), Solstice (solar + battery monitoring via Victron MPPT/SmartShunt)
 - **Gateway Modules**: Aftline (trailer monitor), RV-C Gateway (coming soon)
 - **Interface Modules**: Tapper (buttons), Fireside (wireless display), Milepost (hardwired display), Spotter (trailer monitor display)
 - **Voice & AI**: Peregrine (voice assistant)
@@ -126,7 +126,6 @@ Hardware Modules
 - Bearing - GNSS location, heading, altitude, and precise timing
 - Borealis - Temperature, humidity, TVOC, eCO2 (SHT31-D + SGP30)
 - Picket - Cabinet and door open/closed status monitoring (up to 8 modules per bus)
-- Ampline - Power consumption and state-of-charge via Victron BMV SmartShunt
 - Plateau - Tilt / level measurement with per-corner heights (BNO055 IMU)
 - Reservoir - Water tank levels for up to 3 tanks (fresh, grey, black)
 
@@ -134,7 +133,7 @@ Hardware Modules
 - Torrent - 8-channel smart power delivery with switching and PWM dimming (up to 3 modules per bus)
 - Switchback - 8-channel dry-contact relay module (up to 3 modules per bus)
 - Therma - Closed-loop thermostat (3 boards: controller + heater relay + cooler relay) with mutually-exclusive heat/cool outputs and configurable hysteresis
-- Solstice - Victron MPPT solar charge controller + SmartShunt interface
+- Solstice - Victron MPPT solar charge controller + SmartShunt battery gateway (state-of-charge, power consumption, solar generation)
 
 ### Communication & External Systems
 - Aftline - Trailer wiring harness monitor (all 7 pins)

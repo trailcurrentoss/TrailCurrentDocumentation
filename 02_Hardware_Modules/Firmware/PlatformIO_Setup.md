@@ -77,7 +77,7 @@ lib_deps =
 
 | Board ID | ESP32 Variant | Used By |
 |----------|--------------|---------|
-| `esp32dev` | ESP32 (WROOM) | Ampline, Torrent, Tapper, Solstice |
+| `esp32dev` | ESP32 (WROOM) | Torrent, Tapper |
 | `esp32-c6-devkitm-1` | ESP32-C6 (Waveshare C6-Zero) | Aftline |
 | `esp32s3zero` | ESP32-S3 (S3-Zero) | Plateau, Borealis |
 | `esp32-s3-devkitm-1` | ESP32-S3 (Waveshare Relay-6CH) | Switchback |

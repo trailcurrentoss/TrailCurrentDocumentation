@@ -56,7 +56,7 @@ Detailed data movement through the TrailCurrent system across different scenario
 ### Scenario 2: User Command (Remote Light Toggle via Farwatch)
 
 Light and relay commands use **toggle semantics** — the physical hardware module
-(Ampline PDM / Switchback) is the single source of truth. Multiple controllers
+(Torrent / Switchback) is the single source of truth. Multiple controllers
 (physical switches, touch screens, local PWA, Farwatch) all send toggle commands,
 and the device broadcasts its actual state to all listeners.
 
@@ -86,7 +86,7 @@ and the device broadcasts its actual state to all listeners.
          │
          ▼ CAN Bus (500 kbps)
 ┌──────────────────┐
-│ Ampline PDM      │
+│ Torrent          │
 │ (ESP32)          │
 │ Receives toggle, │
 │ flips light 3    │
@@ -303,7 +303,7 @@ Farwatch Dashboard
 ### Example 2: Energy Data (Merged from 3 CAN Frames)
 
 ```
-Ampline PDM (battery monitoring via Victron VE.Direct → CAN)
+Solstice (battery monitoring via Victron SmartShunt VE.Direct TEXT → CAN)
   ├─ CAN 0x023: [voltH, voltL, _, _, _, percentH, percentL, _]
   │  battery_voltage = voltH + (voltL / 100)
   │  battery_percent = percentH + (percentL / 100)
@@ -381,9 +381,9 @@ CAN modules broadcast at hardware-determined rates (typically 1–10 Hz). The CA
 
 | CAN ID(s) | Data Type | Module | Local MQTT Topics | Payload Fields | Approx. Size |
 |---|---|---|---|---|---|
-| 0x01b | Light status | Ampline (PDM) | `local/lights/1-8/status` (8 topics) | state, brightness | ~40 B each |
+| 0x01b | Light status | Torrent (addr 0) | `local/lights/1-8/status` (8 topics) | state, brightness | ~40 B each |
 | 0x028/029/02a | Relay status | Switchback (3 instances) | `local/relays/1-24/status` (24 topics) | state | ~30 B each |
-| 0x023, 0x024, 0x02c | Energy | Ampline / Inverter | `local/energy/status` (merged) | battery_voltage, battery_percent, consumption_watts, solar_watts, charge_type, time_remaining_minutes | ~115 B |
+| 0x023, 0x024, 0x02c | Energy | Solstice (SmartShunt + MPPT) | `local/energy/status` (merged) | battery_voltage, battery_percent, consumption_watts, solar_watts, charge_type, time_remaining_minutes | ~115 B |
 | 0x009 | GPS position | Milepost | `local/gps/latlon` | latitude, longitude (4 decimal places, ~11m precision) | ~55 B |
 | 0x008 | GPS altitude | Milepost | `local/gps/alt` | altitudeInMeters, altitudeFeet | ~65 B |
 | 0x007 | GNSS stats | Milepost | `local/gps/details` | numberOfSatellites, speedOverGround, courseOverGround, gnssMode | ~70 B |
@@ -442,7 +442,7 @@ Farwatch Backend (WebSocket fan-out, no historical storage)
 Browser (real-time dashboard, 30s staleness timeout)
 ```
 
-**Important design note:** Light and relay commands use **toggle semantics** (CAN 0x018 for lights, 0x025+ for relays), not explicit SET commands. The physical hardware module (Ampline PDM / Switchback) is the single source of truth. This enables multiple controllers (physical switches, touch screens, local PWA, Farwatch cloud) to coexist without race conditions — every controller toggles, and the device broadcasts actual state to all listeners.
+**Important design note:** Light and relay commands use **toggle semantics** (CAN 0x018 for lights, 0x025+ for relays), not explicit SET commands. The physical hardware module (Torrent / Switchback) is the single source of truth. This enables multiple controllers (physical switches, touch screens, local PWA, Farwatch cloud) to coexist without race conditions — every controller toggles, and the device broadcasts actual state to all listeners.
 
 ---
 
