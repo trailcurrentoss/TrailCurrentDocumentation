@@ -1,21 +1,21 @@
 # TrailCurrent Hardware Modules
 
-Complete documentation for all ESP32-based hardware modules in the TrailCurrent platform.
+Complete documentation for all CAN-attached hardware in the TrailCurrent platform — ESP32-class microcontroller modules plus Linux-class compute devices that participate on the bus (Peregrine, Playbill).
 
 ## Overview
 
-Hardware modules are ESP32 microcontroller boards that handle specific functions in the TrailCurrent system. They communicate with each other and the vehicle compute system via the CAN bus.
+Hardware modules are devices that handle specific functions in the TrailCurrent system and communicate with each other and the vehicle compute system via the CAN bus. Most are ESP32 microcontroller boards; two (Peregrine and Playbill) are Linux-class Radxa Q6A products that participate on the bus alongside the MCU modules.
 
 ## Module Categories
 
-Hardware modules are organized into four functional categories:
+Hardware modules are organized by function:
 
 ### 1. **Sensor Modules** - Data Collection
 Modules that read environmental and operational data
 
 - [Bearing](./Bearing.md) - GNSS location, heading, altitude, and precise timing
 - [Borealis](./Borealis.md) - Temperature, humidity, TVOC, and eCO2 air quality monitoring (SHT31-D + SGP30)
-- [Picket](./Picket.md) - Cabinet and door open/closed status monitoring (up to 8 modules per bus, up to 13 reed switch inputs each)
+- [Picket](./Picket.md) - Cabinet and door open/closed status monitoring (up to 8 modules per bus, up to 12 reed switch inputs each)
 - [Plateau](./Plateau.md) - Tilt/level measurement on both axes (BNO055 IMU)
 - [Reservoir](./Reservoir.md) - Water tank level monitoring for up to 3 tanks (fresh, grey, black) via contactless sensors
 
@@ -25,7 +25,7 @@ Modules that control equipment and systems
 - [Torrent](./Torrent.md) - 8-channel smart power delivery module with on/off switching and PWM dimming (up to 3 modules per bus)
 - [Therma](./Therma.md) - Closed-loop thermostat: 3-board system (controller + heater relay + cooler relay) with mutually-exclusive heat/cool outputs and configurable hysteresis
 - [Solstice](./Solstice.md) - Victron MPPT solar + SmartShunt battery gateway (state-of-charge, power consumption, solar generation)
-- [Switchback](./Switchback.md) - 6-channel relay module for switching high-current loads (up to 3 modules per bus)
+- [Switchback](./Switchback.md) - 8-channel dry-contact relay module for switching high-current loads, plus 8 opto-isolated digital inputs that double as a Picket-style sensor node (up to 3 modules per bus)
 
 ### 3. **Communication/Gateway Modules** - Integration
 Modules that connect external devices or provide communication bridges
@@ -45,16 +45,9 @@ Modules that allow user control and status display
 
 - [Peregrine](./Peregrine.md) - AI voice assistant with system access and hands-free control
 
-## Module Statistics
+### 6. **Entertainment**
 
-| Category | Modules | Primary Function |
-|----------|---------|------------------|
-| Sensors | 5 | Data collection |
-| Control | 4 | System control |
-| Gateway | 2 | Device integration (1 coming soon) |
-| Interface | 4 | User interaction |
-| Voice & AI | 1 | Intelligent assistance |
-| **Total** | **16** | - |
+- [Playbill](./Playbill.md) - In-rig entertainment head (Live TV / radio / library / streaming / cast) on Radxa Dragon Q6A. Up to three instances per rig. Can be driven directly from CAN by a third-party button MCU with no MQTT, no Headwaters service, and no cloud.
 
 ## Communication Protocol
 
@@ -76,12 +69,17 @@ All hardware modules communicate using **CAN Bus (Controller Area Network)**:
 0x04:       Firmware Version Report (any module, event-driven at boot)
 0x06-0x09:  Bearing (GNSS) - DateTime, Sat/Speed/Course, Altitude, Lat/Lon
 0x0A-0x11:  Picket - Door/cabinet sensor status (8 addressable modules)
+0x12-0x14:  PicketStatus8/9/10 — Switchback's 8 digital inputs in Picket wire format
+            (Switchback bridges its sensor side onto the Picket address pool;
+             same byte layout, consumed by the same Headwaters path)
 0x15-0x17:  Torrent Brightness Control (per-address, events from any sender)
 0x18-0x1A:  Torrent Toggle On/Off Commands (per-address)
 0x1B-0x1D:  Torrent Device Status Reports (per-address)
-0x1F:       Environment Sensor Data (Borealis)
-0x20:       Leveling Config (Headwaters → Plateau)
+0x1F:       Environment Sensor Data (Borealis — temp/humidity/CO2/VOC Index)
+0x20:       Borealis Safety Data (CO ppm, LPG ratio, alarm flags)
 0x21:       Borealis Calibration (Headwaters → Borealis)
+0x36-0x39:  Vehicle Leveler (Plateau) — LevelingConfig, TiltData, CornerData, StatusData
+            ⚠️ Plateau firmware not yet shipping (moved here from 0x20/0x30-0x32 2026-05-19)
 0x23-0x24:  SmartShunt Basic Data (Solstice — battery V/A/SOC/W/TTG from VE.Direct TEXT)
 0x25-0x27:  Switchback Toggle Commands (3 module instances)
 0x28-0x2A:  Switchback Status Reports (3 module instances)
@@ -89,13 +87,18 @@ All hardware modules communicate using **CAN Bus (Controller Area Network)**:
 0x2C-0x2D:  Solar MPPT Data (Solstice)
 0x2E:       Solar Load Control (any sender → Solstice)
 0x2F:       Shunt Extended History (Solstice — reserved, transmits zeros until HEX GET TX wire)
-0x30-0x32:  Vehicle Leveler Data (Plateau) - Tilt, Corners, Status
 0x33-0x35:  Torrent Light Sequence Commands (per-address)
+0x3A:       Trailer Status (Aftline — turn/brake/running/connected + voltage)
 0x3E:       Water Tank Levels (Reservoir)
 0x3F:       Therma Desired Temperature
 0x40:       Therma Status
 0x41:       Therma Set Desired Temperature Request (any sender → Therma)
 0x42:       Therma Set Threshold Request (any sender → Therma)
+
+0x100-0x10F: Playbill instance 0 (NavCmd, TransportCmd/Status, RadioTuneReq/Status,
+             ScreenStatus, SystemCmd, LaunchSourceCmd, VolumeCmd, Presence)
+0x110-0x11F: Playbill instance 1 (same offset map as instance 0)
+0x120-0x12F: Playbill instance 2 (same offset map as instance 0)
 ```
 
 (See [10_Reference/CAN_BUS_REFERENCE.md](../10_Reference/CAN_BUS_REFERENCE.md) for full details — the authoritative source is [TrailCurrent.dbc](../TrailCurrent.dbc))
@@ -204,10 +207,10 @@ Several ESP32 variants are used across the platform:
 | Variant | Board | Used By |
 |---------|-------|---------|
 | ESP32 (WROOM) | Various dev boards | Torrent, Tapper |
-| ESP32-S3 | Waveshare ESP32-S3-RS485-CAN | Bearing, Solstice, Picket, Aftline, Therma controller, Reservoir, Milepost (custom LCD variant) |
+| ESP32-S3 | Waveshare ESP32-S3-RS485-CAN | Bearing, Borealis, Solstice, Picket, Aftline, Therma controller, Reservoir, Milepost (custom LCD variant) |
 | ESP32-S3 | Waveshare ESP32-S3-Relay-1CH | Therma heater/cooler relay boards |
 | ESP32-S3 | Waveshare ESP32-S3-ETH-8DI-8RO-C | Switchback |
-| ESP32-S3 | S3-Zero | Plateau, Borealis |
+| ESP32-S3 | S3-Zero | Plateau |
 | ESP32-S3 | Waveshare ESP32-S3-Touch-LCD-7 | Milepost (7" display) |
 | ESP32-P4 | Waveshare ESP32-P4-WiFi6-Touch-LCD-7B | Fireside |
 
@@ -298,7 +301,8 @@ All module source code is in `/Product/`:
 - `TrailCurrentMilepost/` - Milepost (hardwired CAN bus touchscreen)
 - `TrailCurrentSpotter/` - Spotter (in-vehicle trailer monitor display)
 - `TrailCurrentPeregrine/` - Peregrine (AI voice assistant, Radxa Dragon Q6A)
-- `TrailCurrentSwitchback/` - Switchback (8-channel relay module)
+- `TrailCurrentPlaybill/` - Playbill (in-rig entertainment head, Radxa Dragon Q6A)
+- `TrailCurrentSwitchback/` - Switchback (8-channel relay outputs + 8 digital inputs in Picket wire format)
 
 ---
 

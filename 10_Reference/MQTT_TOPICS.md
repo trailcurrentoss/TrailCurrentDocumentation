@@ -85,6 +85,22 @@ tc/                              # Root namespace
 - Device ID naming conventions
 - Device registry topics
 
+### Playbill Topics (local/playbill/*)
+
+Playbill (the in-rig entertainment head) exposes a per-instance topic family. Each Playbill has a human-readable `deviceId` slug (`living-room`, `bedroom`, …) set in its `settings.json`. The slug is independent of the numeric `canInstance` used on the CAN bus.
+
+| Topic | Direction | Retained | Purpose |
+|---|---|---|---|
+| `local/playbill/<deviceId>/<feature>/command` | clients → Playbill | No | Issue a command to one Playbill instance. `<feature>` is one of: `nav`, `transport`, `radio`, `system`, `launch-source`, `volume`. Payload is a JSON object with at minimum a string `action` field. |
+| `local/playbill/all/<feature>/command` | clients → all Playbills | No | Broadcast a command to every Playbill on the rig. Same payload shape. |
+| `local/playbill/<deviceId>/<feature>/status` | Playbill → clients | Yes | Latest state for a feature. Retained so new subscribers (Headwaters PWA, Peregrine voice, Farwatch via cloud bridge) get the current state immediately. |
+| `local/playbill/<deviceId>/now-playing` | Playbill → clients | Yes | Rich now-playing payload (title, artwork URL, etc.). Lives only on MQTT — the CAN side carries the numeric subset (`PlaybillTransportStatus`). |
+| `local/playbill/<deviceId>/system/status` | Playbill → clients | Yes | Presence + LWT for this instance. |
+
+Headwaters fans these messages out to the PWA as `playbill_status` WebSocket events. The Headwaters REST surface is `GET /api/playbill/devices` (enumerate) and `POST /api/playbill/:deviceId/:feature/command` (issue a command).
+
+Implementation: [Headwaters `containers/backend/src/routes/playbill.js`](../../TrailCurrentHeadwaters/containers/backend/src/routes/playbill.js) and `containers/backend/src/mqtt.js` (`publishPlaybillCommand`).
+
 ### System Topics (tc/system/*)
 
 **NEEDS TO BE COMPLETED** - Document:

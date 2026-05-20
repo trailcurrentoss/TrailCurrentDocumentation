@@ -222,7 +222,41 @@ Key properties of this flow:
   transition events (entered / left a zone) are logged, and even those are
   rotated aggressively. See [CORE_PRINCIPLES.md](../CORE_PRINCIPLES.md).
 
-### Scenario 5: Offline Operation (No Cloud)
+### Scenario 5: CAN-Only Remote Control of Playbill (No MQTT, No Headwaters Service)
+
+A third-party CAN MCU — a steering-wheel button cluster, an IR receiver, a hard-buttons remote panel — drives a Playbill entertainment head **directly on the CAN bus**, with no MQTT, no Headwaters service, and no cloud involvement. This is the strongest end-to-end demonstration of the platform's wire-only operation: a button press to a working command, end to end, with the only shared dependency being the CAN bus itself.
+
+```
+Button MCU (ESP32 or any CAN-capable device)
+  ├─ User presses "Home"
+  ├─ Compose CAN frame:
+  │  - ID = 0x100 (PlaybillNavCmd0 — instance 0)
+  │  - DLC = 1, data[0] = 6  (NavKey.Home)
+  ├─ twai_transmit() / SocketCAN send
+  │
+  ▼
+CAN Bus (500 kbps, 120Ω terminated)
+  │
+  ▼
+Playbill instance 0 (Radxa Q6A)
+  ├─ CAN listener decodes frame against DBC
+  ├─ Routes to controller's command bus
+  ├─ Electron GUI navigates to Home screen
+  └─ Publishes PlaybillScreenStatus0 (0x105) on the bus
+
+  Optional listeners on the bus (Headwaters, other MCUs):
+    └─ Decode PlaybillScreenStatus0 to mirror current focus
+```
+
+**Why this path matters**:
+- **No MQTT broker required** between the remote and the head unit. Headwaters can be powered off and the remote still works.
+- **No deviceId / slug knowledge required** on the MCU side. The remote only needs to know the numeric `canInstance` (0/1/2) of the Playbill it's targeting.
+- **First press auto-wakes the head**: if no Electron GUI is connected to the Playbill controller, the *first* NavCmd frame triggers `system.launchGui` and is consumed — subsequent presses navigate normally. Like an Apple-TV remote.
+- **Multi-instance addressing** lives entirely in the CAN ID: ID `0x100` reaches instance 0, `0x110` reaches instance 1, `0x120` reaches instance 2. A remote that only targets `0x100` cannot accidentally control "the wrong" Playbill on a multi-Playbill rig.
+
+Full wire-level contract for MCU implementers: [Headwaters `DOCS/CAN-REMOTE.md`](../../TrailCurrentHeadwaters/DOCS/CAN-REMOTE.md).
+
+### Scenario 6: Offline Operation (No Cloud)
 
 The system is fully autonomous without cloud connectivity. All local control,
 sensor reading, and UI functions continue normally. The cloud bridge simply

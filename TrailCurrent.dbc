@@ -24,14 +24,17 @@ NS_ :
 	BA_SGTYPE_REL_
 	SG_MUL_VAL_
 
-BS_: 500000
+BS_:
 
-BU_: Bearing Torrent Tapper Solstice Borealis Headwaters Aftline Therma Plateau Picket Switchback Reservoir
+BU_: Bearing Torrent Tapper Solstice Borealis Headwaters Aftline Therma Plateau Picket Switchback Reservoir Playbill
 
 BO_ 0 OtaUpdateNotification: 3 Headwaters
  SG_ MacAddressByte1 : 7|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Reservoir
  SG_ MacAddressByte2 : 15|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Reservoir
  SG_ MacAddressByte3 : 23|8@0+ (1,0) [0|255] "" Borealis,Therma,Plateau,Aftline,Picket,Switchback,Reservoir
+
+BO_ 1 WifiConfigProvisioning: 8 Headwaters
+ SG_ Subcommand : 7|8@0+ (1,0) [1|4] "" Borealis,Bearing,Plateau,Solstice,Torrent,Picket,Aftline,Switchback,Therma,Milepost,Tapper,Reservoir
 
 BO_ 2 DiscoveryTrigger: 0 Headwaters
 
@@ -73,35 +76,47 @@ BO_ 9 GpsLatitudeLongitude: 8 Bearing
 
 BO_ 10 PicketStatus0: 2 Picket
  SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
 
 BO_ 11 PicketStatus1: 2 Picket
  SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
 
 BO_ 12 PicketStatus2: 2 Picket
  SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
 
 BO_ 13 PicketStatus3: 2 Picket
  SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
 
 BO_ 14 PicketStatus4: 2 Picket
  SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
 
 BO_ 15 PicketStatus5: 2 Picket
  SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
 
 BO_ 16 PicketStatus6: 2 Picket
  SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
 
 BO_ 17 PicketStatus7: 2 Picket
  SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
- SG_ DoorStatus9to10 : 15|8@0+ (1,0) [0|3] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
+
+BO_ 18 PicketStatus8: 2 Switchback
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
+
+BO_ 19 PicketStatus9: 2 Switchback
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
+
+BO_ 20 PicketStatus10: 2 Switchback
+ SG_ DoorStatus1to8 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ DoorStatus9to12 : 15|8@0+ (1,0) [0|15] "" Headwaters
 
 BO_ 21 TorrentBrightness0: 2 Vector__XXX
  SG_ ChannelIndex : 7|8@0+ (1,0) [0|7] "" Torrent
@@ -157,19 +172,17 @@ BO_ 29 TorrentStatus2: 8 Torrent
  SG_ Output7Value : 55|8@0+ (1,0) [0|255] "" Tapper,Headwaters
  SG_ Output8Value : 63|8@0+ (1,0) [0|255] "" Tapper,Headwaters
 
-BO_ 32 LevelingConfig: 7 Headwaters
- SG_ ConfigCommand : 7|8@0+ (1,0) [0|3] "" Plateau
- SG_ MountingSurface : 15|8@0+ (1,0) [0|2] "" Plateau
- SG_ VehicleLengthCm : 23|16@0+ (1,0) [0|65535] "cm" Plateau
- SG_ VehicleWidthCm : 39|16@0+ (1,0) [0|65535] "cm" Plateau
- SG_ SaveToNvs : 55|8@0+ (1,0) [0|1] "" Plateau
+BO_ 32 BorealisSafetyData: 8 Borealis
+ SG_ CarbonMonoxidePpm : 7|16@0+ (1,0) [0|1000] "ppm" Headwaters,Therma
+ SG_ LpgRatioScaled : 23|16@0+ (0.001,0) [0|65.535] "" Headwaters,Therma
+ SG_ AlarmFlags : 39|8@0+ (1,0) [0|255] "" Headwaters,Therma
 
 BO_ 31 EnvironmentSensorData: 8 Borealis
  SG_ TemperatureCelsius : 7|8@0+ (1,0) [-40|125] "degC" Headwaters,Therma
  SG_ TemperatureFahrenheit : 15|8@0+ (1,0) [-40|257] "degF" Headwaters
- SG_ HumidityScaled : 23|16@0+ (0.01,0) [0|100] "%" Headwaters
- SG_ TVOC : 39|16@0+ (1,0) [0|60000] "ppb" Headwaters
- SG_ eCO2 : 55|16@0+ (1,0) [400|60000] "ppm" Headwaters
+ SG_ HumidityScaled : 23|16@0+ (0.01,0) [0|100] "%" Headwaters,Therma
+ SG_ CO2Ppm : 39|16@0+ (1,0) [400|40000] "ppm" Headwaters
+ SG_ VOCIndex : 55|16@0+ (1,0) [1|500] "" Headwaters
 
 BO_ 33 BorealisCalibration: 2 Headwaters
  SG_ TempOffsetTenths : 7|16@0- (0.1,0) [-100|100] "degC" Borealis
@@ -188,19 +201,26 @@ BO_ 36 ShuntBasicData2: 5 Solstice
  SG_ Wattage : 15|16@0+ (1,0) [0|65535] "W" Headwaters
  SG_ TimeToGo : 31|16@0+ (1,0) [0|65535] "min" Headwaters
 
-BO_ 48 TiltData: 8 Plateau
+BO_ 54 LevelingConfig: 7 Headwaters
+ SG_ ConfigCommand : 7|8@0+ (1,0) [0|3] "" Plateau
+ SG_ MountingSurface : 15|8@0+ (1,0) [0|2] "" Plateau
+ SG_ VehicleLengthCm : 23|16@0+ (1,0) [0|65535] "cm" Plateau
+ SG_ VehicleWidthCm : 39|16@0+ (1,0) [0|65535] "cm" Plateau
+ SG_ SaveToNvs : 55|8@0+ (1,0) [0|1] "" Plateau
+
+BO_ 55 TiltData: 8 Plateau
  SG_ PitchScaled : 7|16@0- (0.01,0) [-327.68|327.67] "deg" Headwaters
  SG_ RollScaled : 23|16@0- (0.01,0) [-327.68|327.67] "deg" Headwaters
  SG_ FrontBackDiffMm : 39|16@0- (1,0) [-32768|32767] "mm" Headwaters
  SG_ LeftRightDiffMm : 55|16@0- (1,0) [-32768|32767] "mm" Headwaters
 
-BO_ 49 CornerData: 8 Plateau
+BO_ 56 CornerData: 8 Plateau
  SG_ FrontLeftMm : 7|16@0+ (1,0) [0|65535] "mm" Headwaters
  SG_ FrontRightMm : 23|16@0+ (1,0) [0|65535] "mm" Headwaters
  SG_ RearLeftMm : 39|16@0+ (1,0) [0|65535] "mm" Headwaters
  SG_ RearRightMm : 55|16@0+ (1,0) [0|65535] "mm" Headwaters
 
-BO_ 50 StatusData: 4 Plateau
+BO_ 57 StatusData: 4 Plateau
  SG_ StatusFlags : 7|8@0+ (1,0) [0|255] "" Headwaters
  SG_ CalibrationPacked : 15|8@0+ (1,0) [0|255] "" Headwaters
  SG_ MountingOrientation : 23|8@0+ (1,0) [0|2] "" Headwaters
@@ -262,6 +282,14 @@ BO_ 52 TorrentSequence1: 1 Vector__XXX
 BO_ 53 TorrentSequence2: 1 Vector__XXX
  SG_ SequenceType : 7|8@0+ (1,0) [0|1] "" Torrent
 
+BO_ 58 TrailerStatus: 3 Aftline
+ SG_ Connected : 7|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ LeftTurn : 6|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ RightTurn : 5|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ RunningLights : 4|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ Brakes : 3|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ TrailerVoltageMv : 15|16@0+ (1,0) [0|65535] "mV" Headwaters
+
 BO_ 62 WaterTankLevels: 3 Reservoir
  SG_ FreshWaterLevel : 7|8@0+ (1,0) [0|100] "%" Headwaters
  SG_ GreyWaterLevel : 15|8@0+ (1,0) [0|100] "%" Headwaters
@@ -284,27 +312,180 @@ BO_ 65 ThermaSetDesiredRequest: 2 Vector__XXX
 BO_ 66 ThermaSetThresholdRequest: 1 Vector__XXX
  SG_ RequestedThresholdDeciC : 7|8@0+ (0.1,0) [0.1|5] "degC" Therma
 
+BO_ 256 PlaybillNavCmd0: 1 Vector__XXX
+ SG_ NavKey : 7|8@0+ (1,0) [0|7] "" Playbill
+
+BO_ 257 PlaybillTransportCmd0: 5 Vector__XXX
+ SG_ Action : 7|8@0+ (1,0) [0|255] "" Playbill
+ SG_ Value : 15|32@0+ (1,0) [0|4294967295] "" Playbill
+
+BO_ 258 PlaybillTransportStatus0: 8 Playbill
+ SG_ Paused : 7|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ Muted : 6|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ SourceEnum : 5|6@0+ (1,0) [0|63] "" Headwaters
+ SG_ VolumePct : 15|8@0+ (1,0) [0|255] "%" Headwaters
+ SG_ PositionSec : 23|24@0+ (1,0) [0|16777215] "s" Headwaters
+ SG_ DurationSec : 47|24@0+ (1,0) [0|16777215] "s" Headwaters
+
+BO_ 259 PlaybillRadioTuneReq0: 6 Vector__XXX
+ SG_ Band : 7|8@0+ (1,0) [0|2] "" Playbill
+ SG_ FrequencyKHz : 15|32@0+ (1,0) [0|4294967295] "kHz" Playbill
+ SG_ Mode : 47|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 260 PlaybillRadioStatus0: 8 Playbill
+ SG_ Band : 7|8@0+ (1,0) [0|2] "" Headwaters
+ SG_ FrequencyKHz : 15|32@0+ (1,0) [0|4294967295] "kHz" Headwaters
+ SG_ SignalDbm : 47|8@0- (1,0) [-128|127] "dBm" Headwaters
+ SG_ Tuned : 55|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ Scanning : 54|1@0+ (1,0) [0|1] "" Headwaters
+
+BO_ 261 PlaybillScreenStatus0: 2 Playbill
+ SG_ ScreenEnum : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ GuiOpen : 15|1@0+ (1,0) [0|1] "" Headwaters
+
+BO_ 262 PlaybillSystemCmd0: 1 Vector__XXX
+ SG_ SysAction : 7|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 263 PlaybillLaunchSourceCmd0: 2 Vector__XXX
+ SG_ SourceEnum : 7|8@0+ (1,0) [0|63] "" Playbill
+ SG_ SubScreenEnum : 15|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 264 PlaybillVolumeCmd0: 2 Vector__XXX
+ SG_ VolAction : 7|8@0+ (1,0) [0|5] "" Playbill
+ SG_ Value : 15|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 265 PlaybillPresence0: 6 Playbill
+ SG_ MacAddressByte4 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ MacAddressByte5 : 15|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ MacAddressByte6 : 23|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionMajor : 31|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionMinor : 39|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionPatch : 47|8@0+ (1,0) [0|255] "" Headwaters
+
+BO_ 272 PlaybillNavCmd1: 1 Vector__XXX
+ SG_ NavKey : 7|8@0+ (1,0) [0|7] "" Playbill
+
+BO_ 273 PlaybillTransportCmd1: 5 Vector__XXX
+ SG_ Action : 7|8@0+ (1,0) [0|255] "" Playbill
+ SG_ Value : 15|32@0+ (1,0) [0|4294967295] "" Playbill
+
+BO_ 274 PlaybillTransportStatus1: 8 Playbill
+ SG_ Paused : 7|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ Muted : 6|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ SourceEnum : 5|6@0+ (1,0) [0|63] "" Headwaters
+ SG_ VolumePct : 15|8@0+ (1,0) [0|255] "%" Headwaters
+ SG_ PositionSec : 23|24@0+ (1,0) [0|16777215] "s" Headwaters
+ SG_ DurationSec : 47|24@0+ (1,0) [0|16777215] "s" Headwaters
+
+BO_ 275 PlaybillRadioTuneReq1: 6 Vector__XXX
+ SG_ Band : 7|8@0+ (1,0) [0|2] "" Playbill
+ SG_ FrequencyKHz : 15|32@0+ (1,0) [0|4294967295] "kHz" Playbill
+ SG_ Mode : 47|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 276 PlaybillRadioStatus1: 8 Playbill
+ SG_ Band : 7|8@0+ (1,0) [0|2] "" Headwaters
+ SG_ FrequencyKHz : 15|32@0+ (1,0) [0|4294967295] "kHz" Headwaters
+ SG_ SignalDbm : 47|8@0- (1,0) [-128|127] "dBm" Headwaters
+ SG_ Tuned : 55|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ Scanning : 54|1@0+ (1,0) [0|1] "" Headwaters
+
+BO_ 277 PlaybillScreenStatus1: 2 Playbill
+ SG_ ScreenEnum : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ GuiOpen : 15|1@0+ (1,0) [0|1] "" Headwaters
+
+BO_ 278 PlaybillSystemCmd1: 1 Vector__XXX
+ SG_ SysAction : 7|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 279 PlaybillLaunchSourceCmd1: 2 Vector__XXX
+ SG_ SourceEnum : 7|8@0+ (1,0) [0|63] "" Playbill
+ SG_ SubScreenEnum : 15|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 280 PlaybillVolumeCmd1: 2 Vector__XXX
+ SG_ VolAction : 7|8@0+ (1,0) [0|5] "" Playbill
+ SG_ Value : 15|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 281 PlaybillPresence1: 6 Playbill
+ SG_ MacAddressByte4 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ MacAddressByte5 : 15|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ MacAddressByte6 : 23|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionMajor : 31|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionMinor : 39|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionPatch : 47|8@0+ (1,0) [0|255] "" Headwaters
+
+BO_ 288 PlaybillNavCmd2: 1 Vector__XXX
+ SG_ NavKey : 7|8@0+ (1,0) [0|7] "" Playbill
+
+BO_ 289 PlaybillTransportCmd2: 5 Vector__XXX
+ SG_ Action : 7|8@0+ (1,0) [0|255] "" Playbill
+ SG_ Value : 15|32@0+ (1,0) [0|4294967295] "" Playbill
+
+BO_ 290 PlaybillTransportStatus2: 8 Playbill
+ SG_ Paused : 7|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ Muted : 6|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ SourceEnum : 5|6@0+ (1,0) [0|63] "" Headwaters
+ SG_ VolumePct : 15|8@0+ (1,0) [0|255] "%" Headwaters
+ SG_ PositionSec : 23|24@0+ (1,0) [0|16777215] "s" Headwaters
+ SG_ DurationSec : 47|24@0+ (1,0) [0|16777215] "s" Headwaters
+
+BO_ 291 PlaybillRadioTuneReq2: 6 Vector__XXX
+ SG_ Band : 7|8@0+ (1,0) [0|2] "" Playbill
+ SG_ FrequencyKHz : 15|32@0+ (1,0) [0|4294967295] "kHz" Playbill
+ SG_ Mode : 47|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 292 PlaybillRadioStatus2: 8 Playbill
+ SG_ Band : 7|8@0+ (1,0) [0|2] "" Headwaters
+ SG_ FrequencyKHz : 15|32@0+ (1,0) [0|4294967295] "kHz" Headwaters
+ SG_ SignalDbm : 47|8@0- (1,0) [-128|127] "dBm" Headwaters
+ SG_ Tuned : 55|1@0+ (1,0) [0|1] "" Headwaters
+ SG_ Scanning : 54|1@0+ (1,0) [0|1] "" Headwaters
+
+BO_ 293 PlaybillScreenStatus2: 2 Playbill
+ SG_ ScreenEnum : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ GuiOpen : 15|1@0+ (1,0) [0|1] "" Headwaters
+
+BO_ 294 PlaybillSystemCmd2: 1 Vector__XXX
+ SG_ SysAction : 7|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 295 PlaybillLaunchSourceCmd2: 2 Vector__XXX
+ SG_ SourceEnum : 7|8@0+ (1,0) [0|63] "" Playbill
+ SG_ SubScreenEnum : 15|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 296 PlaybillVolumeCmd2: 2 Vector__XXX
+ SG_ VolAction : 7|8@0+ (1,0) [0|5] "" Playbill
+ SG_ Value : 15|8@0+ (1,0) [0|255] "" Playbill
+
+BO_ 297 PlaybillPresence2: 6 Playbill
+ SG_ MacAddressByte4 : 7|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ MacAddressByte5 : 15|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ MacAddressByte6 : 23|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionMajor : 31|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionMinor : 39|8@0+ (1,0) [0|255] "" Headwaters
+ SG_ VersionPatch : 47|8@0+ (1,0) [0|255] "" Headwaters
+
 CM_ BU_ Bearing "Bearing (GNSS) module (ESP32). Reads GNSS data from a connected GPS receiver and broadcasts position, altitude, speed, course, and date/time onto the CAN bus. Transmit-only device.";
 CM_ BU_ Torrent "Torrent power distribution module (ESP32). 8-channel PWM module controlling MOSFET outputs for lights and accessories. Module address (0-2) set at compile time via TORRENT_ADDRESS build flag, allowing up to 3 modules on the same bus. Receives brightness commands (ID 0x15-0x17), toggle commands (ID 0x18-0x1A), and sequence commands (ID 0x33-0x35), one per module instance. Sends status reports (ID 0x1B-0x1D) showing current state of all 8 outputs. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
 CM_ BU_ Tapper "Tapper button panel (ESP32). Physical 8-button interface. Each button sends a toggle command to Torrent to turn a corresponding output channel on or off. Has 8 status LEDs that reflect current output states by listening to DeviceStatusReport messages.";
 CM_ BU_ Solstice "Solstice solar + battery gateway (ESP32-S3, Waveshare ESP32-S3-RS485-CAN). Reads Victron MPPT solar charge controller data via VE.Direct TEXT on UART1 (19200 baud, RX on GPIO1, TX on GPIO2) and Victron SmartShunt data via VE.Direct TEXT on UART2 (RX-only). Transmits MPPT solar data on ID 0x2C/0x2D and SmartShunt basic data (voltage, current, SOC, wattage, time-to-go) on ID 0x23/0x24. Receives SolarLoadControl (ID 0x2E) and commands the MPPT load output ON/OFF/Default via VE.Direct HEX SET on UART1 (register 0xEDAB). ShuntExtLive (0x2B) and ShuntExtHistory (0x2F) frames are transmitted with all-zero payload; populating them requires a VE.Direct HEX GET exchange with the SmartShunt, which needs a TX wire to the shunt that is not present on the current hardware revision.";
-CM_ BU_ Borealis "Borealis environment and air quality sensor module (ESP32-S3-Zero). Reads DHT22 for temperature/humidity and SGP30 for TVOC/eCO2. Sends all data in a single 8-byte CAN frame at ID 0x1F. Bytes 0-3 are backwards-compatible with the predecessor AirQualityModule format. Bytes 4-7 add TVOC and eCO2 readings. Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
+CM_ BU_ Borealis "Borealis environment and safety sensor module (Waveshare ESP32-S3-RS485-CAN). Reads four sensors over I2C/ADC: Sensirion SCD41 (photoacoustic NDIR — real CO2 plus temperature and humidity, via DFRobot SEN0536); Sensirion SGP40 (VOC Index 1-500, via DFRobot SEN0394); a factory-calibrated electrochemical carbon monoxide sensor (DFRobot SEN0466, 0-1000 ppm); and an MQ-6 propane/LPG sensor (DFRobot SEN0131, reports Rs/R0 ratio). Transmits two CAN frames at 1 Hz: EnvironmentSensorData (0x1F) carries temperature, humidity, CO2, and VOC Index; BorealisSafetyData (0x20) carries CO ppm, LPG Rs/R0, and an alarm-flags bitmask spanning all four hazards. Accepts BorealisCalibration (0x21) for temperature offset trim. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
 CM_ BU_ Headwaters "Headwaters in-vehicle compute (Raspberry Pi). CAN-to-MQTT bridge running a Python script that reads all CAN bus messages and publishes them as JSON over MQTT (with TLS). Also subscribes to MQTT and writes received commands back onto the CAN bus. Enables cloud connectivity and remote monitoring.";
 CM_ BU_ Aftline "Aftline trailer connector monitor (ESP32-C6). Monitors the standard 7-pin trailer connection for voltage, turn signals, brake signals, and running lights. Reports trailer connection state. Uses TwaiTaskBased library. Under active development.";
 CM_ BU_ Therma "Therma closed-loop thermostat (3 boards). Controller: Waveshare ESP32-S3-RS485-CAN — only board on the CAN bus. Owns the authoritative desired temperature and hysteresis threshold (persisted to NVS), runs the control loop, and broadcasts ThermaDesiredTemperature (0x3F) and ThermaStatus (0x40) at 1 Hz. Consumes current temperature from Borealis EnvironmentSensorData (0x1F). Any device on the bus can request a setpoint or threshold change via ThermaSetDesiredRequest (0x41) or ThermaSetThresholdRequest (0x42); Therma validates, clamps to safe range, persists, and immediately re-broadcasts the new authoritative value. Drives two Waveshare ESP32-S3-Relay-1CH relay boards (heater + cooler) over direct GPIO pin-to-pin signalling — the relay boards are not on the CAN bus. Heating and cooling outputs are mutually exclusive and enforced by the controller. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN (controller only).";
-CM_ BU_ Plateau "Plateau vehicle leveling module (ESP32-S3-Zero with Adafruit BNO055 IMU). Reads pitch and roll from the BNO055 9-DOF IMU and computes per-corner height adjustments based on configurable vehicle dimensions. Supports three mounting orientations (floor, left wall, right wall) with automatic axis remapping. BNO055 calibration offsets are auto-saved to NVS when fully calibrated. Receives leveling configuration commands via CAN (ID 0x20). Transmits tilt data at 2Hz (ID 0x30), corner height data (ID 0x31), and calibration status every 2s (ID 0x32). Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
-CM_ BU_ Picket "Picket cabinet/door sensor module (ESP32-S3, Waveshare ESP32-S3-RS485-CAN). Monitors up to 13 magnetic reed switch inputs to detect open/closed state of cabinet doors and enclosures. Module address (0-7) set at compile time via PICKET_ADDRESS build flag, allowing up to 8 modules on the same bus (CAN IDs 0x0A-0x11). Onboard TJA1051 CAN transceiver. ESP-IDF firmware. Supports OTA firmware updates via CAN.";
+CM_ BU_ Plateau "Plateau vehicle leveling module (ESP32-S3-Zero with Adafruit BNO055 IMU). Firmware not yet shipping. Reads pitch and roll from the BNO055 9-DOF IMU and computes per-corner height adjustments based on configurable vehicle dimensions. Supports three mounting orientations (floor, left wall, right wall) with automatic axis remapping. BNO055 calibration offsets are auto-saved to NVS when fully calibrated. Receives leveling configuration commands via CAN (ID 0x36). Transmits tilt data at 2Hz (ID 0x37), corner height data (ID 0x38), and calibration status every 2s (ID 0x39). Plateau's CAN IDs were reallocated 2026-05-19 from the original 0x20/0x30/0x31/0x32 to the contiguous 0x36-0x39 block when Borealis claimed 0x20 for its safety frame. Supports OTA firmware updates and WiFi credential provisioning via CAN. Uses TwaiTaskBased and OtaUpdate libraries.";
+CM_ BU_ Picket "Picket cabinet/door sensor module (ESP32-S3, Waveshare ESP32-S3-RS485-CAN). Monitors up to 12 magnetic reed switch inputs to detect open/closed state of cabinet doors and enclosures. Module address (0-7) set at compile time via PICKET_ADDRESS build flag, allowing up to 8 modules on the same bus (CAN IDs 0x0A-0x11). Onboard TJA1051 CAN transceiver. ESP-IDF firmware. Supports OTA firmware updates via CAN.";
 CM_ BU_ Switchback "Switchback relay control module (ESP32-S3, Waveshare ESP32-S3-ETH-8DI-8RO-C). Controls 8 mechanical relays for switching high-current loads. Module address (0-2) set at compile time via SWITCHBACK_ADDRESS build flag, allowing up to 3 modules on the same bus. Receives toggle commands via CAN (ID 0x25-0x27, one per module instance). Sends relay status bitmask via CAN (ID 0x28-0x2A). Relays are binary on/off (not PWM). 8 optocoupler-isolated digital inputs. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
 CM_ BU_ Reservoir "Reservoir water tank level monitor (ESP32-S3, Waveshare ESP32-S3-RS485-CAN). Monitors up to 3 water tanks (fresh, grey, black) using 4 contactless level sensors per tank mounted at 25%, 50%, 75%, and 100% levels. Sensors output HIGH when water is detected. Reports each tank level as a 0-100% value in a single CAN frame (ID 0x3E). Percentage-based reporting allows future migration to analog sensors without CAN protocol changes. ESP-IDF firmware. Supports OTA firmware updates and WiFi credential provisioning via CAN.";
+CM_ BU_ Playbill "Playbill in-rig media center (Radxa Q6A, full Linux desktop). Electron 10ft TV UI plus an always-running Node.js controller daemon (playbill-controller systemd user service) that owns the MQTT connection and mpv playback. Up to 3 instances per rig, each with a numeric canInstance (0/1/2) determining its CAN ID block (0x100/0x110/0x120 base). Receives nav, transport, radio-tune, system, source-launch, and volume commands from CAN-side senders (touchscreen MCU, dash button panel, IR-remote MCU); transmits transport status, radio status, screen status, and presence heartbeat. MQTT-only metadata (titles, artwork URLs, OAuth tokens) bypasses the CAN bridge. See docs/app/architecture-v2.md and docs/app/dbc-additions.md.";
 
 CM_ BO_ 2 "Module self-discovery trigger. Broadcast by Headwaters with no payload (DLC 0). All unconfigured modules on the bus respond by connecting to WiFi and advertising a _trailcurrent._tcp mDNS service with TXT records: type (module type), addr (instance address), canid (hex CAN ID), fw (firmware version). Headwaters browses mDNS to discover the module, then sends GET /discovery/confirm to acknowledge. The module marks itself configured in NVS and tears down WiFi. Only unconfigured modules respond; configured modules ignore this message silently.";
 CM_ BO_ 3 "Discovery reset. Targeted by MAC address (same format as OTA trigger). Clears the configured flag in NVS on the targeted module so it responds to the next DiscoveryTrigger (0x02) broadcast.";
 CM_ BO_ 0 "OTA (Over-The-Air) firmware update notification. Sent by Headwaters when a new firmware build is available. Contains the last 3 bytes of the target device MAC address. Each device on the bus checks if the MAC matches its own hostname (formatted as esp32-XXYYZZ). If it matches, the device pauses normal operation, connects to WiFi, and checks for the OTA update. This allows targeted firmware updates to individual devices without disrupting others.";
+
+CM_ BO_ 1 "WiFi credential push from Headwaters to every ESP-IDF module on the bus. Multi-frame protocol — Headwaters transmits a sequence of 8-byte frames all on CAN ID 0x01, discriminated by byte 0 (Subcommand): (1) Start frame: byte 1 = ssid_len, byte 2 = pass_len, byte 3 = ssid_chunks (ceil(ssid_len/6)), byte 4 = pass_chunks (ceil(pass_len/6)), bytes 5-7 zero. (2) SSID chunk: byte 1 = chunk index, bytes 2-7 = up to 6 bytes of SSID text. (3) Password chunk: byte 1 = chunk index, bytes 2-7 = up to 6 bytes of password text. (4) End frame: byte 1 = XOR checksum across all SSID and password bytes, bytes 2-7 zero. Frames are sent with a 50 ms inter-frame delay. Receivers buffer chunks indexed by chunk number, validate the checksum on the End frame, and commit the credentials to NVS on success. Every ESP-IDF module defines CAN_ID_WIFI_CONFIG = 0x01 and listens for this. Implementation: TrailCurrentHeadwaters/containers/backend/src/mqtt.js:980-1043.";
 CM_ BO_ 6 "GPS date and time data from the GNSS receiver. Sent periodically by Bearing. Year is encoded as a 16-bit unsigned integer split across bytes 0 and 1 (big-endian). Month, day, hour, minute, and second are each a single byte with their natural value. Time is in UTC.";
 CM_ BO_ 7 "GPS navigation data: number of satellites being tracked, speed over ground, course over ground (heading), and the active GNSS constellation. Speed is in knots multiplied by 100 (divide raw value by 100 to get knots). Course is in degrees multiplied by 10 (divide raw value by 10 to get degrees, 0-360). GNSS mode indicates which satellite constellation combination is active (GPS, BeiDou, GLONASS, or combinations thereof).";
 CM_ BO_ 8 "GPS altitude above mean sea level. Encoded as a 32-bit unsigned integer representing altitude in meters multiplied by 100 (divide raw value by 100 to get meters). For example, a raw value of 152340 means 1523.40 meters.";
 CM_ BO_ 9 "GPS position: latitude and longitude. Each coordinate uses 4 bytes: a sign byte (0 = North/East positive, 1 = South/West negative) followed by a 24-bit unsigned integer representing the absolute value multiplied by 10000. To decode: take the 24-bit value, divide by 10000, and apply the sign. For example, sign=0 and raw=339876 means +33.9876 degrees.";
-CM_ BO_ 10 "Picket status from module with address 0 (default). Sent at 5Hz. Each bit represents one reed switch input: 1 = door open (no magnet), 0 = door closed (magnet present). Byte 0 contains doors 1-8 (bit 0 = door 1 LSB, bit 7 = door 8 MSB). Byte 1 bits 0-4 contain doors 9-13, bits 5-7 are reserved. CAN IDs 0x0A through 0x11 share this identical signal layout, each sent by a different physical module with PICKET_ADDRESS build flag 0-7.";
+CM_ BO_ 10 "Picket status from module with address 0 (default). Sent at 5Hz. Each bit represents one reed switch input: 1 = door open (no magnet), 0 = door closed (magnet present). Byte 0 contains doors 1-8 (bit 0 = door 1 LSB, bit 7 = door 8 MSB). Byte 1 bits 0-4 contain doors 9-13, bits 5-7 are reserved. CAN IDs 0x0A through 0x11 share this identical signal layout, each sent by a different physical module with PICKET_ADDRESS build flag 0-7. CAN IDs 0x12-0x14 (PicketStatus8/9/10) extend this address pool with Switchback modules broadcasting their 8 DIs in the same format (byte 1 always 0x00 since Switchback has no inputs 9-12).";
 CM_ BO_ 11 "Picket status from module with build address 1. Same signal layout as PicketStatus0 (ID 0x0A). See that message for full signal description.";
 CM_ BO_ 12 "Picket status from module with build address 2. Same signal layout as PicketStatus0 (ID 0x0A).";
 CM_ BO_ 13 "Picket status from module with build address 3. Same signal layout as PicketStatus0 (ID 0x0A).";
@@ -312,6 +493,9 @@ CM_ BO_ 14 "Picket status from module with build address 4. Same signal layout a
 CM_ BO_ 15 "Picket status from module with build address 5. Same signal layout as PicketStatus0 (ID 0x0A).";
 CM_ BO_ 16 "Picket status from module with build address 6. Same signal layout as PicketStatus0 (ID 0x0A).";
 CM_ BO_ 17 "Picket status from module with build address 7. Same signal layout as PicketStatus0 (ID 0x0A).";
+CM_ BO_ 18 "Reed-switch / digital-input status from a Switchback module with SWITCHBACK_ADDRESS=0. Sent at 5Hz. Identical wire format to PicketStatus0 (ID 0x0A): byte 0 carries DI1-DI8 (1 = open / no current through optocoupler, 0 = closed). Byte 1 is always 0x00 because the Switchback hardware exposes only 8 inputs vs Picket's 12. Decoded by the same Headwaters consumer code as the rest of the Picket family. CAN IDs 0x12-0x14 extend the Picket address pool (0x0A-0x11) for Switchback DI broadcasts.";
+CM_ BO_ 19 "Reed-switch / digital-input status from a Switchback module with SWITCHBACK_ADDRESS=1. Same signal layout as PicketStatus8 (ID 0x12).";
+CM_ BO_ 20 "Reed-switch / digital-input status from a Switchback module with SWITCHBACK_ADDRESS=2. Same signal layout as PicketStatus8 (ID 0x12).";
 CM_ BO_ 21 "Brightness control command for Torrent module instance 0. Sets a specific PWM brightness level (0-255) for one of the 8 output channels. Byte 0 selects the channel (0-7), byte 1 sets the brightness level. A value of 0 turns the channel fully off, 255 is full brightness. CAN IDs 0x15-0x17 share this identical signal layout, each targeting a different physical Torrent module.";
 CM_ BO_ 22 "Brightness control command for Torrent module instance 1. Same signal layout as TorrentBrightness0 (ID 0x15).";
 CM_ BO_ 23 "Brightness control command for Torrent module instance 2. Same signal layout as TorrentBrightness0 (ID 0x15).";
@@ -324,7 +508,7 @@ CM_ BO_ 29 "Status report from Torrent module instance 2. Same signal layout as 
 CM_ BO_ 51 "Light sequence animation command for Torrent module instance 0. Triggers a pre-programmed light show effect. Byte 0 value 0 starts the interior sequence (smooth fade in/out followed by a chase pattern on outputs 5-8). Byte 0 value 1 starts the exterior sequence (smooth fade in/out followed by an alternating flash on outputs 3-4). Sequences run to completion before normal control resumes. CAN IDs 0x33-0x35 share this identical signal layout, each targeting a different physical Torrent module.";
 CM_ BO_ 52 "Light sequence animation command for Torrent module instance 1. Same signal layout as TorrentSequence0 (ID 0x33).";
 CM_ BO_ 53 "Light sequence animation command for Torrent module instance 2. Same signal layout as TorrentSequence0 (ID 0x33).";
-CM_ BO_ 31 "Environment sensor data from Borealis. Bytes 0-3 are backwards-compatible: byte 0 is temperature in whole degrees Celsius, byte 1 is temperature in whole degrees Fahrenheit (F = (C * 9 + 3) / 5 + 32), bytes 2-3 are a 16-bit big-endian humidity value multiplied by 100. Bytes 4-5 are TVOC in ppb (16-bit big-endian, 0-60000). Bytes 6-7 are eCO2 in ppm (16-bit big-endian, 400-60000). TVOC and eCO2 read from an SGP30 sensor. The SGP30 needs ~15 seconds warm-up; initial values are TVOC=0, eCO2=400.";
+CM_ BO_ 31 "Environment sensor data from Borealis. Cycle time 1000 ms. Bytes 0-1 carry temperature: byte 0 is whole degrees Celsius, byte 1 is whole degrees Fahrenheit (F = (C * 9 + 3) / 5 + 32). Bytes 2-3 are a 16-bit big-endian humidity value multiplied by 100 (so 4523 means 45.23%RH). Bytes 4-5 are real CO2 in ppm (16-bit big-endian, 400-40000) from a Sensirion SCD41 photoacoustic NDIR sensor — this is real CO2, not the eCO2 estimate the previous SGP30 generation produced. Bytes 6-7 are VOC Index (16-bit big-endian, 1-500) from a Sensirion SGP40 — a relative trending index where 100 is the running average and higher values mean more VOCs. Temperature, humidity, and CO2 come from the same SCD41 sample. The SCD41 needs ~5 seconds between measurements; the SGP40 needs roughly the same warm-up the SGP30 did. Note: the byte-4-7 semantics changed when Borealis moved from DHT22+SGP30 to SCD41+SGP40 — any consumer that decoded bytes 4-5 as TVOC ppb or bytes 6-7 as eCO2 ppm needs to be updated.";
 CM_ BO_ 33 "Temperature calibration offset for Borealis. Sent by Headwaters. Bytes 0-1 are a signed 16-bit big-endian value in tenths of degrees Celsius (e.g. -28 = -2.8C). Stored to NVS on receipt and applied to all SHT31 temperature readings before conversion or transmission.";
 CM_ BO_ 35 "SmartShunt basic data part 1, transmitted by Solstice from Victron SmartShunt VE.Direct TEXT fields. Reports core battery metrics. Battery voltage is split into whole number (byte 0) and decimal part (byte 1) - combine as: voltage = byte0 + byte1/100. Byte 2 indicates if current is flowing out of the battery (1 = discharging/negative, 0 = charging/positive). Current is split similarly into whole (byte 3) and decimal (byte 4). State of charge percentage is split into whole (byte 5) and decimal (byte 6). For example: bytes 13, 45, 1, 5, 30, 85, 50 means 13.45V, -5.30A discharge, 85.50% SOC.";
 CM_ BO_ 36 "SmartShunt basic data part 2, transmitted by Solstice from Victron SmartShunt VE.Direct TEXT fields. Byte 0 indicates if wattage is negative (0xFF = battery discharging/negative, 0x00 = charging/positive). Bytes 1-2 form a 16-bit big-endian unsigned value for the absolute wattage in whole watts. Bytes 3-4 form a 16-bit big-endian unsigned value for time-to-go in minutes (how long until the battery is empty at the current discharge rate). For example: bytes 0xFF, 0x01, 0x2C, 0x02, 0x58 means -300W discharge, 600 minutes remaining.";
@@ -334,10 +518,13 @@ CM_ BO_ 39 "Relay toggle command for Switchback module instance 2. Same signal l
 CM_ BO_ 40 "Relay status report from Switchback module instance 0. Sent immediately on state change (event-driven, not periodic). Byte 0 is a bitmask of relay states: bit 0 = CH1, bit 1 = CH2, ... bit 7 = CH8. Value 1 = relay ON (energized), 0 = relay OFF. CAN IDs 0x28-0x2A share this identical signal layout, each sent by a different physical Switchback module.";
 CM_ BO_ 41 "Relay status report from Switchback module instance 1. Same signal layout as SwitchbackStatus0 (ID 0x28).";
 CM_ BO_ 42 "Relay status report from Switchback module instance 2. Same signal layout as SwitchbackStatus0 (ID 0x28).";
-CM_ BO_ 32 "Leveling configuration command for Plateau. Byte 0 is the command type: 0x01 = set configuration (bytes 1-6 contain mounting surface, vehicle length, vehicle width, and save flag), 0x02 = request immediate status report on ID 0x32, 0x03 = zero/tare calibration (reserved). For command 0x01: byte 1 is the mounting surface (0=floor, 1=left wall, 2=right wall), bytes 2-3 are vehicle length in cm (big-endian uint16), bytes 4-5 are vehicle width in cm (big-endian uint16), byte 6 = 0x01 to persist to NVS. Configuration is applied immediately (including axis remap) even without saving.";
-CM_ BO_ 48 "Vehicle tilt and height difference data from the BNO055 IMU. Sent at 2Hz (500ms interval). Pitch and roll are in degrees multiplied by 100 as signed 16-bit big-endian integers (divide by 100 for degrees). Positive pitch = front tilted up. Positive roll = right side tilted up. Front-back and left-right height differences are in millimeters, computed from tilt angles and configured vehicle dimensions using: diff_mm = dimension_cm * 10 * tan(angle_rad).";
-CM_ BO_ 49 "Per-corner height adjustment data. Derived from pitch/roll and vehicle dimensions. Values represent how much each corner needs to be raised to achieve level, normalized so the lowest corner = 0. All values are unsigned 16-bit big-endian in millimeters. Corners are: front-left, front-right, rear-left, rear-right.";
-CM_ BO_ 50 "Vehicle leveling system status. Sent every 2 seconds. Byte 0 is a flags bitmask: bit 0 = IMU connected, bit 1 = fully calibrated (cal_sys==3), bit 2 = leveling active. Byte 1 is packed BNO055 calibration levels: bits 7-6 = system (0-3), bits 5-4 = gyro (0-3), bits 3-2 = accel (0-3), bits 1-0 = mag (0-3). Byte 2 is the current mounting surface enum (0=floor, 1=left wall, 2=right wall). Byte 3 is reserved.";
+CM_ BO_ 32 "Combined safety/alarm frame from Borealis covering all four hazards on a single ID. Bytes 0-1: carbon monoxide concentration in ppm (big-endian uint16, 0-1000 from a factory-calibrated electrochemical sensor — SEN0466). Bytes 2-3: propane/LPG Rs/R0 ratio scaled by 1000 (big-endian uint16; lower values mean more gas present — derived from an MQ-6 sensor, SEN0131). Byte 4: alarm flags bitmask — bit 0 CO warn, bit 1 CO alarm, bit 2 LPG warn, bit 3 LPG alarm, bit 4 CO2 warn, bit 5 CO2 alarm, bit 6 VOC alarm. Bytes 5-7: reserved (zero-padded). Borealis evaluates alarm thresholds on-board (CO alarm >=200 ppm / warn >=70 ppm; LPG alarm Rs/R0 <0.3 / warn <0.5; CO2 alarm >=2500 ppm / warn >=1500 ppm referencing the value transmitted on EnvironmentSensorData; VOC alarm at VOC Index >=400). Cycle time 1000 ms. Consumers should treat byte 4 as the source of truth for alarm state and use bytes 0-3 for trending only.";
+
+CM_ BO_ 58 "Trailer 7-pin connector status from Aftline. Byte 0 is a flags bitmask: bit 0 connected (any voltage present on the trailer pigtail), bit 1 left_turn, bit 2 right_turn, bit 3 running_lights, bit 4 brakes. Bytes 1-2 are the measured trailer-side supply voltage in millivolts (big-endian uint16) from the ADC channel on Aftline's voltage divider. Reported on the rig CAN bus while a trailer is plugged in. Aftline reads the 7-pin signal lines via discrete GPIO inputs (active-low through opto-isolators) and the trailer battery line via an ADC divider.";
+CM_ BO_ 54 "Leveling configuration command for Plateau. Byte 0 is the command type: 0x01 = set configuration (bytes 1-6 contain mounting surface, vehicle length, vehicle width, and save flag), 0x02 = request immediate status report on ID 0x39, 0x03 = zero/tare calibration (reserved). For command 0x01: byte 1 is the mounting surface (0=floor, 1=left wall, 2=right wall), bytes 2-3 are vehicle length in cm (big-endian uint16), bytes 4-5 are vehicle width in cm (big-endian uint16), byte 6 = 0x01 to persist to NVS. Configuration is applied immediately (including axis remap) even without saving. Previously transmitted on 0x20; moved to 0x36 (2026-05-19) when Borealis claimed 0x20.";
+CM_ BO_ 55 "Vehicle tilt and height difference data from the BNO055 IMU. Sent at 2Hz (500ms interval). Pitch and roll are in degrees multiplied by 100 as signed 16-bit big-endian integers (divide by 100 for degrees). Positive pitch = front tilted up. Positive roll = right side tilted up. Front-back and left-right height differences are in millimeters, computed from tilt angles and configured vehicle dimensions using: diff_mm = dimension_cm * 10 * tan(angle_rad). Previously transmitted on 0x30; moved to 0x37 (2026-05-19).";
+CM_ BO_ 56 "Per-corner height adjustment data. Derived from pitch/roll and vehicle dimensions. Values represent how much each corner needs to be raised to achieve level, normalized so the lowest corner = 0. All values are unsigned 16-bit big-endian in millimeters. Corners are: front-left, front-right, rear-left, rear-right. Previously transmitted on 0x31; moved to 0x38 (2026-05-19).";
+CM_ BO_ 57 "Vehicle leveling system status. Sent every 2 seconds. Byte 0 is a flags bitmask: bit 0 = IMU connected, bit 1 = fully calibrated (cal_sys==3), bit 2 = leveling active. Byte 1 is packed BNO055 calibration levels: bits 7-6 = system (0-3), bits 5-4 = gyro (0-3), bits 3-2 = accel (0-3), bits 1-0 = mag (0-3). Byte 2 is the current mounting surface enum (0=floor, 1=left wall, 2=right wall). Byte 3 is reserved. Previously transmitted on 0x32; moved to 0x39 (2026-05-19).";
 CM_ BO_ 44 "Solar MPPT charge controller data part 1, from the Victron MPPT solar charger. Panel voltage is split into whole (byte 0) and decimal (byte 1) - combine as: panelV = byte0 + byte1/100. Bytes 2-3 form a 16-bit big-endian value for solar power in watts. Battery voltage (as seen by the charger) is split into whole (byte 4) and decimal (byte 5). Byte 6 is the solar charge status enum from the Victron CS field (0 = Off, 2 = Fault, 3 = Bulk, 4 = Absorption, 5 = Float).";
 CM_ BO_ 45 "Solar MPPT charge controller data part 2, from the Victron MPPT solar charger. Byte 0 indicates if panel current is negative (1 = yes, 0 = no). Panel current is split into whole number (byte 1) and decimal (byte 2) - combine as: current = byte1 + byte2/100 amps. Apply sign from byte 0.";
 CM_ BO_ 46 "Solar MPPT load output control command. Sent to Solstice to control the Victron MPPT load output terminal via VE.Direct HEX protocol (register 0xEDAB). Byte 0 is the desired load state: 0 = OFF, 1 = ON, 4 = Default (use MPPT built-in algorithm).";
@@ -370,8 +557,8 @@ CM_ SG_ 9 LatitudeSign "Sign of latitude: 0 = positive (North), 1 = negative (So
 CM_ SG_ 9 LatitudeRaw "Absolute value of latitude in degrees. Raw 24-bit value is degrees multiplied by 10000. The factor of 0.0001 converts automatically. Combine with LatitudeSign for the final value. Example: sign=0, raw=339876 means +33.9876 degrees North.";
 CM_ SG_ 9 LongitudeSign "Sign of longitude: 0 = positive (East), 1 = negative (West).";
 CM_ SG_ 9 LongitudeRaw "Absolute value of longitude in degrees. Raw 24-bit value is degrees multiplied by 10000. The factor of 0.0001 converts automatically. Combine with LongitudeSign for the final value.";
-CM_ SG_ 10 DoorStatus1to8 "Bitmask of door/cabinet reed switch states for inputs 1-8. Each bit represents one input: bit 0 = door 1 (RSW01), bit 1 = door 2 (RSW02), ... bit 7 = door 8 (RSW08). Value 1 = door open (reed switch open, no magnet nearby). Value 0 = door closed (reed switch closed, magnet present). Applies identically to CAN IDs 0x0A through 0x11.";
-CM_ SG_ 10 DoorStatus9to10 "Bitmask of door/cabinet reed switch states for inputs 9-10. Bit 0 = door 9 (RSW09), bit 1 = door 10 (RSW10). Bits 2-7 are reserved and always 0. Value 1 = door open, 0 = door closed. Applies identically to CAN IDs 0x0A through 0x11.";
+CM_ SG_ 10 DoorStatus1to8 "Bitmask of door/cabinet reed switch states for inputs 1-8. Each bit represents one input: bit 0 = door 1 (RSW01), bit 1 = door 2 (RSW02), ... bit 7 = door 8 (RSW08). Value 1 = door open (reed switch open, no magnet nearby). Value 0 = door closed (reed switch closed, magnet present). Applies identically to CAN IDs 0x0A through 0x11 (Picket modules) and 0x12 through 0x14 (Switchback modules — DI1-DI8 in dry-contact mode).";
+CM_ SG_ 10 DoorStatus9to12 "Bitmask of door/cabinet reed switch states for inputs 9-12. Bit 0 = door 9 (RSW09), bit 1 = door 10 (RSW10), bit 2 = door 11 (RSW11), bit 3 = door 12 (RSW12). Bits 4-7 are reserved and always 0. Value 1 = door open, 0 = door closed. Applies identically to CAN IDs 0x0A through 0x11 (Picket). For CAN IDs 0x12-0x14 (Switchback), this byte is always 0x00 because Switchback hardware exposes only 8 digital inputs.";
 CM_ SG_ 21 ChannelIndex "Output channel number to control (0-7). Channel 0 corresponds to Output 1, channel 7 to Output 8.";
 CM_ SG_ 21 BrightnessLevel "PWM brightness level for the selected channel. 0 = fully off, 255 = fully on. Values in between produce proportional brightness via PWM.";
 CM_ SG_ 24 ButtonOrCommand "Button index or special command code. Values 0-7: toggle the corresponding output channel (0=Output1 ... 7=Output8). Value 8: all-channels command (use CommandValue byte). Value 9: turn all channels on (when CommandValue=1).";
@@ -391,23 +578,23 @@ CM_ SG_ 31 HumidityScaled "Relative humidity percentage. Raw 16-bit value is hum
 CM_ SG_ 31 TVOC "Total Volatile Organic Compounds in parts per billion from the SGP30 sensor. Range 0-60000 ppb. Air quality interpretation: 0-65 Excellent, 65-220 Good, 220-660 Moderate, 660-2200 Poor, 2200+ Unhealthy. Reads 0 during the ~15 second warm-up period.";
 CM_ SG_ 31 eCO2 "Equivalent CO2 concentration in parts per million from the SGP30 sensor. Range 400-60000 ppm. Levels: <400 Low (fresh/outdoor air), 400-999 Normal (well-ventilated indoor), 1000-1999 High (poor ventilation), >=2000 Alarm (immediate ventilation needed). Reads 400 during warm-up.";
 CM_ SG_ 33 TempOffsetTenths "Signed temperature calibration offset in tenths of a degree Celsius. Applied to raw SHT31 readings to compensate for self-heating or sensor placement. For example, -28 means subtract 2.8C from the raw reading.";
-CM_ SG_ 32 ConfigCommand "Configuration command type. 0x01 = set vehicle config (use remaining bytes). 0x02 = request immediate status report on CAN ID 0x32. 0x03 = zero/tare calibration reset (reserved for future use).";
-CM_ SG_ 32 MountingSurface "Mounting orientation of the IMU on the vehicle. 0 = floor (horizontal, default), 1 = left wall (vertical, left side), 2 = right wall (vertical, right side). Determines BNO055 axis remapping for correct pitch/roll interpretation.";
-CM_ SG_ 32 VehicleLengthCm "Vehicle length in centimeters, front axle to rear axle. 16-bit big-endian unsigned. Used to compute front-to-back height difference from pitch angle. Default 500 (5 meters).";
-CM_ SG_ 32 VehicleWidthCm "Vehicle width in centimeters, left wheel to right wheel. 16-bit big-endian unsigned. Used to compute left-to-right height difference from roll angle. Default 200 (2 meters).";
-CM_ SG_ 32 SaveToNvs "Set to 0x01 to persist the configuration to NVS flash so it survives reboot. Set to 0x00 for temporary (session-only) configuration change.";
-CM_ SG_ 48 PitchScaled "Vehicle pitch angle in degrees, multiplied by 100. Signed 16-bit big-endian. Divide by 100 for degrees. Positive = front tilted up relative to rear.";
-CM_ SG_ 48 RollScaled "Vehicle roll angle in degrees, multiplied by 100. Signed 16-bit big-endian. Divide by 100 for degrees. Positive = right side tilted up relative to left.";
-CM_ SG_ 48 FrontBackDiffMm "Height difference front-to-back in millimeters. Signed 16-bit big-endian. Positive = front is higher than rear. Computed as vehicle_length_cm * 10 * tan(pitch_rad).";
-CM_ SG_ 48 LeftRightDiffMm "Height difference left-to-right in millimeters. Signed 16-bit big-endian. Positive = right side is higher than left. Computed as vehicle_width_cm * 10 * tan(roll_rad).";
-CM_ SG_ 49 FrontLeftMm "Front-left corner height adjustment in millimeters. Amount this corner needs to be raised to achieve level. Normalized so the lowest corner = 0.";
-CM_ SG_ 49 FrontRightMm "Front-right corner height adjustment in millimeters. Normalized so the lowest corner = 0.";
-CM_ SG_ 49 RearLeftMm "Rear-left corner height adjustment in millimeters. Normalized so the lowest corner = 0.";
-CM_ SG_ 49 RearRightMm "Rear-right corner height adjustment in millimeters. Normalized so the lowest corner = 0.";
-CM_ SG_ 50 StatusFlags "Bitmask of system status flags. Bit 0 (0x01): IMU connected and communicating. Bit 1 (0x02): BNO055 fully calibrated (system calibration level = 3). Bit 2 (0x04): leveling computation active.";
-CM_ SG_ 50 CalibrationPacked "Packed BNO055 calibration status. Each field is 0-3 where 3 = fully calibrated. Bits 7-6: system cal. Bits 5-4: gyro cal. Bits 3-2: accelerometer cal. Bits 1-0: magnetometer cal.";
-CM_ SG_ 50 MountingOrientation "Current mounting surface configuration. 0 = floor, 1 = left wall, 2 = right wall. Reflects the active axis remap mode.";
-CM_ SG_ 50 Reserved0 "Reserved byte, always 0x00.";
+CM_ SG_ 54 ConfigCommand "Configuration command type. 0x01 = set vehicle config (use remaining bytes). 0x02 = request immediate status report on CAN ID 0x39. 0x03 = zero/tare calibration reset (reserved for future use).";
+CM_ SG_ 54 MountingSurface "Mounting orientation of the IMU on the vehicle. 0 = floor (horizontal, default), 1 = left wall (vertical, left side), 2 = right wall (vertical, right side). Determines BNO055 axis remapping for correct pitch/roll interpretation.";
+CM_ SG_ 54 VehicleLengthCm "Vehicle length in centimeters, front axle to rear axle. 16-bit big-endian unsigned. Used to compute front-to-back height difference from pitch angle. Default 500 (5 meters).";
+CM_ SG_ 54 VehicleWidthCm "Vehicle width in centimeters, left wheel to right wheel. 16-bit big-endian unsigned. Used to compute left-to-right height difference from roll angle. Default 200 (2 meters).";
+CM_ SG_ 54 SaveToNvs "Set to 0x01 to persist the configuration to NVS flash so it survives reboot. Set to 0x00 for temporary (session-only) configuration change.";
+CM_ SG_ 55 PitchScaled "Vehicle pitch angle in degrees, multiplied by 100. Signed 16-bit big-endian. Divide by 100 for degrees. Positive = front tilted up relative to rear.";
+CM_ SG_ 55 RollScaled "Vehicle roll angle in degrees, multiplied by 100. Signed 16-bit big-endian. Divide by 100 for degrees. Positive = right side tilted up relative to left.";
+CM_ SG_ 55 FrontBackDiffMm "Height difference front-to-back in millimeters. Signed 16-bit big-endian. Positive = front is higher than rear. Computed as vehicle_length_cm * 10 * tan(pitch_rad).";
+CM_ SG_ 55 LeftRightDiffMm "Height difference left-to-right in millimeters. Signed 16-bit big-endian. Positive = right side is higher than left. Computed as vehicle_width_cm * 10 * tan(roll_rad).";
+CM_ SG_ 56 FrontLeftMm "Front-left corner height adjustment in millimeters. Amount this corner needs to be raised to achieve level. Normalized so the lowest corner = 0.";
+CM_ SG_ 56 FrontRightMm "Front-right corner height adjustment in millimeters. Normalized so the lowest corner = 0.";
+CM_ SG_ 56 RearLeftMm "Rear-left corner height adjustment in millimeters. Normalized so the lowest corner = 0.";
+CM_ SG_ 56 RearRightMm "Rear-right corner height adjustment in millimeters. Normalized so the lowest corner = 0.";
+CM_ SG_ 57 StatusFlags "Bitmask of system status flags. Bit 0 (0x01): IMU connected and communicating. Bit 1 (0x02): BNO055 fully calibrated (system calibration level = 3). Bit 2 (0x04): leveling computation active.";
+CM_ SG_ 57 CalibrationPacked "Packed BNO055 calibration status. Each field is 0-3 where 3 = fully calibrated. Bits 7-6: system cal. Bits 5-4: gyro cal. Bits 3-2: accelerometer cal. Bits 1-0: magnetometer cal.";
+CM_ SG_ 57 MountingOrientation "Current mounting surface configuration. 0 = floor, 1 = left wall, 2 = right wall. Reflects the active axis remap mode.";
+CM_ SG_ 57 Reserved0 "Reserved byte, always 0x00.";
 CM_ SG_ 35 BattVoltageWhole "Battery voltage whole number part in volts. Combine with BattVoltageDecimal as: voltage = BattVoltageWhole + BattVoltageDecimal / 100.0 to get the full voltage reading.";
 CM_ SG_ 35 BattVoltageDecimal "Battery voltage decimal part (hundredths of a volt, 0-99). See BattVoltageWhole for how to reconstruct the full voltage.";
 CM_ SG_ 35 IsCurrentNegative "Indicates direction of current flow. 0 = positive/charging (current flowing into battery). 1 = negative/discharging (current flowing out of battery). Apply this sign to the current value from ShuntCurrentWhole + ShuntCurrentDecimal.";
@@ -442,6 +629,16 @@ CM_ SG_ 64 FaultBitmask "Fault conditions detected by the Therma controller. Bit
 CM_ BO_ 65 "Request to change the Therma desired temperature. Can be sent by any device on the bus (PWA, wall panels, Farwatch cloud, Headwaters). Therma validates the requested value, clamps it to the safe range, persists it to NVS, and broadcasts the new authoritative value on ThermaDesiredTemperature (0x3F) on the next tick. Rejected requests are silently ignored. Senders must not display the requested value locally — they must wait for and display the next broadcast from Therma.";
 CM_ SG_ 65 RequestedSetpointDeciC "Requested desired temperature in tenths of a degree Celsius. Signed 16-bit big-endian. Values outside [5.0, 35.0] degC are rejected.";
 CM_ BO_ 66 "Request to change the Therma hysteresis threshold (deadband). Same request/response pattern as ThermaSetDesiredRequest (0x41). Therma validates, clamps, persists to NVS, and re-broadcasts the new authoritative threshold on ThermaDesiredTemperature (0x3F) on the next tick.";
+CM_ BO_ 256 "Playbill remote-control D-pad press, instance 0. NavKey: 0=Up 1=Down 2=Left 3=Right 4=Select 5=Back 6=Home 7=Menu. CAN IDs 0x100/0x110/0x120 (PlaybillNavCmd0/1/2) share this signal layout, each targeting a different physical Playbill instance per its settings.json device.canInstance field.";
+CM_ BO_ 257 "Playbill transport command, instance 0. Action: 0=Play 1=Pause 2=Stop 3=Toggle 4=SeekRel 5=SeekAbs 6=Next 7=Previous. Value is unused for play/pause/stop/toggle/next/previous; for SeekRel it is signed-encoded-as-unsigned milliseconds (use 0x80000000 + delta_ms; consumer subtracts the bias); for SeekAbs it is absolute milliseconds. Volume and mute are deliberately NOT here — see PlaybillVolumeCmd (0x108).";
+CM_ BO_ 258 "Playbill transport status, instance 0. Authoritative current playback state in numeric form. Text titles, artwork URLs, and other metadata that does not fit in 8 bytes live on the MQTT-only local/playbill/<id>/now-playing topic. Byte 0 packs Paused (bit 7), Muted (bit 6), and SourceEnum (bits 5-0). VolumePct 0-100 (255 = unknown). PositionSec/DurationSec are unsigned 24-bit (0 to ~194 days); DurationSec=0 means live or unknown.";
+CM_ BO_ 259 "Playbill radio tune request, instance 0. Band: 0=FM 1=AM 2=Scanner. FrequencyKHz is a 32-bit unsigned integer in kilohertz, covering FM (88000-108000), AM (530-1700), and the public-safety scanner range without needing a band-multiplier signal. Mode is reserved (e.g., NFM/WFM modulation override).";
+CM_ BO_ 260 "Playbill radio status, instance 0. Authoritative current radio tuner state. SignalDbm is signed 8-bit dBm (typically -110 to -20). Tuned=1 means demodulating; Scanning=1 means a scan is in progress (FrequencyKHz is the current scan position).";
+CM_ BO_ 261 "Playbill screen status, instance 0. ScreenEnum: 0=Home 1=Apps 2=Live 3=Radio 4=LocalLibrary 5=Rig 6=Settings 7=NowPlaying. GuiOpen=1 means the Electron window is currently on screen; 0 means the controller daemon is running but the GUI is closed (audio-only playback continues).";
+CM_ BO_ 262 "Playbill system command, instance 0. SysAction: 0=LaunchGui (cold-wake — bring up the Electron window if closed) 1=QuitGui (close window; controller stays running) 2=Focus (raise existing window) 3=Wake (light the display from screensaver) 4=Sleep (force screensaver / DPMS off).";
+CM_ BO_ 263 "Playbill launch-source command, instance 0. Equivalent of a hardware preset button on a stereo head unit — implies LaunchGui plus navigate to the named source. SourceEnum matches PlaybillTransportStatus.SourceEnum: 0=None 1=YouTube 2=LiveTV 3=Radio 4=LocalLibrary 5=Plex 6=Spotify 7=Netflix. SubScreenEnum: 0=Default (browse home) 1=SignIn 2=Settings 3=Search.";
+CM_ BO_ 264 "Playbill volume command, instance 0. Separated from PlaybillTransportCmd (0x101) so a hardware volume encoder or mute button can wire to a single CAN ID with no enum-parsing logic. VolAction: 0=Up (Value=step, default 5) 1=Down (Value=step, default 5) 2=Set (Value=absolute percent 0-100) 3=MuteOn 4=MuteOff 5=MuteToggle.";
+CM_ BO_ 265 "Playbill presence heartbeat, instance 0. Mirrors the FirmwareVersionReport (0x004) shape: last 3 bytes of the host's primary NIC MAC followed by the controller daemon's version triplet. Sent once on startup and again every 60 s as a heartbeat so a CAN-side consumer can discover what is online without subscribing to MQTT.";
 CM_ SG_ 66 RequestedThresholdDeciC "Requested hysteresis threshold width around the setpoint in tenths of a degree Celsius, unsigned 8-bit. Values outside [0.1, 5.0] degC are rejected.";
 
 BA_DEF_ BO_ "CycleTime" INT 0 10000;
@@ -449,16 +646,19 @@ BA_DEF_ BU_ "NodeLayerModules" STRING;
 BA_DEF_ "BusType" STRING;
 BA_DEF_ "DatabaseVersion" STRING;
 BA_DEF_ "ProtocolType" STRING;
+BA_DEF_ "Baudrate" INT 0 1000000;
 
 BA_DEF_DEF_ "CycleTime" 0;
 BA_DEF_DEF_ "NodeLayerModules" "";
 BA_DEF_DEF_ "BusType" "";
 BA_DEF_DEF_ "DatabaseVersion" "";
 BA_DEF_DEF_ "ProtocolType" "";
+BA_DEF_DEF_ "Baudrate" 500000;
 
 BA_ "BusType" "CAN";
 BA_ "DatabaseVersion" "1.0.0";
 BA_ "ProtocolType" "CAN 2.0A";
+BA_ "Baudrate" 500000;
 
 BA_ "CycleTime" BO_ 6 1000;
 BA_ "CycleTime" BO_ 7 1000;
@@ -472,6 +672,9 @@ BA_ "CycleTime" BO_ 14 200;
 BA_ "CycleTime" BO_ 15 200;
 BA_ "CycleTime" BO_ 16 200;
 BA_ "CycleTime" BO_ 17 200;
+BA_ "CycleTime" BO_ 18 200;
+BA_ "CycleTime" BO_ 19 200;
+BA_ "CycleTime" BO_ 20 200;
 BA_ "CycleTime" BO_ 27 33;
 BA_ "CycleTime" BO_ 28 33;
 BA_ "CycleTime" BO_ 29 33;
@@ -486,6 +689,18 @@ BA_ "CycleTime" BO_ 45 33;
 BA_ "CycleTime" BO_ 62 1000;
 BA_ "CycleTime" BO_ 63 1000;
 BA_ "CycleTime" BO_ 64 1000;
+BA_ "CycleTime" BO_ 258 500;
+BA_ "CycleTime" BO_ 260 1000;
+BA_ "CycleTime" BO_ 261 1000;
+BA_ "CycleTime" BO_ 265 60000;
+BA_ "CycleTime" BO_ 274 500;
+BA_ "CycleTime" BO_ 276 1000;
+BA_ "CycleTime" BO_ 277 1000;
+BA_ "CycleTime" BO_ 281 60000;
+BA_ "CycleTime" BO_ 290 500;
+BA_ "CycleTime" BO_ 292 1000;
+BA_ "CycleTime" BO_ 293 1000;
+BA_ "CycleTime" BO_ 297 60000;
 
 VAL_ 9 LatitudeSign 0 "North_Positive" 1 "South_Negative";
 VAL_ 9 LongitudeSign 0 "East_Positive" 1 "West_Negative";
@@ -504,4 +719,34 @@ VAL_ 50 MountingOrientation 0 "Floor" 1 "Left_Wall" 2 "Right_Wall";
 VAL_ 37 RelayOrCommand 0 "Toggle_Relay1" 1 "Toggle_Relay2" 2 "Toggle_Relay3" 3 "Toggle_Relay4" 4 "Toggle_Relay5" 5 "Toggle_Relay6" 6 "Toggle_Relay7" 7 "Toggle_Relay8" 8 "All_Relays_Command";
 VAL_ 7 GnssMode 0 "No_Constellation" 1 "GPS" 2 "BeiDou" 3 "GPS_BeiDou" 4 "GLONASS" 5 "GPS_GLONASS" 6 "BeiDou_GLONASS" 7 "GPS_BeiDou_GLONASS";
 VAL_ 64 ThermaMode 0 "Idle" 1 "Heating" 2 "Cooling";
+VAL_ 256 NavKey 0 "Up" 1 "Down" 2 "Left" 3 "Right" 4 "Select" 5 "Back" 6 "Home" 7 "Menu";
+VAL_ 272 NavKey 0 "Up" 1 "Down" 2 "Left" 3 "Right" 4 "Select" 5 "Back" 6 "Home" 7 "Menu";
+VAL_ 288 NavKey 0 "Up" 1 "Down" 2 "Left" 3 "Right" 4 "Select" 5 "Back" 6 "Home" 7 "Menu";
+VAL_ 257 Action 0 "Play" 1 "Pause" 2 "Stop" 3 "Toggle" 4 "SeekRel" 5 "SeekAbs" 6 "Next" 7 "Previous";
+VAL_ 273 Action 0 "Play" 1 "Pause" 2 "Stop" 3 "Toggle" 4 "SeekRel" 5 "SeekAbs" 6 "Next" 7 "Previous";
+VAL_ 289 Action 0 "Play" 1 "Pause" 2 "Stop" 3 "Toggle" 4 "SeekRel" 5 "SeekAbs" 6 "Next" 7 "Previous";
+VAL_ 258 SourceEnum 0 "None" 1 "YouTube" 2 "LiveTV" 3 "Radio" 4 "LocalLibrary" 5 "Plex" 6 "Spotify" 7 "Netflix";
+VAL_ 274 SourceEnum 0 "None" 1 "YouTube" 2 "LiveTV" 3 "Radio" 4 "LocalLibrary" 5 "Plex" 6 "Spotify" 7 "Netflix";
+VAL_ 290 SourceEnum 0 "None" 1 "YouTube" 2 "LiveTV" 3 "Radio" 4 "LocalLibrary" 5 "Plex" 6 "Spotify" 7 "Netflix";
+VAL_ 259 Band 0 "FM" 1 "AM" 2 "Scanner";
+VAL_ 275 Band 0 "FM" 1 "AM" 2 "Scanner";
+VAL_ 291 Band 0 "FM" 1 "AM" 2 "Scanner";
+VAL_ 260 Band 0 "FM" 1 "AM" 2 "Scanner";
+VAL_ 276 Band 0 "FM" 1 "AM" 2 "Scanner";
+VAL_ 292 Band 0 "FM" 1 "AM" 2 "Scanner";
+VAL_ 261 ScreenEnum 0 "Home" 1 "Apps" 2 "Live" 3 "Radio" 4 "LocalLibrary" 5 "Rig" 6 "Settings" 7 "NowPlaying";
+VAL_ 277 ScreenEnum 0 "Home" 1 "Apps" 2 "Live" 3 "Radio" 4 "LocalLibrary" 5 "Rig" 6 "Settings" 7 "NowPlaying";
+VAL_ 293 ScreenEnum 0 "Home" 1 "Apps" 2 "Live" 3 "Radio" 4 "LocalLibrary" 5 "Rig" 6 "Settings" 7 "NowPlaying";
+VAL_ 262 SysAction 0 "LaunchGui" 1 "QuitGui" 2 "Focus" 3 "Wake" 4 "Sleep";
+VAL_ 278 SysAction 0 "LaunchGui" 1 "QuitGui" 2 "Focus" 3 "Wake" 4 "Sleep";
+VAL_ 294 SysAction 0 "LaunchGui" 1 "QuitGui" 2 "Focus" 3 "Wake" 4 "Sleep";
+VAL_ 263 SourceEnum 0 "None" 1 "YouTube" 2 "LiveTV" 3 "Radio" 4 "LocalLibrary" 5 "Plex" 6 "Spotify" 7 "Netflix";
+VAL_ 279 SourceEnum 0 "None" 1 "YouTube" 2 "LiveTV" 3 "Radio" 4 "LocalLibrary" 5 "Plex" 6 "Spotify" 7 "Netflix";
+VAL_ 295 SourceEnum 0 "None" 1 "YouTube" 2 "LiveTV" 3 "Radio" 4 "LocalLibrary" 5 "Plex" 6 "Spotify" 7 "Netflix";
+VAL_ 263 SubScreenEnum 0 "Default" 1 "SignIn" 2 "Settings" 3 "Search";
+VAL_ 279 SubScreenEnum 0 "Default" 1 "SignIn" 2 "Settings" 3 "Search";
+VAL_ 295 SubScreenEnum 0 "Default" 1 "SignIn" 2 "Settings" 3 "Search";
+VAL_ 264 VolAction 0 "Up" 1 "Down" 2 "Set" 3 "MuteOn" 4 "MuteOff" 5 "MuteToggle";
+VAL_ 280 VolAction 0 "Up" 1 "Down" 2 "Set" 3 "MuteOn" 4 "MuteOff" 5 "MuteToggle";
+VAL_ 296 VolAction 0 "Up" 1 "Down" 2 "Set" 3 "MuteOn" 4 "MuteOff" 5 "MuteToggle";
 

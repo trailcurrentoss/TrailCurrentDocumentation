@@ -16,13 +16,14 @@ These modules collect data from the environment and vehicle systems.
 - **Documentation**: [Bearing.md](Bearing.md)
 - **Source**: `/Product/TrailCurrentBearing/`
 
-### TrailCurrent Borealis (Air Quality & Environment)
-- **Purpose**: Monitor temperature, humidity, TVOC, and eCO2
-- **Hardware**: ESP32-S3-Zero
+### TrailCurrent Borealis (Environment & Safety)
+- **Purpose**: Monitor temperature, humidity, real CO2, VOC Index, **carbon monoxide, and propane/LPG** for both comfort and life-safety
+- **Hardware**: Waveshare ESP32-S3-RS485-CAN (ESP32-S3R8, 8 MB PSRAM, 16 MB flash, isolated TJA1051 CAN transceiver, PCF85063AT RTC, 7-36 V DC or 5 V USB-C input)
 - **Framework**: ESP-IDF
-- **Inputs**: SHT31-D (temperature/humidity) + SGP30 (TVOC/eCO2) over I²C
-- **Outputs**: CAN messages with environmental readings
-- **CAN IDs**: 0x1F (EnvironmentSensorData); accepts 0x21 (BorealisCalibration)
+- **Inputs**: Sensirion SCD41 (photoacoustic NDIR — real CO2 + temp + humidity, via DFRobot SEN0536) + Sensirion SGP40 (VOC Index 1-500, via DFRobot SEN0394) + DFRobot SEN0466 carbon monoxide (electrochemical, factory-calibrated, 0-1000 ppm) all over I²C; DFRobot SEN0131 MQ-6 propane/LPG on ADC1_CH2 via 10 kΩ/15 kΩ divider
+- **Outputs**: Two CAN frames at 1 Hz — `EnvironmentSensorData` (0x1F) and `BorealisSafetyData` (0x20)
+- **CAN IDs**: 0x1F (EnvironmentSensorData), 0x20 (BorealisSafetyData — CO/LPG/alarm flags); accepts 0x21 (BorealisCalibration)
+- **Safety thresholds (compile-time)**: CO alarm ≥ 200 ppm / warn ≥ 70 ppm; LPG alarm Rs/R0 < 0.3 / warn < 0.5; CO2 alarm ≥ 2500 ppm / warn ≥ 1500 ppm; VOC alarm at index ≥ 400. Borealis evaluates these on-board so a consumer only needs to read the alarm-flags byte to know current state.
 - **Documentation**: [Borealis.md](Borealis.md)
 - **Source**: `/Product/TrailCurrentBorealis/`
 
@@ -30,7 +31,7 @@ These modules collect data from the environment and vehicle systems.
 - **Purpose**: Monitor open/closed status of doors, windows, cabinets, and bays
 - **Hardware**: Waveshare ESP32-S3-RS485-CAN (off-the-shelf board with onboard CAN transceiver)
 - **Framework**: ESP-IDF
-- **Inputs**: Up to 13 magnetic reed switches (via pin header, internal pull-ups, no external resistors)
+- **Inputs**: Up to 12 magnetic reed switches (via pin header, internal pull-ups, no external resistors)
 - **Outputs**: CAN messages with door/cabinet state
 - **Addressing**: Compile-time `PICKET_ADDRESS` build flag (0-7, up to 8 modules per bus)
 - **CAN ID Range**: 0x0A-0x11
@@ -38,12 +39,14 @@ These modules collect data from the environment and vehicle systems.
 - **Source**: `/Product/TrailCurrentPicket/`
 
 ### TrailCurrent Plateau (Vehicle Level Sensor)
+> ℹ️ **Firmware not yet shipping.** Plateau's CAN IDs were reallocated 2026-05-19 from the original `0x20 / 0x30 / 0x31 / 0x32` block to the contiguous `0x36-0x39` block (Borealis claimed `0x20` for its safety frame). DBC and Plateau firmware were updated together — consumers integrating against the DBC can wire to the new IDs now.
+
 - **Purpose**: Tilt/level measurement on both axes with per-corner height calculation
 - **Hardware**: ESP32-S3-Zero with Adafruit BNO055 IMU
 - **Framework**: ESP-IDF
-- **Inputs**: BNO055 orientation data; CAN leveling configuration (0x20)
+- **Inputs**: BNO055 orientation data; CAN leveling configuration on `0x36`
 - **Outputs**: CAN messages with tilt, per-corner heights, and status
-- **CAN IDs**: 0x30 (TiltData), 0x31 (CornerData), 0x32 (StatusData); accepts 0x20 (LevelingConfig)
+- **CAN IDs**: 0x36 (LevelingConfig — RX), 0x37 (TiltData), 0x38 (CornerData), 0x39 (StatusData)
 - **Documentation**: [Plateau.md](Plateau.md)
 - **Source**: `/Product/TrailCurrentPlateau/`
 
@@ -98,16 +101,19 @@ These modules execute commands and control physical systems.
 - **Source**: `/Product/TrailCurrentSolstice/`
 - **Key Feature**: Single gateway for solar generation AND battery state-of-charge; supports MPPT load-output ON/OFF/Default control from the CAN bus
 
-### TrailCurrent Switchback (Relay Module)
-- **Purpose**: High-current relay switching for loads that don't fit the Torrent PWM profile
-- **Hardware**: Waveshare ESP32-S3-ETH-8DI-8RO-C (8 dry-contact relay outputs)
+### TrailCurrent Switchback (Relay Module + Picket-style Sensor Input)
+- **Purpose**: High-current relay switching for loads that don't fit the Torrent PWM profile. The same board doubles as a **Picket-compatible sensor input node** — its 8 digital inputs (the "8DI" in the board name) can be wired to reed switches, limit switches, current-loop opto inputs, or any dry-contact source, and it broadcasts their state in the same wire format Picket uses for door/cabinet sensors. The same physical Switchback can drive relays *and* report sensor inputs at the same time; there's no mode switch.
+- **Hardware**: Waveshare ESP32-S3-ETH-8DI-8RO-C — 8 dry-contact relay outputs (8RO) plus 8 opto-isolated digital inputs (8DI) on the same board
 - **Framework**: ESP-IDF
-- **Inputs**: CAN toggle commands from UI/Headwaters
-- **Outputs**: Relay state bitmask on CAN
-- **Addressing**: Compile-time address (0-2) — up to 3 modules per bus via `build-all.sh`
-- **CAN IDs**: 0x25-0x27 (toggle commands), 0x28-0x2A (status reports)
+- **Inputs**: CAN toggle commands from UI/Headwaters (relay outputs); 8 opto-isolated digital input lines (sensor side — connect anything that closes a contact: doors, cabinets, bay lights, switch panels, current-loop signals)
+- **Outputs**: Relay state bitmask on CAN; PicketStatus-format frames on CAN for the 8 input lines (consumed by exactly the same Headwaters code path that handles Picket modules — there's no Switchback-specific consumer logic)
+- **Addressing**: Compile-time address (0-2) — up to 3 modules per bus via `build-all.sh`. Each Switchback instance owns one slot in *both* address pools simultaneously: the relay pool (`0x25-0x27` toggle, `0x28-0x2A` status) and the input pool (`0x12-0x14`, the extension of Picket's `0x0A-0x11` range).
+- **CAN IDs**:
+  - **Relay control** — `0x25-0x27` (toggle commands, RX), `0x28-0x2A` (status reports, TX)
+  - **Sensor inputs** — `0x12-0x14` (PicketStatus8/9/10 wire format, TX). Address 0 = `0x12`, address 1 = `0x13`, address 2 = `0x14`. Same byte layout as PicketStatus0 (`0x0A`): byte 0 carries 8 inputs (1 bit per input, 1 = open / no current, 0 = closed), byte 1 is always `0x00` because Switchback has 8 inputs vs Picket's 12.
 - **Documentation**: [Switchback.md](Switchback.md)
 - **Source**: `/Product/TrailCurrentSwitchback/`
+- **Key Feature**: Single board for both output (relay) and input (sensor) duty. In rigs where Picket coverage isn't worth a dedicated module — a few cabinet sensors here, a couple of limit switches there — a Switchback that's already driving relays can absorb the sensor load with no additional hardware. Headwaters, the PWA, and any other consumer treat the resulting frames as PicketStatus8/9/10, no Switchback-aware code required.
 
 ---
 
@@ -121,7 +127,7 @@ These modules provide connectivity and bridge external devices.
 - **Framework**: ESP-IDF
 - **Inputs**: ADC voltage sensing plus digital turn/brake/light lines from a 7-pin trailer connector
 - **Outputs**: Trailer wiring status on CAN (lights, brakes, signals, connection)
-- **CAN IDs**: 0x10 (TrailerStatus)
+- **CAN IDs**: 0x3A (TrailerStatus). Previously transmitted on 0x10, which collided with PicketStatus6 in Picket's reserved range; reallocated 2026-05-19.
 - **Documentation**: [Aftline.md](Aftline.md)
 - **Source**: `/Product/TrailCurrentAftline/`
 - **Key Feature**: Complete trailer wiring harness monitoring
@@ -191,14 +197,35 @@ These modules allow users to view status and issue commands.
 ### TrailCurrent Peregrine (AI Voice Assistant)
 - **Purpose**: Fully-local AI voice companion with system access and hands-free control
 - **Hardware**: Radxa Dragon Q6A (Qualcomm QCS6490 SoC with Hexagon NPU, 8 GB)
-- **Framework**: Custom Ubuntu Noble 24.04 image running a Python pipeline under systemd
-- **Inputs**: Microphone, system data via MQTT from Headwaters
-- **Outputs**: Voice responses, MQTT device commands
-- **Stack**: openWakeWord → faster-whisper → Llama 3.2 1B → Piper TTS (all local, no cloud)
+- **Framework**: Custom Ubuntu Noble 24.04 image running a Python pipeline under systemd. Canonical install is the image build at [`TrailCurrentPeregrine/image_build/`](../../TrailCurrentPeregrine/image_build/); `deploy.sh` is a development tool only.
+- **Inputs**: Microphone; system data via MQTT from Headwaters; any LAN browser via `https://peregrine.local/` (web chat UI); REST API surface exposed by `web_chat.py` for other clients on the rig (Headwaters, Playbill, Outbound, etc.) to invoke the on-device LLM
+- **Outputs**: Voice responses (TTS), MQTT device commands, HTTP/WS responses to the LAN chat UI
+- **Stack**: openWakeWord → faster-whisper (`base.en`, INT8 CPU) → **Llama 3.2 1B running on the Hexagon NPU via `genie-t2t-run`** (~12 tok/s) → Piper TTS (`en_US-libritts_r-medium`). All local, no cloud.
 - **Wake Word**: Configurable (default "Hey Peregrine")
+- **Intent set**: light/relay control, thermostat setpoint/threshold, vehicle leveling, GNSS/position queries, "what's playing on Playbill", radio tuning, plus the open-ended chat surface routed through the on-device LLM
+- **Trust on Headwaters**: Peregrine's per-board self-signed CA is automatically installed in Headwaters' container trust store (via the Overlook PWA and the `peregrine-ca.js` service) so the in-vehicle dashboard and any backend HTTPS client can reach `https://peregrine.local/` without certificate warnings. The CA PEM is persisted to MongoDB (`system_config`) so a container recreate reinstalls it on startup.
+- **Time source**: Headwaters (NTP, port 123) — see [NETWORK_TOPOLOGY.md — Time Synchronization](../01_Architecture/NETWORK_TOPOLOGY.md#time-synchronization)
 - **Documentation**: [Peregrine.md](Peregrine.md)
-- **Source**: `/Product/TrailCurrentPeregrine/`
-- **Key Feature**: Fully offline pipeline — never leaves the vehicle (Core Principle: Data Privacy First)
+- **Source**: `/Product/TrailCurrentPeregrine/` — see its `docs/` and `image_build/docs/` for the per-feature walkthroughs (build host setup, image build, flashing, first boot, first login, troubleshooting, development, cutting a release, software releases, MQTT CA cert, future vision modes)
+- **Key Feature**: Fully offline pipeline — never leaves the vehicle (Core Principle: Data Privacy First). NPU-accelerated LLM is what makes "local-and-actually-useful" tractable on a passively-cooled rig device.
+
+---
+
+## Entertainment
+
+### TrailCurrent Playbill (In-Rig Entertainment Head)
+- **Purpose**: 10-foot, remote-driven entertainment head for use when the rig is parked — Live TV (OTA + RTL-SDR radio), local media library, streaming apps, screen mirroring / AirPlay. Not the vehicle dash head unit.
+- **Hardware**: Radxa Dragon Q6A (Qualcomm QCS6490, 8 GB)
+- **Framework**: Ubuntu Noble 24.04 + GNOME on Wayland, branded TrailCurrent throughout. The Playbill app is an Electron application (no TypeScript) installed on a normal desktop — not a kiosk lockdown.
+- **Inputs**: Arrow keys / IR or Bluetooth remote, optional steering-wheel button MCU or other CAN-attached remote, Headwaters PWA (radio/volume/remote sub-pages), Peregrine voice intents ("what's playing on Playbill")
+- **Outputs**: HDMI video, analog audio out (3.5 mm jack — pinned via WirePlumber so HDMI doesn't win); status frames on CAN; presence + state on MQTT
+- **Addressing**: Up to **three Playbill instances per rig** (e.g. Living Room / Bedroom / Bunkhouse). Each instance claims one of three contiguous 16-ID CAN blocks: `0x100–0x10F`, `0x110–0x11F`, `0x120–0x12F`. Same message offset within each block. MQTT uses a human-readable `device.id` slug; CAN uses the numeric `device.canInstance`. A Playbill with `canInstance = null` is MQTT-only and consumes no CAN block.
+- **CAN messages**: 10 message types per instance — `PlaybillNavCmd`, `PlaybillTransportCmd`, `PlaybillTransportStatus`, `PlaybillRadioTuneReq`, `PlaybillRadioStatus`, `PlaybillScreenStatus`, `PlaybillSystemCmd`, `PlaybillLaunchSourceCmd`, `PlaybillVolumeCmd`, `PlaybillPresence`. Full layouts in [CAN_BUS_REFERENCE.md](../10_Reference/CAN_BUS_REFERENCE.md#playbill-multi-instance-block).
+- **MQTT topics**: `local/playbill/<deviceId>/<feature>/{command,status}`; broadcast variant `local/playbill/all/<feature>/command`; presence at `local/playbill/<deviceId>/system/status` (retained).
+- **Time source**: Headwaters (NTP, port 123)
+- **Documentation**: [Playbill.md](Playbill.md)
+- **Source**: `/Product/TrailCurrentPlaybill/` — see its `docs/` for the per-feature documentation (Live TV, Radio, Cast, image build, embloader patch, Q6A lessons learned)
+- **Key Feature**: Third-party CAN MCUs (steering-wheel buttons, IR receivers, hard-buttons remote panels) can drive a Playbill **directly on the CAN bus with no MQTT, no Headwaters service, and no cloud** — strongest demonstration to date that the platform is wire-only-capable end-to-end. See [Headwaters DOCS/CAN-REMOTE.md](../../TrailCurrentHeadwaters/DOCS/CAN-REMOTE.md) for the wire-level contract.
 
 ---
 
@@ -228,6 +255,10 @@ Add to above:
 - Plateau (vehicle leveling)
 - Peregrine (voice assistant)
 - Fireside (portable wireless display)
+
+### In-Rig Entertainment
+Independent of the above — Playbill is a stationary-use product layered onto any rig that has Headwaters:
+- Playbill (Live TV / radio / library / streaming / cast, up to 3 instances per rig)
 
 ---
 
@@ -267,6 +298,10 @@ User Interfaces:
 
 Voice & AI:
 └─ Peregrine (voice assistant)
+
+Entertainment:
+└─ Playbill (in-rig entertainment head — up to 3 instances per rig,
+             can also be driven directly from CAN by a button MCU)
 ```
 
 ---

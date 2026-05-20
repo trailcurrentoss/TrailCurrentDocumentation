@@ -50,15 +50,16 @@ The TrailCurrent platform is organized into three layers, where the **Device and
 **Role**: Sensing, control, and communication
 
 **Components**:
-- **Sensor Modules**: Bearing (GNSS), Borealis (environment), Picket (doors), Plateau (level)
-- **Control Modules**: Torrent (power delivery), Therma (climate), Solstice (solar + battery monitoring via Victron MPPT/SmartShunt)
+- **Sensor Modules**: Bearing (GNSS), Borealis (environment), Picket (doors), Plateau (level), Reservoir (water tanks)
+- **Control Modules**: Torrent (power delivery), Switchback (relay), Therma (climate), Solstice (solar + battery monitoring via Victron MPPT/SmartShunt)
 - **Gateway Modules**: Aftline (trailer monitor), RV-C Gateway (coming soon)
 - **Interface Modules**: Tapper (buttons), Fireside (wireless display), Milepost (hardwired display), Spotter (trailer monitor display)
 - **Voice & AI**: Peregrine (voice assistant)
+- **Entertainment**: Playbill (in-rig entertainment head)
 
 **Communication**: CAN bus (primary), EspNow (secondary), Bluetooth
 
-**Technology**: ESP32 microcontrollers, ESP-IDF framework
+**Technology**: ESP32 microcontrollers (ESP-IDF) for the MCU-class modules; Radxa Dragon Q6A (Ubuntu 24.04) for the Linux-class devices on the bus (Peregrine, Playbill)
 
 ### Edge Layer (In-Vehicle Compute)
 
@@ -68,10 +69,11 @@ The TrailCurrent platform is organized into three layers, where the **Device and
 - CAN-to-MQTT gateway
 - Docker container orchestration
 - Local configuration and management
-- OTA firmware update distribution
+- OTA firmware update distribution (CAN-based for MCU modules, mDNS + HTTP for wireless modules)
 - Local data logging and caching
+- **Canonical LAN NTP server** for the rig — every Linux-class device on the platform (Peregrine, Playbill, future compute modules) syncs to Headwaters. This is what makes offline scheduling possible: every device evaluates triggers against the same clock with or without internet. See [NETWORK_TOPOLOGY.md — Time Synchronization](NETWORK_TOPOLOGY.md#time-synchronization).
 
-**Compute Device**: Raspberry Pi Compute Module 5 (CM5) on a standard carrier board with Waveshare RS485 CAN HAT (B) — fully off-the-shelf, no custom PCBs.
+**Compute Device**: Raspberry Pi Compute Module 5 (CM5) on a standard carrier board with Waveshare RS485 CAN HAT (B) — fully off-the-shelf, no custom PCBs. A Radxa Dragon Q6A variant is in development under [`/Product/TrailCurrentHeadwaters/RADXAQ6A/`](../../TrailCurrentHeadwaters/RADXAQ6A/) — not recommended for shipping use yet; CM5 remains canonical.
 
 **Communication**: CAN bus (to devices), Ethernet/WiFi (to cloud), MQTT (internal messaging)
 
@@ -146,7 +148,10 @@ Hardware Modules
 - Spotter - Compact in-vehicle display for monitoring the trailer while towing
 
 ### Voice & AI
-- Peregrine - Fully-local AI voice assistant (Radxa Dragon Q6A)
+- Peregrine - Fully-local AI voice assistant (Radxa Dragon Q6A). LLM runs on the Hexagon NPU via `genie-t2t-run` (~12 tok/s). Also exposes a LAN web chat UI at `https://peregrine.local/`.
+
+### Entertainment
+- Playbill - In-rig entertainment head (Live TV, RTL-SDR radio, local library, streaming, screen mirroring / AirPlay) on Radxa Dragon Q6A. Up to three instances per rig, each binding to a 16-ID CAN block (`0x100/0x110/0x120`). Can be driven directly from CAN by a third-party button MCU with no MQTT, no Headwaters service, and no cloud — see [10_Reference/CAN_BUS_REFERENCE.md — Playbill block](../10_Reference/CAN_BUS_REFERENCE.md#playbill-multi-instance-block).
 
 ## Data Flow
 

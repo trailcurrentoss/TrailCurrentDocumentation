@@ -9,11 +9,14 @@ The In-Vehicle Compute system — branded **TrailCurrent Headwaters** — is an 
 It runs containerized services that:
 - Convert CAN bus messages to MQTT for local wireless communication (when internet unavailable) and cloud sync (when connected to the cloud application, Farwatch)
 - Cache data locally for offline operation and autonomous vehicle control
-- Distribute OTA firmware updates to hardware modules
+- Distribute OTA firmware updates to hardware modules (over CAN for MCU modules; over mDNS + HTTP for wireless modules)
 - Provide a local REST + WebSocket API for vehicle status queries
 - Route commands from users/cloud to hardware modules via CAN
+- **Serve as the canonical LAN NTP server** for the rig — every Linux-class device on the platform (Peregrine, Playbill, future compute modules) syncs to Headwaters so all scheduling and time-ordered logic agrees on the clock, with or without internet (see [Time Synchronization](#time-synchronization) below)
 
 > **Lite variant:** [TrailCurrent Baseflow](../README.md#baseflow-lite-edge-gateway) is a scaled-down variant of Headwaters that runs on the Arduino Uno Q (4GB) and provides the same core frontend/backend/MQTT/CAN stack without tile server, cloud sync, OTA distribution, or Node-RED. Use it when all you need is a self-contained edge gateway.
+
+> **Alternate hardware platform (work in progress):** A **Radxa Dragon Q6A variant** of Headwaters lives under [`/Product/TrailCurrentHeadwaters/RADXAQ6A/`](../../TrailCurrentHeadwaters/RADXAQ6A/) and builds a flashable Q6A image with the same Docker/MQTT/MongoDB/tileserver/backend/frontend/CAN bridge stack. **It is not recommended for shipping use yet** — further hardware and field testing is required. The CM5 build remains the canonical, recommended platform for any real deployment. The Q6A variant is fully self-contained (no shared scripts with the CM5 pipeline) so the two can evolve independently.
 
 ## Architecture
 
@@ -57,6 +60,36 @@ Local web dashboard for vehicle status, diagnostics, and configuration.
 
 ### 5. Tile Server
 Offline vector tile server for maps that work without internet connectivity.
+
+### 6. NTP Server (chronyd)
+Headwaters serves NTP to the rig LAN so every Linux-class device on the platform (Peregrine, Playbill, future compute modules) syncs to the same clock. See [Time Synchronization](#time-synchronization) below for the full rationale.
+
+## Time Synchronization
+
+Headwaters is the **canonical LAN NTP server** for the rig. It serves on UDP port 123 and allows queries from `192.168.0.0/16`, `10.0.0.0/8`, and `172.16.0.0/12` so any RFC 1918 rig network works without reconfiguration.
+
+This is foundational, not incidental. When **scheduling features** come online (timed automations, schedule-based light / relay / thermostat / Playbill actions), every device on the rig needs to evaluate triggers against the **same clock** — and that clock has to work without internet. Centralizing the time source on Headwaters makes that possible.
+
+### How the time source resolves
+
+`chronyd` on Headwaters draws from three sources, in order:
+
+1. **Upstream NTP pool** (Debian NTP pool, iburst, max 4 sources) — used when internet is reachable.
+2. **GNSS UTC from Bearing** — `time-from-bearing.service` reads Bearing's `GpsDateTime` CAN frame (`0x06`) and feeds the UTC time into the system clock. This is the offline fallback: a rig rolling for days without internet still gets correct time, because Bearing's GNSS receiver always has it.
+3. **Local stratum 10 fallback** — if neither upstream nor GNSS is available (e.g., a stationary rig with no internet and no satellite lock), chronyd serves from its own clock so LAN clients don't get "unsynchronised" errors. Any real internet source beats local stratum 10 if one shows up.
+
+`makestep 1.0 3` is configured so the first 3 updates after startup take an immediate jump (instead of slewing) when the offset is > 1 s, which matches the boot-with-stale-RTC case.
+
+### MCU modules are out of scope
+
+ESP32-class hardware modules do not run NTP. When ordering matters between MCU events, the consumer is responsible for timestamping on Headwaters (or another Linux-class device) at receive time. Bearing's `GpsDateTime` (`0x06`) is also available on the bus for any module that wants a direct time reference without going through Headwaters.
+
+### Configuration pointers
+
+- `chronyd` config: `/Product/TrailCurrentHeadwaters/config/chrony/chrony.conf`
+- GNSS-fed time service: `/Product/TrailCurrentHeadwaters/local_code/time-from-bearing.{py,service}`
+
+See [01_Architecture/NETWORK_TOPOLOGY.md — Time Synchronization](../01_Architecture/NETWORK_TOPOLOGY.md#time-synchronization) for the architectural diagram and rationale.
 
 ## Setup & Installation
 

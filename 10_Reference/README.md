@@ -192,27 +192,27 @@ See [HARDWARE_SPECIFICATIONS.md](HARDWARE_SPECIFICATIONS.md) for complete specs.
 
 ### Message IDs (CAN)
 
-| Device Type | Start | End | Count |
-|-------------|-------|-----|-------|
-| GPS | 0x100 | 0x10F | 16 |
-| Temperature | 0x120 | 0x12F | 16 |
-| Power | 0x200 | 0x2FF | 256 |
-| Status | 0x300 | 0x3FF | 256 |
-| UI | 0x400 | 0x4FF | 256 |
-| Gateway | 0x500 | 0x5FF | 256 |
+See [CAN_BUS_REFERENCE.md](CAN_BUS_REFERENCE.md) for the authoritative per-message table sourced from [TrailCurrent.dbc](../TrailCurrent.dbc). At-a-glance allocation:
+
+| Range | Used for | Notes |
+|---|---|---|
+| `0x00 – 0x42` | All ESP32-class hardware modules | Bearing, Picket, Torrent, Borealis, Solstice, Switchback, Plateau, Reservoir, Therma, plus Headwaters-originated discovery/OTA/provisioning frames. Next available: `0x43`. |
+| `0x100 – 0x12F` | Playbill head-unit | Three contiguous 16-ID blocks (`0x100/0x110/0x120`), one per Playbill instance. See [CAN_BUS_REFERENCE.md — Playbill multi-instance block](CAN_BUS_REFERENCE.md#playbill-multi-instance-block). |
 
 ### Port Numbers
 
-| Service | Port | Protocol |
-|---------|------|----------|
-| REST API | 3000 | HTTP (dev) |
-| REST API | 443 | HTTPS (prod) |
-| MQTT | 1883 | TCP (local only) |
-| MQTT TLS | 8883 | TCP+TLS (vehicle ↔ cloud) |
-| WebSocket | 8080 | WS (dev) |
-| WebSocket | 443 | WSS (prod, same port as REST) |
-| MongoDB | 27017 | TCP (internal to Docker network) |
-| tileserver-gl | 8080 | HTTP (internal) |
+| Service | Port | Protocol | Where |
+|---------|------|----------|-------|
+| REST API | 3000 | HTTP (dev) | Headwaters local |
+| REST API | 443 | HTTPS (prod) | Farwatch cloud |
+| MQTT | 1883 | TCP | Headwaters local broker (in-container only) |
+| MQTT TLS | 8883 | TCP+TLS | Vehicle ↔ cloud and in-vehicle clients |
+| WebSocket | 8080 | WS (dev) | Headwaters local |
+| WebSocket | 443 | WSS (prod, same port as REST) | Farwatch cloud |
+| MongoDB | 27017 | TCP | Internal to Docker network |
+| tileserver-gl | 8080 | HTTP | Internal |
+| **NTP** | **123** | **UDP** | **Headwaters serves to all Linux-class devices on the rig (Peregrine, Playbill). See [NETWORK_TOPOLOGY.md — Time Synchronization](../01_Architecture/NETWORK_TOPOLOGY.md#time-synchronization).** |
+| Peregrine Web Chat | 443 | HTTPS | `https://peregrine.local/` — LAN-facing chat UI exposing the on-device LLM. Port 80 redirects to 443 and serves `/ca.pem` unencrypted for first-time CA install. |
 
 ### Data Sizes
 

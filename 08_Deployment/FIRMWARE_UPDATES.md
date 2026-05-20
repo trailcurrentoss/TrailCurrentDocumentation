@@ -4,12 +4,61 @@ Comprehensive guide to distributing and managing firmware updates for TrailCurre
 
 ## Overview
 
-**NEEDS TO BE COMPLETED** - Introduction to:
-- OTA update architecture
-- Update flow
-- Safety mechanisms
-- Rollback procedures
-- Version management
+TrailCurrent runs two distinct firmware-update paths in parallel, because the platform has two distinct classes of device. Choose the path that matches the device, not the other way around.
+
+| Device class | Discovery path | Update transport | Examples |
+|---|---|---|---|
+| **CAN-attached MCU modules** | Headwaters broadcasts `OtaUpdateNotification` (`0x00`) on CAN; the targeted module joins WiFi and pulls the binary | WiFi (HTTPS to Headwaters) | Bearing, Borealis, Torrent, Switchback, Picket, Plateau, Reservoir, Therma, Solstice, Aftline, Tapper, Milepost, Fireside, Spotter |
+| **Wireless modules (no CAN attachment)** | mDNS browse — Headwaters runs a `discovery-mdns.py` browser that finds and onboards LAN-attached modules without requiring them to ever appear on the CAN bus | WiFi (HTTPS to Headwaters) | **Fireside** is the first wireless module on this pattern; the pattern is intentionally generic and will be reused for future wireless devices. |
+| **Linux-class compute devices** | Image rebuild + reflash for OS/dependency/model changes; `deploy.sh` for source-only iteration | edl-ng SPI NOR + NVMe flash, or rsync over SSH | Peregrine, Playbill, Headwaters Q6A variant |
+
+The two MCU paths share the same WiFi-side OTA mechanics — they differ only in how Headwaters **finds** the module and decides to push an update.
+
+## Wireless Module Discovery
+
+Wireless modules don't sit on the CAN bus, so `DiscoveryTrigger` (`0x02`) and `DiscoveryReset` (`0x03`) don't reach them. Instead, Headwaters runs an mDNS browser (`local_code/discovery-mdns.py`) that walks the LAN looking for advertised TrailCurrent services, then drives onboarding entirely over MQTT and HTTP.
+
+### Topic surface
+
+| MQTT topic | Direction | Purpose |
+|---|---|---|
+| `discovery/browse/start` | PWA → discovery service | Begin a browse window (firmware advertises for 30 s) |
+| `discovery/browse/stop` | PWA → discovery service | End the browse window early |
+| `discovery/browse/found` | discovery service → PWA | Each device found during the browse window |
+| `discovery/confirm/request` | PWA → discovery service | MCU-style flow: ask the module to flash an LED / play a tone to physically identify it |
+| `discovery/confirm/response` | discovery service → PWA | Result of the confirm round-trip |
+| `discovery/claim/request` | PWA → discovery service | Linux-style flow: claim the module with credentials |
+| `discovery/claim/response` | discovery service → PWA | Result of the claim |
+
+### Two onboarding patterns
+
+The discovery service supports two patterns depending on what the module can do:
+
+1. **MCU pattern (`confirm`)** — the module exposes a plain HTTP GET `/discovery/confirm` endpoint with no auth. The browse → confirm → adopt sequence is appropriate for small MCU-class devices where there's nothing useful to authenticate against yet.
+2. **Linux pattern (`claim`)** — the module exposes HTTP POST `/discovery/claim` and accepts credentials. Used for Linux-class devices (Peregrine being the obvious next consumer) where the device has a real user account and TLS surface.
+
+### Why this is separate from the CAN OTA path
+
+Adding `Fireside` to the platform forced this split. Fireside is a battery-powered wireless touchscreen — it has no CAN wiring and never participates on the bus. The existing CAN-broadcast OTA path could not reach it. Rather than retrofit a CAN attachment, the wireless discovery path was added as a sibling to the CAN path; the same MQTT-driven OTA mechanism then carries the update payload once the module has been adopted.
+
+This is intentionally a **generic pattern**, not a Fireside-specific hack. Future wireless modules onboard the same way with no additional Headwaters code.
+
+### Where to look
+
+- Headwaters mDNS browser: `/Product/TrailCurrentHeadwaters/local_code/discovery-mdns.py`
+- Headwaters mDNS resolver service: `containers/backend/src/services/mdns-resolver.js`
+- Headwaters discovery REST route: `containers/backend/src/routes/discovery.js`
+- PWA discovery flow: `containers/frontend/public/js/pages/...`
+
+## Deployment Package Distribution (Zip via PWA)
+
+The Headwaters PWA accepts a zipped deployment package directly through the Overlook UI — the same artifact the cloud OTA watcher would normally fetch from Farwatch, just uploaded locally instead. Useful for:
+
+- Bringing a freshly-built deployment up over a USB stick when the rig has no internet
+- Side-loading a release candidate before pushing to the cloud
+- Recovering an offline rig
+
+The cloud OTA watcher (in `OTA_DEPLOYMENT_IMPLEMENTATION.md`) is still the canonical production path; the PWA upload is the offline / local-loop variant. Both apply the same package format.
 
 ## Update Architecture
 

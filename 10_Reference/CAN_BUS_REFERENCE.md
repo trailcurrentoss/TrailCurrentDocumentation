@@ -25,12 +25,15 @@ Complete reference for CAN message formats, IDs, and protocols used in TrailCurr
 
 ## CAN ID Allocation
 
-All TrailCurrent messages currently use IDs in the range 0x00-0x42 (decimal 0-66). Next available: 0x43.
+TrailCurrent messages are organized in two ranges:
+
+- **Hardware-module range**: `0x00–0x42` (decimal 0–66) — the ESP32-class modules. Next available in this range: `0x05`, `0x12-0x14` (Switchback bridges Picket here — see PicketStatus8/9/10), `0x22`, `0x30–0x32` (freed when Plateau moved to `0x36-0x39`), `0x3B–0x3D`, then `0x43+`.
+- **Playbill head-unit range**: `0x100–0x12F` (decimal 256–303) — three contiguous 16-ID blocks, one per Playbill instance. See the [Playbill multi-instance block](#playbill-multi-instance-block) section below.
 
 | CAN ID (hex) | CAN ID (dec) | Message Name | DLC | Sender | Cycle Time |
 |--------------|-------------|--------------|-----|--------|------------|
 | 0x00 | 0 | OtaUpdateNotification | 3 | Headwaters | Event-driven |
-| 0x01 | 1 | WifiConfigProvisioning | 8 | Headwaters | Event-driven |
+| 0x01 | 1 | WifiConfigProvisioning | 8 | Headwaters | Event-driven (multi-frame sequence) |
 | 0x02 | 2 | DiscoveryTrigger | 0 | Headwaters | Event-driven |
 | 0x03 | 3 | DiscoveryReset | 3 | Headwaters | Event-driven |
 | 0x04 | 4 | FirmwareVersionReport | 6 | All modules | Event-driven (boot) |
@@ -55,8 +58,8 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x42 (decimal 0-66
 | 0x1B | 27 | TorrentStatus0 | 8 | Torrent addr 0 | 33 ms |
 | 0x1C | 28 | TorrentStatus1 | 8 | Torrent addr 1 | 33 ms |
 | 0x1D | 29 | TorrentStatus2 | 8 | Torrent addr 2 | 33 ms |
-| 0x1F | 31 | EnvironmentSensorData | 8 | Borealis | 2000 ms |
-| 0x20 | 32 | LevelingConfig | 7 | Headwaters | Event-driven |
+| 0x1F | 31 | EnvironmentSensorData | 8 | Borealis | 1000 ms |
+| 0x20 | 32 | BorealisSafetyData | 8 | Borealis | 1000 ms |
 | 0x21 | 33 | BorealisCalibration | 2 | Headwaters | Event-driven |
 | 0x23 | 35 | ShuntBasicData1 | 7 | Solstice | 33 ms |
 | 0x24 | 36 | ShuntBasicData2 | 5 | Solstice | 33 ms |
@@ -71,17 +74,20 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x42 (decimal 0-66
 | 0x2D | 45 | SolarMpptData2 | 3 | Solstice | 33 ms |
 | 0x2E | 46 | SolarLoadControl | 1 | Any sender | Event-driven |
 | 0x2F | 47 | ShuntExtHistory | 6 | Solstice | 33 ms (reserved — zeros) |
-| 0x30 | 48 | TiltData | 8 | Plateau | 500 ms |
-| 0x31 | 49 | CornerData | 8 | Plateau | 500 ms |
-| 0x32 | 50 | StatusData | 4 | Plateau | 2000 ms |
 | 0x33 | 51 | TorrentSequence0 | 1 | Any sender | Event-driven |
 | 0x34 | 52 | TorrentSequence1 | 1 | Any sender | Event-driven |
 | 0x35 | 53 | TorrentSequence2 | 1 | Any sender | Event-driven |
+| 0x36 | 54 | LevelingConfig | 7 | Headwaters | Event-driven (Plateau firmware not yet shipping) |
+| 0x37 | 55 | TiltData | 8 | Plateau | 500 ms (firmware not yet shipping) |
+| 0x38 | 56 | CornerData | 8 | Plateau | 500 ms (firmware not yet shipping) |
+| 0x39 | 57 | StatusData | 4 | Plateau | 2000 ms (firmware not yet shipping) |
+| 0x3A | 58 | TrailerStatus | 3 | Aftline | 33 ms |
 | 0x3E | 62 | WaterTankLevels | 3 | Reservoir | 2000 ms |
 | 0x3F | 63 | ThermaDesiredTemperature | 3 | Therma | 1000 ms |
 | 0x40 | 64 | ThermaStatus | 6 | Therma | 1000 ms |
 | 0x41 | 65 | ThermaSetDesiredRequest | 2 | Any sender | Event-driven |
 | 0x42 | 66 | ThermaSetThresholdRequest | 1 | Any sender | Event-driven |
+| 0x100–0x12F | 256–303 | Playbill block (3 instances × 10 message types — see [Playbill multi-instance block](#playbill-multi-instance-block)) | 1–8 | Mixed (Any sender → Playbill; Playbill → bus for `*Status` and `Presence`) | Mixed |
 
 ### Bus Nodes
 
@@ -91,14 +97,15 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x42 (decimal 0-66
 | Torrent | ESP32 (WROOM) | 8-channel PWM power distribution module. Compile-time address 0-2, up to 3 on same bus. ESP-IDF firmware |
 | Tapper | ESP32 (WROOM) | Physical 8-button control panel. Target-selectable at build time (Torrent or Switchback) with instance addressing. ESP-IDF firmware |
 | Solstice | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Solar + battery gateway. Reads Victron MPPT via VE.Direct TEXT+HEX SET on UART1 and Victron SmartShunt via VE.Direct TEXT on UART2 (RX-only on current hardware). Transmits basic battery data (0x23/0x24), MPPT solar data (0x2C/0x2D). 0x2B/0x2F reserved (zeros). Accepts MPPT load control (0x2E). ESP-IDF firmware |
-| Borealis | ESP32-S3-Zero | Environment/air quality sensor. SHT31-D (temp/humidity) + SGP30 (TVOC/eCO2) over I²C. ESP-IDF firmware |
-| Picket | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Cabinet/door sensor. Up to 13 reed switch inputs, NVS-addressed (8 modules max). ESP-IDF firmware |
-| Switchback | ESP32-S3 (Waveshare ESP32-S3-ETH-8DI-8RO-C) | 8-channel dry-contact relay module. Up to 3 on same bus (compile-time address 0-2). ESP-IDF firmware |
+| Borealis | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Environment + safety sensor. Sensirion SCD41 (real CO2 + temp + humidity, photoacoustic NDIR) and Sensirion SGP40 (VOC Index 1-500) over I²C; DFRobot SEN0466 carbon-monoxide sensor (electrochemical, 0-1000 ppm) on I²C; DFRobot SEN0131 MQ-6 propane/LPG sensor on ADC. Transmits EnvironmentSensorData (0x1F) and BorealisSafetyData (0x20) at 1 Hz. ESP-IDF firmware |
+| Picket | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Cabinet/door sensor. Up to 12 reed switch inputs, NVS-addressed (8 modules max). ESP-IDF firmware |
+| Switchback | ESP32-S3 (Waveshare ESP32-S3-ETH-8DI-8RO-C) | 8-channel dry-contact relay module **plus** Picket-compatible 8-input sensor node on the same board. Relay control on 0x25-0x2A (per-instance); 8 digital inputs transmitted on 0x12-0x14 in PicketStatus8/9/10 wire format (consumed by the same Headwaters path as Picket). Up to 3 on same bus (compile-time address 0-2). ESP-IDF firmware |
 | Plateau | ESP32-S3-Zero | Vehicle leveling with Adafruit BNO055 IMU; per-corner height calculation. ESP-IDF firmware |
 | Aftline | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Trailer 7-pin connector monitor (ADC voltage + digital turn/brake/light sensing). ESP-IDF firmware |
 | Therma | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) controller + 2× ESP32-S3 (Waveshare ESP32-S3-Relay-1CH) relay boards | Closed-loop thermostat. Controller owns authoritative desired temperature, mode, and threshold. Drives heater/cooler relay boards over direct GPIO (relay boards are not on the CAN bus). ESP-IDF firmware |
 | Reservoir | ESP32-S3 (Waveshare ESP32-S3-RS485-CAN) | Water tank level monitor. Reads contactless sensors on up to 3 tanks (fresh/grey/black) and reports fill percentages. ESP-IDF firmware |
 | Headwaters | Raspberry Pi Compute Module 5 (CM5) on standard carrier with Waveshare RS485 CAN HAT (B) | Dockerized edge gateway: CAN ↔ MQTT bridge, MQTT broker (Mosquitto), backend REST/WebSocket API, MongoDB, local tile server, and touchscreen dashboard. Host for OTA distribution and cloud sync |
+| Playbill | Radxa Dragon Q6A (Qualcomm QCS6490) running Ubuntu Noble 24.04 + GNOME on Wayland | In-rig entertainment head. Up to three instances per rig, each binding to a 16-ID CAN block (`0x100–0x10F` / `0x110–0x11F` / `0x120–0x12F`). Receives nav/transport/radio/system/launch/volume commands; transmits transport/radio/screen status and a 60 s presence heartbeat. A Playbill with `device.canInstance = null` is MQTT-only and does not occupy a CAN block |
 
 ---
 
@@ -113,6 +120,21 @@ All TrailCurrent messages currently use IDs in the range 0x00-0x42 (decimal 0-66
 | 0 | MacAddressByte1 | 7:0 | uint8 | 0-255 | First byte of target MAC address |
 | 1 | MacAddressByte2 | 15:8 | uint8 | 0-255 | Second byte of target MAC address |
 | 2 | MacAddressByte3 | 23:16 | uint8 | 0-255 | Third byte of target MAC address |
+
+---
+
+### WiFi Credential Provisioning (0x01)
+
+**WifiConfigProvisioning** (8 bytes per frame, multi-frame sequence) — Sent by Headwaters to push WiFi credentials to every ESP-IDF module on the bus. The DLC is always 8; semantics of bytes 1-7 depend on byte 0 (`Subcommand`):
+
+| Subcommand | Name | Byte 1 | Bytes 2-7 |
+|---|---|---|---|
+| `0x01` | Start | `ssid_len` | byte 2 = `pass_len`, byte 3 = `ssid_chunks` = ⌈ssid_len/6⌉, byte 4 = `pass_chunks` = ⌈pass_len/6⌉, bytes 5-7 zero |
+| `0x02` | SSID chunk | `chunk_index` | up to 6 bytes of SSID text, zero-padded |
+| `0x03` | Password chunk | `chunk_index` | up to 6 bytes of password text, zero-padded |
+| `0x04` | End | `xor_checksum` (XOR of all SSID + password bytes) | zero-padded |
+
+Headwaters sends the frames with a 50 ms inter-frame delay. Receivers buffer chunks indexed by chunk number, validate the checksum on the End frame, and commit the credentials to NVS on success. Every ESP-IDF module defines `CAN_ID_WIFI_CONFIG = 0x01` and listens for this. Implementation: [`TrailCurrentHeadwaters/containers/backend/src/mqtt.js:980-1043`](../../TrailCurrentHeadwaters/containers/backend/src/mqtt.js#L980-L1043).
 
 ---
 
@@ -228,14 +250,16 @@ Position coordinates. Each coordinate is a sign byte followed by a 24-bit absolu
 
 ### Picket - Cabinet & Door Sensors (0x0A-0x11)
 
-Monitors up to 13 magnetic reed switch inputs per module. Uses the Waveshare ESP32-S3-RS485-CAN board with onboard TJA1051 CAN transceiver. Module address (0-7) is set at compile time via `PICKET_ADDRESS` build flag (`idf.py build -DPICKET_ADDRESS=N`), allowing up to 8 Picket modules on the same bus. CAN IDs 0x0A through 0x11 share identical signal layout. Sent at 5 Hz (200 ms cycle). All reed switch inputs use internal pull-ups with no external resistors required.
+Monitors up to 12 magnetic reed switch inputs per module. Uses the Waveshare ESP32-S3-RS485-CAN board with onboard TJA1051 CAN transceiver. Module address (0-7) is set at compile time via `PICKET_ADDRESS` build flag (`idf.py build -DPICKET_ADDRESS=N`), allowing up to 8 Picket modules on the same bus. CAN IDs 0x0A through 0x11 share identical signal layout. Sent at 5 Hz (200 ms cycle). All reed switch inputs use internal pull-ups with no external resistors required.
+
+> The Picket address pool extends through `0x14` — IDs `0x12/0x13/0x14` are reserved for [Switchback](#switchback---relay-control-module--sensor-input-node-0x12-0x14-0x25-0x2a) modules broadcasting their 8 digital inputs in the same PicketStatus wire format. Headwaters and any other Picket consumer treat those frames identically to Picket's own.
 
 #### PicketStatus (0x0A-0x11, 2 bytes each)
 
 | Byte | Signal | Bits | Type | Range | Description |
 |------|--------|------|------|-------|-------------|
 | 0 | DoorStatus1to8 | 7:0 | uint8 bitmask | 0-255 | Bit 0 = door 1 (RSW01) ... bit 7 = door 8 (RSW08). 1 = open, 0 = closed |
-| 1 | DoorStatus9to13 | 15:8 | uint8 bitmask | 0-31 | Bits 0-4 = doors 9-13 (RSW09-RSW13). Bits 5-7 reserved |
+| 1 | DoorStatus9to12 | 15:8 | uint8 bitmask | 0-15 | Bits 0-3 = doors 9-12 (RSW09-RSW12). Bits 4-7 reserved |
 
 **Encoding:** 1 = door open (reed switch open, no magnet nearby). 0 = door closed (reed switch closed, magnet present).
 
@@ -316,19 +340,60 @@ Triggers a pre-programmed light animation effect. Sequences run to completion be
 
 ---
 
-### Borealis - Environment Sensor (0x1F)
+### Borealis - Environment + Safety Sensor (0x1F, 0x20)
 
-Environment and air quality sensor module (ESP32-S3-Zero). Reads DHT22 for temperature/humidity and SGP30 for TVOC/eCO2. Bytes 0-3 are backwards-compatible with the predecessor AirQualityModule format. The SGP30 needs ~15 seconds warm-up; initial values are TVOC=0, eCO2=400.
+Combined environment and safety sensor module (Waveshare ESP32-S3-RS485-CAN). Reads four sensors and broadcasts two CAN frames at 1 Hz:
 
-#### EnvironmentSensorData (0x1F, 8 bytes) — 2000 ms cycle (0.5 Hz)
+- **SCD41** (DFRobot SEN0536) over I²C — photoacoustic NDIR; provides **real CO2** (not eCO2), temperature, and humidity from a single sensor
+- **SGP40** (DFRobot SEN0394) over I²C — VOC Index 1-500 (relative trending; 100 = running average)
+- **SEN0466** electrochemical carbon-monoxide sensor over I²C — factory-calibrated, 0-1000 ppm
+- **SEN0131** MQ-6 propane/LPG sensor on ADC1_CH2 — reports Rs/R0 ratio (lower = more gas)
+
+> **Wire-format change**: bytes 4-7 of `EnvironmentSensorData` changed when Borealis moved from the DHT22 + SGP30 generation to the SCD41 + SGP40 generation. The byte positions are the same; the signal *semantics* are different. Bytes 4-5 are now **real CO2 ppm** (not TVOC ppb) and bytes 6-7 are now **VOC Index 1-500** (not eCO2 ppm). Any consumer decoding the old layout will return nonsense — re-decode from the current DBC.
+
+#### EnvironmentSensorData (0x1F, 8 bytes) — 1000 ms cycle (1 Hz)
 
 | Byte | Signal | Bits | Type | Scale | Range | Unit | Description |
 |------|--------|------|------|-------|-------|------|-------------|
-| 0 | TemperatureCelsius | 7:0 | uint8 | 1 | -40 to 125 | degC | Whole degrees Celsius from DHT22 |
+| 0 | TemperatureCelsius | 7:0 | uint8 | 1 | -40 to 125 | degC | Whole degrees Celsius (SCD41) |
 | 1 | TemperatureFahrenheit | 15:8 | uint8 | 1 | -40 to 257 | degF | Whole degrees Fahrenheit: F = (C * 9 + 3) / 5 + 32 |
-| 2-3 | HumidityScaled | 23:16, 31:24 | uint16 BE | 0.01 | 0-100 | % | Relative humidity (raw / 100 = %). E.g., 5523 = 55.23% |
-| 4-5 | TVOC | 39:32, 47:40 | uint16 BE | 1 | 0-60000 | ppb | Total VOCs from SGP30. 0-65 Excellent, 65-220 Good, 220-660 Moderate, 660-2200 Poor, 2200+ Unhealthy |
-| 6-7 | eCO2 | 55:48, 63:56 | uint16 BE | 1 | 400-60000 | ppm | Equivalent CO2 from SGP30. <400 Low, 400-999 Normal, 1000-1999 High, >=2000 Alarm |
+| 2-3 | HumidityScaled | 23:16, 31:24 | uint16 BE | 0.01 | 0-100 | % | Relative humidity from SCD41 (raw / 100 = %). E.g., 5523 = 55.23% |
+| 4-5 | CO2Ppm | 39:32, 47:40 | uint16 BE | 1 | 400-40000 | ppm | Real CO2 from SCD41 NDIR. <600 Excellent, 600-1000 Good, 1000-1500 Moderate, 1500-2500 Poor, >2500 Unhealthy |
+| 6-7 | VOCIndex | 55:48, 63:56 | uint16 BE | 1 | 1-500 | (index) | Sensirion VOC Index from SGP40. 100 = running average; >100 means more VOCs than recent baseline. >400 typically alarmable |
+
+#### BorealisSafetyData (0x20, 8 bytes) — 1000 ms cycle (1 Hz)
+
+Combined alarm channel covering all four hazards on a single ID. Borealis evaluates thresholds on-board so a consumer only needs to read byte 4 to know the current alarm state.
+
+| Byte | Signal | Bits | Type | Scale | Range | Unit | Description |
+|------|--------|------|------|-------|-------|------|-------------|
+| 0-1 | CarbonMonoxidePpm | 7:0, 15:8 | uint16 BE | 1 | 0-1000 | ppm | CO concentration from SEN0466 electrochemical sensor |
+| 2-3 | LpgRatioScaled | 23:16, 31:24 | uint16 BE | 0.001 | 0.000-65.535 | (ratio) | Propane/LPG Rs/R0 ratio from MQ-6 (SEN0131). Lower values mean more gas present |
+| 4 | AlarmFlags | 39:32 | uint8 (bitmask) | — | 0-255 | (flags) | Bitmask: bit 0 CO warn, bit 1 CO alarm, bit 2 LPG warn, bit 3 LPG alarm, bit 4 CO2 warn, bit 5 CO2 alarm, bit 6 VOC alarm |
+| 5-7 | (reserved) | — | — | — | — | — | Zero-padded |
+
+**Alarm thresholds** (compiled into firmware): CO alarm ≥ 200 ppm / warn ≥ 70 ppm; LPG alarm Rs/R0 < 0.3 / warn < 0.5; CO2 alarm ≥ 2500 ppm / warn ≥ 1500 ppm (evaluated against the value sent on `EnvironmentSensorData`); VOC alarm at VOC Index ≥ 400.
+
+**Consumer rule**: byte 4 (`AlarmFlags`) is the source of truth for current alarm state. Bytes 0-3 are for trending/display only — do not threshold them in consumer code, because the firmware may change its own thresholds in a later release.
+
+---
+
+### Aftline - Trailer 7-Pin Connector Monitor (0x3A)
+
+Aftline monitors the standard 7-pin trailer connector. It reads the four signal lines (left turn, right turn, brake, running lights) via opto-isolated GPIOs and the trailer-side battery voltage via an ADC divider. Transmits one frame.
+
+#### TrailerStatus (0x3A, 3 bytes) — 33 ms cycle (~30 Hz)
+
+| Byte | Signal | Bits | Type | Range | Unit | Description |
+|------|--------|------|------|-------|------|-------------|
+| 0 | Connected     | 7:7 | bool | 0-1 | — | 1 = any voltage present on the trailer pigtail |
+| 0 | LeftTurn      | 6:6 | bool | 0-1 | — | 1 = left turn signal active |
+| 0 | RightTurn     | 5:5 | bool | 0-1 | — | 1 = right turn signal active |
+| 0 | RunningLights | 4:4 | bool | 0-1 | — | 1 = running/marker lights active |
+| 0 | Brakes        | 3:3 | bool | 0-1 | — | 1 = brake lights active |
+| 1-2 | TrailerVoltageMv | 15:8, 23:16 | uint16 BE | 0-65535 | mV | Trailer-side supply voltage (ADC reading through resistor divider) |
+
+> Aftline previously transmitted on `0x10`, which collided with `PicketStatus6` in Picket's reserved `0x0A-0x14` range. It was moved to `0x3A` (2026-05-19) — Aftline firmware updated to match.
 
 ---
 
@@ -366,9 +431,19 @@ Power consumption and time remaining.
 
 ---
 
-### Switchback - Relay Control Module (0x25-0x2A)
+### Switchback - Relay Control Module + Sensor Input Node (0x12-0x14, 0x25-0x2A)
 
-6-channel relay control module (ESP32-S3, Waveshare ESP32-S3-Relay-6CH). Controls 6 mechanical relays for switching high-current loads. Relays are binary on/off (not PWM). Supports up to 3 modules on the same bus, each with its own command/status CAN ID pair.
+8-channel dry-contact relay control module **plus** a Picket-compatible 8-input sensor node on the same board. ESP32-S3 on a Waveshare ESP32-S3-ETH-8DI-8RO-C — 8 relay outputs (8RO) and 8 opto-isolated digital inputs (8DI). Relays are binary on/off (not PWM). The same physical Switchback drives relays and reports sensor inputs simultaneously; there's no mode switch. Supports up to 3 modules on the same bus, each instance owning one slot in *both* the relay pool and the input pool.
+
+**Two-pool addressing**:
+
+| Switchback address | Relay toggle (RX) | Relay status (TX) | Sensor input (TX) |
+|---|---|---|---|
+| 0 | 0x25 | 0x28 | 0x12 (PicketStatus8) |
+| 1 | 0x26 | 0x29 | 0x13 (PicketStatus9) |
+| 2 | 0x27 | 0x2A | 0x14 (PicketStatus10) |
+
+The sensor-input frames use the same wire format as Picket's `0x0A-0x11` range — Headwaters consumes them through the same code path as any Picket module, so no Switchback-specific decoder is needed. See the [Picket section](#picket---cabinet--door-sensors-0x0a-0x11) above for the byte layout. Switchback always sets byte 1 to `0x00` because its hardware has 8 inputs vs Picket's 12.
 
 #### SwitchbackToggle (0x25-0x27, 2 bytes each) — Event-driven
 
@@ -443,11 +518,15 @@ Panel current.
 
 ---
 
-### Plateau - Vehicle Leveler (0x20, 0x30-0x32)
+### Plateau - Vehicle Leveler (0x36-0x39)
+
+> ℹ️ **Plateau firmware is not yet shipping.** The byte layouts below match Plateau's current source code (`/Product/TrailCurrentPlateau/`), which has been updated to the new ID block. Consumers integrating against the DBC can wire to these IDs now; they will not move again before Plateau ships.
 
 Vehicle leveling module (ESP32-S3-Zero with Adafruit BNO055 9-DOF IMU). Reads pitch and roll, computes per-corner height adjustments based on configurable vehicle dimensions. Supports three mounting orientations with automatic BNO055 axis remapping. Calibration offsets auto-saved to NVS when fully calibrated.
 
-#### LevelingConfig (0x20, 7 bytes) — Event-driven command
+Plateau's CAN IDs were reallocated 2026-05-19 from the original `0x20 / 0x30 / 0x31 / 0x32` to the contiguous `0x36-0x39` block when Borealis claimed `0x20` for its safety frame. Both DBC and firmware were updated together; no consumer should be wired to the legacy IDs.
+
+#### LevelingConfig (0x36, 7 bytes) — Event-driven command
 
 Configuration command sent to Plateau.
 
@@ -464,7 +543,7 @@ Configuration command sent to Plateau.
 | Value | Command | Description |
 |-------|---------|-------------|
 | 1 | Set Vehicle Config | Apply bytes 1-6 (mounting, dimensions, save flag) |
-| 2 | Request Status | Request immediate status report on CAN ID 0x32 |
+| 2 | Request Status | Request immediate status report on CAN ID 0x39 |
 | 3 | Zero/Tare | Calibration reset (reserved for future use) |
 
 **MountingSurface values:**
@@ -475,7 +554,7 @@ Configuration command sent to Plateau.
 | 1 | Left Wall | Vertical, left side |
 | 2 | Right Wall | Vertical, right side |
 
-#### TiltData (0x30, 8 bytes) — 500 ms cycle (2 Hz)
+#### TiltData (0x37, 8 bytes) — 500 ms cycle (2 Hz)
 
 Vehicle pitch, roll, and computed height differences.
 
@@ -486,7 +565,7 @@ Vehicle pitch, roll, and computed height differences.
 | 4-5 | FrontBackDiffMm | 39:32, 47:40 | int16 BE | 1 | -32768 to 32767 | mm | Height diff front-to-back. Computed: length_cm * 10 * tan(pitch_rad) |
 | 6-7 | LeftRightDiffMm | 55:48, 63:56 | int16 BE | 1 | -32768 to 32767 | mm | Height diff left-to-right. Computed: width_cm * 10 * tan(roll_rad) |
 
-#### CornerData (0x31, 8 bytes) — 500 ms cycle (2 Hz)
+#### CornerData (0x38, 8 bytes) — 500 ms cycle (2 Hz)
 
 Per-corner height adjustments. Normalized so the lowest corner = 0.
 
@@ -497,7 +576,7 @@ Per-corner height adjustments. Normalized so the lowest corner = 0.
 | 4-5 | RearLeftMm | 39:32, 47:40 | uint16 BE | 0-65535 | mm | Rear-left raise amount |
 | 6-7 | RearRightMm | 55:48, 63:56 | uint16 BE | 0-65535 | mm | Rear-right raise amount |
 
-#### StatusData (0x32, 4 bytes) — 2000 ms cycle (0.5 Hz)
+#### StatusData (0x39, 4 bytes) — 2000 ms cycle (0.5 Hz)
 
 System status and BNO055 calibration levels.
 
@@ -574,6 +653,182 @@ Request to change the hysteresis threshold (deadband). Same pattern as `ThermaSe
 
 ---
 
+### Playbill multi-instance block
+
+Playbill is the rig-side entertainment head (Radxa Dragon Q6A running a GNOME desktop with an Electron app). It is the only TrailCurrent device that uses CAN IDs above `0x42`, and it is the only device that allocates **multiple contiguous blocks** of CAN IDs — one per Playbill instance, up to three per rig.
+
+The narrative source for this section is [Playbill `docs/app/dbc-additions.md`](../../TrailCurrentPlaybill/docs/app/dbc-additions.md). The wire-level contract for a third-party MCU that wants to drive a Playbill is [Headwaters `DOCS/CAN-REMOTE.md`](../../TrailCurrentHeadwaters/DOCS/CAN-REMOTE.md). If anything here disagrees with the DBC, the DBC wins.
+
+#### Addressing
+
+Each Playbill instance claims one of three CAN address blocks at install time via its `device.canInstance` setting:
+
+| `canInstance` | Block         | What it controls |
+|---|---|---|
+| `0` | `0x100 – 0x10F` | Playbill 0 (default name "Living Room") |
+| `1` | `0x110 – 0x11F` | Playbill 1 (default name "Bedroom") |
+| `2` | `0x120 – 0x12F` | Playbill 2 (default name "Bunkhouse") |
+| `null` | (none) | MQTT-only — does not participate in CAN |
+
+Every message type uses the **same offset within the block**. Address math:
+
+```
+target_id = (0x100 + 0x10 * instance) + offset
+```
+
+Reserved offsets `+0xA … +0xF` are intentionally empty so the message set can grow within each block without renumbering.
+
+A fourth Playbill instance is a future expansion (`0x130–0x13F`) — call it out before doing it.
+
+#### Message map (per instance)
+
+| Offset | Message | Size | Direction | Cycle Time |
+|---|---|---|---|---|
+| `+0x0` | `PlaybillNavCmd<N>` | 1 | → Playbill | Event-driven |
+| `+0x1` | `PlaybillTransportCmd<N>` | 5 | → Playbill | Event-driven |
+| `+0x2` | `PlaybillTransportStatus<N>` | 8 | ← Playbill | 500–1000 ms (edge-triggered) |
+| `+0x3` | `PlaybillRadioTuneReq<N>` | 6 | → Playbill | Event-driven |
+| `+0x4` | `PlaybillRadioStatus<N>` | 8 | ← Playbill | 500–1000 ms (edge-triggered) |
+| `+0x5` | `PlaybillScreenStatus<N>` | 2 | ← Playbill | 500–1000 ms (edge-triggered) |
+| `+0x6` | `PlaybillSystemCmd<N>` | 1 | → Playbill | Event-driven |
+| `+0x7` | `PlaybillLaunchSourceCmd<N>` | 2 | → Playbill | Event-driven |
+| `+0x8` | `PlaybillVolumeCmd<N>` | 2 | → Playbill | Event-driven |
+| `+0x9` | `PlaybillPresence<N>` | 6 | ← Playbill | 60 000 ms (heartbeat) |
+| `+0xA … +0xF` | RESERVED | — | — | — |
+
+All payloads are byte-aligned, Motorola big-endian (matching every existing TrailCurrent message). 8-byte CAN 2.0A frames; messages shorter than 8 bytes leave trailing bytes unused.
+
+#### PlaybillNavCmd (`+0x0`) — D-pad / remote keys
+
+| Byte | Bits | Signal | Enum |
+|---|---|---|---|
+| 0 | `7\|8` | `NavKey` | 0=Up · 1=Down · 2=Left · 3=Right · 4=Select · 5=Back · 6=Home · 7=Menu |
+
+**Auto-wake behavior**: if no Electron GUI is currently connected to the Playbill controller, the *first* `NavCmd` frame triggers `system.launchGui` automatically and is **not** delivered as a navigation event. Subsequent frames navigate normally. Treat like the first press on an Apple-TV-style remote — it wakes the box.
+
+CAN IDs: `0x100` / `0x110` / `0x120`.
+
+#### PlaybillTransportCmd (`+0x1`) — Play / pause / seek
+
+| Byte | Bits | Signal | Notes |
+|---|---|---|---|
+| 0 | `7\|8` | `Action` | 0=Play · 1=Pause · 2=Stop · 3=Toggle · 4=SeekRel · 5=SeekAbs · 6=Next · 7=Previous |
+| 1–4 | `15\|32` | `Value` | 32-bit BE. SeekRel: signed-as-unsigned ms (`0x80000000 + delta_ms`). SeekAbs: absolute ms. Unused for the other actions — send zeros. |
+
+Volume and mute are deliberately split into `PlaybillVolumeCmd` (`+0x8`) so a hardware volume encoder can wire to a single CAN ID with no enum-parsing logic.
+
+CAN IDs: `0x101` / `0x111` / `0x121`.
+
+#### PlaybillTransportStatus (`+0x2`) — What's playing right now
+
+| Bits | Signal | Range | Meaning |
+|---|---|---|---|
+| `7\|1` | `Paused` | 0–1 | 1 if paused or stopped |
+| `6\|1` | `Muted` | 0–1 | |
+| `5\|6` | `SourceEnum` | 0–63 | enum below |
+| `15\|8` | `VolumePct` | 0–100 (255=unknown) | percent |
+| `23\|24` | `PositionSec` | 0–16 777 215 | current playback position in seconds |
+| `47\|24` | `DurationSec` | 0–16 777 215 (0=live/unknown) | total duration |
+
+**`SourceEnum`** (shared by TransportStatus and LaunchSourceCmd):
+`0=None · 1=YouTube · 2=LiveTV · 3=Radio · 4=LocalLibrary · 5=Plex · 6=Spotify · 7=Netflix · 8–63 reserved`
+
+Status messages are **edge-triggered** (republished only when state changes). A consumer that needs a synchronous read should cache the last value and re-request via the matching command.
+
+Text titles, artwork URLs, etc. live on the MQTT-only `local/playbill/<id>/now-playing` topic — not on CAN.
+
+CAN IDs: `0x102` / `0x112` / `0x122`.
+
+#### PlaybillRadioTuneReq (`+0x3`) — Tune the RTL-SDR radio
+
+Frequency in **kilohertz** as a 32-bit unsigned int — covers FM (88 000 – 108 000 kHz), AM (530 – 1700 kHz), and the public-safety scanner range (up to 1 GHz) without a band-multiplier signal.
+
+| Byte | Bits | Signal | Notes |
+|---|---|---|---|
+| 0 | `7\|8` | `Band` | 0=FM · 1=AM · 2=Scanner |
+| 1–4 | `15\|32` | `FrequencyKHz` | kHz |
+| 5 | `47\|8` | `Mode` | reserved (future NFM/WFM/AM modulation override) |
+
+CAN IDs: `0x103` / `0x113` / `0x123`.
+
+#### PlaybillRadioStatus (`+0x4`) — Current radio state
+
+| Bits | Signal | Range | Meaning |
+|---|---|---|---|
+| `7\|8` | `Band` | 0–2 | same enum as TuneReq |
+| `15\|32` | `FrequencyKHz` | 0–4 294 967 295 | kHz |
+| `47\|8` | `SignalDbm` (signed) | −128 to +127 | dBm |
+| `55\|1` | `Tuned` | 0–1 | 1 if currently tuned & demodulating |
+| `54\|1` | `Scanning` | 0–1 | 1 if mid-scan |
+
+CAN IDs: `0x104` / `0x114` / `0x124`.
+
+#### PlaybillScreenStatus (`+0x5`) — Which screen the GUI is on
+
+| Bits | Signal | Range | Meaning |
+|---|---|---|---|
+| `7\|8` | `ScreenEnum` | 0–255 | 0=Home · 1=Apps · 2=Live · 3=Radio · 4=LocalLibrary · 5=Rig · 6=Settings · 7=NowPlaying · 8–255 reserved |
+| `15\|1` | `GuiOpen` | 0–1 | 1 = Electron window is on screen |
+
+Useful for a dash status LED or for the PWA to mirror current focus.
+
+CAN IDs: `0x105` / `0x115` / `0x125`.
+
+#### PlaybillSystemCmd (`+0x6`) — Power / window lifecycle
+
+| Byte | Bits | Signal | Enum |
+|---|---|---|---|
+| 0 | `7\|8` | `SysAction` | 0=LaunchGui · 1=QuitGui · 2=Focus · 3=Wake · 4=Sleep · 5–255 reserved |
+
+`LaunchGui` is the explicit "power on" — use this from a dedicated power button on your remote if you don't want to rely on the nav-press auto-wake.
+
+CAN IDs: `0x106` / `0x116` / `0x126`.
+
+#### PlaybillLaunchSourceCmd (`+0x7`) — "Open this source"
+
+Analogous to a hardware preset button on a stereo head unit. Implies LaunchGui + navigate.
+
+| Byte | Bits | Signal | Enum |
+|---|---|---|---|
+| 0 | `7\|8` | `SourceEnum` | shared with TransportStatus |
+| 1 | `15\|8` | `SubScreenEnum` | 0=Default · 1=SignIn · 2=Settings · 3=Search · 4–255 reserved |
+
+CAN IDs: `0x107` / `0x117` / `0x127`.
+
+#### PlaybillVolumeCmd (`+0x8`) — Volume + mute
+
+Split out from TransportCmd so a hardware volume encoder or mute button can wire to a single CAN ID with no enum-parsing logic.
+
+| Byte | Bits | Signal | Notes |
+|---|---|---|---|
+| 0 | `7\|8` | `VolAction` | 0=Up · 1=Down · 2=Set · 3=MuteOn · 4=MuteOff · 5=MuteToggle |
+| 1 | `15\|8` | `Value` | Up/Down: step percent (1–100, 0 = default 5). Set: target percent 0–100. Mute actions: ignored. |
+
+CAN IDs: `0x108` / `0x118` / `0x128`.
+
+#### PlaybillPresence (`+0x9`) — Heartbeat (read-only)
+
+Mirrors the `FirmwareVersionReport` (`0x004`) shape: last three bytes of the host's primary NIC MAC + version triplet. Sent once on startup and again every 60 s. Lets a CAN consumer (dash module, future status LED) discover which Playbills are alive on the bus without subscribing to MQTT.
+
+| Byte | Bits | Signal | Notes |
+|---|---|---|---|
+| 0 | `7\|8` | `MacAddressByte4` | last three bytes of the host's primary NIC MAC |
+| 1 | `15\|8` | `MacAddressByte5` | |
+| 2 | `23\|8` | `MacAddressByte6` | |
+| 3 | `31\|8` | `VersionMajor` | from controller `package.json` |
+| 4 | `39\|8` | `VersionMinor` | |
+| 5 | `47\|8` | `VersionPatch` | |
+
+CAN IDs: `0x109` / `0x119` / `0x129`.
+
+#### Cross-cutting design notes
+
+- **CAN does not bleed into MQTT.** MQTT topics use the human-readable `device.id` slug (e.g. `local/playbill/living-room/...`); CAN uses the numeric `device.canInstance` (0/1/2). They're independent fields in `settings.json`.
+- **`Vector__XXX` as transmitter** is used for `→ Playbill` messages because there's no single canonical sender — a touchscreen, a CAN button MCU, or the Headwaters CAN bridge can all originate them.
+- **Reserved enum values and offset slots are forever.** Once a downstream device wires to (say) `SysAction = 3 = Wake`, that value cannot be reused. Add new values, don't recycle.
+
+---
+
 ## Bit Encoding Conventions
 
 All TrailCurrent CAN messages use the following encoding conventions:
@@ -633,8 +888,8 @@ Some signals use a scale factor to provide fractional precision in an integer fi
 | 0x2B | ShuntExtLive (Solstice, reserved — transmits zeros) | 33 ms | ~30 Hz |
 | 0x2C-0x2D | Solar MPPT data (Solstice) | 33 ms | ~30 Hz |
 | 0x2F | ShuntExtHistory (Solstice, reserved — transmits zeros) | 33 ms | ~30 Hz |
-| 0x30-0x31 | Tilt/corner data (Plateau) | 500 ms | 2 Hz |
-| 0x32 | Status data (Plateau) | 2000 ms | 0.5 Hz |
+| 0x37-0x38 | Tilt/corner data (Plateau) | 500 ms | 2 Hz |
+| 0x39 | Status data (Plateau) | 2000 ms | 0.5 Hz |
 | 0x3F | ThermaDesiredTemperature | 1000 ms | 1 Hz |
 | 0x40 | ThermaStatus | 1000 ms | 1 Hz |
 | 0x00, 0x15, 0x18, 0x1E, 0x20, 0x25-0x27, 0x41, 0x42 | Commands | Event-driven | On demand |
